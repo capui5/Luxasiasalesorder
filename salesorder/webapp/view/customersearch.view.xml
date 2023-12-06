@@ -1,0 +1,104 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.customersearch"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Page showHeader="false">
+        <OverflowToolbar class="header" id="otbSubheader">
+            <Text text="LUXASIA" class="mainmenutext" />
+        </OverflowToolbar>
+
+        <Bar class="custom-bar">
+            <contentLeft>
+                <Button
+                    icon="sap-icon://arrow-left"
+                    press="onNavBack"
+                    class="navbutton"
+                />
+                <Text text="CUSTOMER SEARCH" class="customersearch" />
+            </contentLeft>
+            <contentRight>
+                <Button
+                    text="CREATE NEW PROFILE"
+                    press="onNextPage"
+                    class="wide-button"
+                />
+            </contentRight>
+        </Bar>
+        <content>
+            <FlexBox
+                class="flex-spacing"
+                alignItems="Start"
+                justifyContent="SpaceAround"
+                wrap="Wrap"
+            >
+                <Input visible="false" id="customerno" placeholder="Customer No" />  
+                <Input id="mobileInput" placeholder="Mobile Number" />
+                <Input id="emailInput" placeholder="Email Address" />
+                <Input id="nameInput" placeholder="Firstname" />
+                <Input id="surnameInput" placeholder="Lastname" />
+                <Button
+                    text="Search"
+                    press="onSearch"
+                    class="wide-button1 top-spacing"
+                    id="searchButton"
+                />
+            </FlexBox>
+
+           <Table
+    id="customerTable"
+    visible="false"
+    inset="false"
+    class="myCustomTable"
+>
+    <columns>
+      <Column hAlign="Center" demandPopin="true">
+            <Text text="CUSTOMER NO" />
+        </Column>
+        <Column hAlign="Center" demandPopin="true">
+            <Text text="MOBILE NUMBER" />
+        </Column>
+        <Column hAlign="Center" demandPopin="true">
+            <Text text="EMAIL ADDRESS" />
+        </Column>
+        <Column hAlign="Center" demandPopin="true">
+            <Text text="FIRST NAME" />
+        </Column>
+        <Column hAlign="Center" demandPopin="true" minScreenWidth="Desktop">
+            <Text text="LAST NAME" />
+        </Column>
+        <Column hAlign="Center" demandPopin="true">
+            <Text text="SALES ORDER" />
+        </Column>
+        <!-- <Column id="actionButton" columnPersonalizationText="Action Button"/> -->
+    </columns>
+
+    <items>
+        <ColumnListItem press="onPress"> 
+         <cells>
+                <Text text="{mainModel>CustomerNo}" class="myBlackText" />
+            </cells>
+            <cells>
+                <Text text="{mainModel>Tel1Numbr}" class="myBlackText" />
+            </cells>
+            <cells>
+                <Text text="{mainModel>EMail}" class="myBlackText" />
+            </cells>
+            <cells>
+                <Text text="{mainModel>Firstname}" class="myBlackText" />
+            </cells>
+            <cells>
+                <Text text="{mainModel>}" class="myBlackText" /> 
+            </cells>
+
+        </ColumnListItem>
+    </items>
+</Table>
+
+          
+        </content>
+    </Page>
+</mvc:View>

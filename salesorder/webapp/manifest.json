@@ -1,0 +1,349 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "com.luxasia.salesorder",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.11.4",
+      "toolsId": "a176351b-6ee2-4308-9b14-2b39b7463a5d"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZSDGW_CE_APP_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "SalesOrder-Managed": {
+          "semanticObject": "SalesOrder",
+          "action": "Managed",
+          "title": "{{flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.120.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.f": {},
+        "sap.suite.ui.generic.template": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.ui.table": {},
+        "sap.ushell": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.luxasia.salesorder.i18n.i18n"
+        }
+      },
+      "mainModel": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      },
+      "CallModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "preload": false,
+        "uri": "model/calllist.json"
+      },
+      "customerData": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "model/customerData.json",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "GenericModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "model/generic.json",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "BrandStoreModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "StoreModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "SelectedBrandName": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "CampaignModel" :{
+        "type": "sap.ui.model.json.JSONModel",
+        "preload" : true,
+        "settings":{
+          "defaultBindingMode": "TwoWay"
+        }
+      },  
+      "SelectedItems" :{
+        "type": "sap.ui.model.json.JSONModel",
+        "preload" : true,
+        "settings":{
+          "defaultBindingMode": "TwoWay"
+        }
+      }, 
+      "CustomerNoModel" :{
+        "type": "sap.ui.model.json.JSONModel",
+        "preload" : true,
+        "settings":{
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "ResponseModel" :{
+        "type": "sap.ui.model.json.JSONModel",
+        "preload" : true,
+        "settings":{
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "SalesEmployeeModel" :{
+        "type": "sap.ui.model.json.JSONModel",
+        "preload" : true,
+        "settings":{
+          "defaultBindingMode": "TwoWay"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "com.luxasia.salesorder.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false
+      },
+      "routes": [
+        {
+          "name": "Routestoreselection",
+          "pattern": ":?query:",
+          "target": [
+            "Targetstoreselection"
+          ]
+        },
+        {
+          "name": "brand",
+          "pattern": "brand/{SStoreId}",
+          "target": [
+            "brand"
+          ]
+        },
+        {
+          "name": "customersearch",
+          "pattern": "customersearch",
+          "target": [
+            "customersearch"
+          ]
+        },
+        {
+          "name": "mainmenu",
+          "pattern": "mainmenu",
+          "target": [
+            "mainmenu"
+          ]
+        },
+       
+        {
+          "name": "newcustomer",
+          "pattern": "newcustomer",
+          "target": [
+            "newcustomer"
+          ]
+        },
+        {
+          "name": "calllist",
+          "pattern": "calllist",
+          "target": [
+            "calllist"
+          ]
+        },
+        {
+          "name": "reviewallcampaigns",
+          "pattern": "reviewallcampaigns",
+          "target": [
+            "reviewallcampaigns"
+          ]
+        },
+        {
+          "name": "salescompletion",
+          "pattern": "salescompletion",
+          "target": [
+            "salescompletion"
+          ]
+        },
+        {
+          "name": "transaction",
+          "pattern": "transaction",
+          "target": [
+            "transaction"
+          ]
+        },
+        {
+          "name": "stockorder",
+          "pattern": "stockorder",
+          "target": [
+            "stockorder"
+          ]
+        }
+      
+      ],
+      "targets": {
+        "Targetstoreselection": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "storeselection",
+          "viewName": "storeselection"
+        },
+        "customersearch": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "customersearch",
+          "viewName": "customersearch"
+        },
+        "mainmenu": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "mainmenu",
+          "viewName": "mainmenu"
+        },
+        "brand": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "brand",
+          "viewName": "brand"
+        },
+        "newcustomer": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "newcustomer",
+          "viewName": "newcustomer"
+        },
+        "calllist":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "calllist",
+          "viewName": "calllist"
+        },
+        "reviewallcampaigns":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "reviewallcampaigns",
+          "viewName": "reviewallcampaigns"
+        },
+        "salescompletion":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "salescompletion",
+          "viewName": "salescompletion"
+        },
+        "newcustdetail":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "newcustdetail",
+          "viewName": "newcustdetail"
+        },
+        "transaction":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "transaction",
+          "viewName": "transaction"
+        },
+        "stockorder":{
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "stockorder",
+          "viewName": "stockorder"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.luxasia.salesorder.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "App"
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "SalesUI"
+  }
+}

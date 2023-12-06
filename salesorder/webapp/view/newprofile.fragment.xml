@@ -1,0 +1,63 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+
+    <Dialog
+        id="newprof"
+        title="CREATE NEW PROFILE"
+		showHeader="false"
+    >
+    <VBox
+            xmlns="sap.m"
+            class="sapUiContentPadding"
+
+        >
+            <HBox alignItems="Center">
+                <Label
+                    class="fragmentext1"
+                    text="CREATE NEW PROFILE"
+                />
+
+                <HBox width="100%" />
+
+             <Button
+                    id="helloDialogButton"
+                    icon="sap-icon://decline"
+                    press=".onCloseFrag"
+                />
+            </HBox>
+        </VBox> 
+	 <HBox class= "fragtile">
+        <GenericTile
+            class="sapUiTinyMarginBegin sapUiTinyMarginTop tileset"
+            header="USE QR CODE TO CREATE PROFILE"
+            subheader="Subtitle"
+            press="onQrPress"
+            frameType="TwoByHalf"
+        >
+            <TileContent
+                unit="EUR"
+                footer="Current Quarter"
+            >
+                <ImageContent src="sap-icon://qr-code" class="tile-iconcreate  newprofile"/>
+            </TileContent>
+        </GenericTile>
+        
+        <GenericTile
+            class="sapUiTinyMarginBegin sapUiTinyMarginTop tileset"
+            header="ENTER PROFILE MANUALLY"
+            subheader="Subtitle"
+            press="createprofile"
+            frameType="TwoByHalf"
+        >
+            <TileContent
+                unit="EUR"
+                footer="Current Quarter"
+            >
+                <ImageContent src="sap-icon://document-text" class="tile-iconcreate  newprofile"/>
+            </TileContent>
+        </GenericTile>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

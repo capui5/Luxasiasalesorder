@@ -1,0 +1,115 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.calllist"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+  
+        <OverflowToolbar class="header" id="otbSubheader">
+            <Text
+                text="LUXASIA"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+       
+<Bar class="calllist" design="Auto">
+    <contentLeft>
+        <Button
+            icon="sap-icon://arrow-left"
+            size="1rem"
+            color="#000000"
+            press="onNavBack"
+            class="navbutton"
+        />
+        <Text text="Contact List" wrapping="true" style="font-size: 1rem;" />
+    </contentLeft>
+    <contentRight>
+        <MultiComboBox
+            change="handleChange"
+            selectionChange="handleSelectionChange"
+            width="190px"
+            id="selectbycustomer"
+            placeholder="Filter by Customer"
+            showSecondaryValues="true"
+            class="multicombobox"
+        />
+        <MultiComboBox
+            change="handleChange"
+            selectionChange="handleSelectionChange"
+            width="190px"
+            id="selectbycampaign"
+            placeholder="Filter by Campaign"
+            showSecondaryValues="true"
+            class="multicombobox"
+        >
+            <core:Item key="Special Price" text="Special Price" />
+            <core:Item key="Cart" text="Cart" />
+            <core:Item key="MOM" text="MOM" />
+        </MultiComboBox>
+        <MultiComboBox
+            change="handleChange"
+            selectionChange="handleSelectionChange"
+            width="190px"
+            id="selectbytier"
+            placeholder="Filter by Tier"
+            showSecondaryValues="true"
+            class="multicombobox"
+        />
+    </contentRight>
+</Bar>
+ 
+ 
+ 
+ 
+       
+            <Table
+                id="customerTable"
+                items="{CallModel>/call_list}"
+                class="myCustomMargin"
+                inset="false"
+            >
+                <columns>
+                    <Column demandPopin="true">
+                        <Text text="Customers" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true">
+                        <Text text="Campaign" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true" minScreenWidth="Desktop">
+                        <Text text="Tier" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true">
+                        <Text text="Phone#" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true" minScreenWidth="Tablet">
+                        <Text text="Date" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true">
+                        <Text text="Attempts" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true" minScreenWidth="Desktop">
+                        <Text text="Notes" class="titleText" />
+                    </Column>
+                    <Column demandPopin="true" minScreenWidth="Tablet">
+                        <Text text="Status" class="titleText" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{CallModel>Customers}" />
+                            <Text text="{CallModel>Campaign}" />
+                            <Text text="{CallModel>Tier}" />
+                            <Text text="{CallModel>Phone}" />
+                            <Text text="{CallModel>Date}" />
+                            <Text text="{CallModel>Attempts}" />
+                            <Text text="{CallModel>Notes}" />
+                            <Text text="{CallModel>Status}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+       
+   
+</mvc:View>

@@ -1,0 +1,264 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.stockorder"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Page
+        showHeader="false"
+        id="myPage"
+    >
+        <OverflowToolbar
+            class="header"
+            id="otbHeader"
+        >
+            <Text
+                text="luxasia"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+        <f:Form
+            id="FormChange354"
+            editable="true"
+        >
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    labelSpanXL="3"
+                    labelSpanL="3"
+                    labelSpanM="3"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="4"
+                    emptySpanL="4"
+                    emptySpanM="4"
+                    emptySpanS="0"
+                    columnsXL="1"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false"
+                />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement>
+                            <f:fields>
+                                <!-- <Select
+                                    visible="true"
+                                    items="{ 
+        path: 'mainModel>/VendorSet',
+        sorter: { path: 'VendorName' }
+    }"
+                                    id="vendor"
+                                    selectedKey="{mainModel>/selectedVendorKeys/0}"
+                                    change="onVendorSelectionChange"
+                                >
+                                    <items>
+                                        <core:Item
+                                            key=""
+                                            text="Select a Vendor"
+                                        />
+                                        <core:Item
+                                            text="{mainModel>VendorName}"
+                                            key="{mainModel>VendorName}"
+                                        />
+                                    </items>
+                                </Select> -->
+
+                                <ComboBox
+                                    visible="true"
+                                    items="{ 
+        path: 'mainModel>/VendorSet',
+        length: 10000,
+        sorter: {
+            path: 'VendorName',
+            descending: false 
+        }
+    }"
+                                    id="vendor"
+                                    selectedKey="{mainModel>/selectedVendorKeys/0}"
+                                    change="onVendorSelectionChange"
+                                    placeholder="Select a Vendor"
+                                >
+                                    <items>
+                                        <core:Item
+                                            key=""
+                                            text="Select a Vendor"
+                                        />
+                                        <core:Item
+                                            text="{mainModel>VendorName}{mainModel>VendorNo}"
+                                            key="{mainModel>VendorNo}"
+                                        />
+                                    </items>
+                                </ComboBox>
+
+                                <DatePicker
+                                    id="DP2"
+                                    value="{/DlvDate}"
+                                    dateValue="{/DlvDate}"
+                                    change="handleChange"
+                                    class="sapUiSmallMarginBottom"
+                                    placeholder="Delivery Date"
+                                />
+                                <!-- <DatePicker
+    id="DP2"
+    value="{
+        'path':'/valueDP2',
+        'type':'sap.ui.model.type.Date',
+        'formatOptions': {
+            'pattern': 'yyyy-MM-dd'
+        }
+    }"
+    dateValue="{/valueDP2}"
+    change="handleChange"
+    class="sapUiSmallMarginBottom"
+    placeholder="Delivery Date"
+/> -->
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+        <Table
+            items="{cartpurchaseModel>/selectedItems}"
+            mode="TwoWay"
+        >
+            <headerToolbar>
+                <OverflowToolbar class="otbSubheader">
+                    <Text
+                        text="PURCHASE ORDER"
+                        class="transtext"
+                    />
+                    <ToolbarSpacer />
+                    <Button
+                        text="ADD"
+                        class="add1"
+                        press="onAddProduct"
+                    />
+                </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column width="12em">
+                    <Text text="Bar Code" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Product" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Qunatity" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="UOM" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Price" />
+                </Column>
+                <Column
+                    hAlign="Center"
+                    minScreenWidth="Tablet"
+                >
+                    <Text text="Currency" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <ObjectIdentifier text="{cartpurchaseModel>Barcode}" />
+                        <HBox>
+                            <items>
+                                <ObjectIdentifier
+                                    text="{cartpurchaseModel>ArticleDesc}"
+                                />
+                                <!-- <Button
+                                    icon="sap-icon://delete"
+                                    press="onDeleteProduct"
+                                /> -->
+                            </items>
+                        </HBox>
+                        <StepInput
+                            value="{cartpurchaseModel>quantity}"
+                            max=""
+                            min="0"
+                            step="1"
+                            width="80px"
+                            validationMode="LiveChange"
+                            change="onQuantityChange"
+                        />
+                        <ObjectIdentifier text="{cartpurchaseModel>UOM}" />
+                        <ObjectNumber
+                            number="{cartpurchaseModel>RetailPrice}"
+                        />
+                        <!-- <StepInput
+                        value="{mainModel>quantity}"
+                        max=""
+                        min="0"
+                        step="1"
+                        width="80px"
+                        validationMode="LiveChange"
+                        change="onQuantityChange"
+                    /> -->
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+            <OverflowToolbar
+                class="customfooter"
+                id="otFooter"
+            >
+                <VBox alignItems="Start">
+                    <!-- <MultiComboBox
+                        id="Campaign"
+                        items="{CampaignModel>/}"
+                        class="wide-select custom-margin"
+                        placeholder="SELECT PROMOTION"
+                        selectedKeys="{selectedPromotion>/selectedPromotion}"
+                    >
+                        <core:Item
+                            key="{CampaignModel>name}"
+                            text="{CampaignModel>CampaignIdDesc}"
+                        />
+                    </MultiComboBox> -->
+                    <Text
+                        text="PH will be offered a field to key the retailer reference here"
+                        class="myText"
+                    />
+                </VBox>
+                <ToolbarSpacer />
+
+                <VBox alignItems="End">
+                    <Text
+                        text="Total: {cartpurchaseModel>/totalPrice}"
+                        class="myBlackText"
+                    />
+
+                    <ToolbarSpacer />
+                    <HBox alignItems="End">
+                        <Button
+                            text="CANCEL"
+                            press="onCancelPress"
+                            class="transcancel"
+                        />
+                        <Button
+                            text="Create Dept Store Order"
+                            press="onPoPress"
+                            class="transsave"
+                        />
+                    </HBox>
+                </VBox>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

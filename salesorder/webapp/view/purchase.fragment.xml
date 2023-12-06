@@ -1,0 +1,63 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="purchaseorder"
+        title="CREATE NEW PROFILE"
+        showHeader="false"
+    >
+        <VBox
+            xmlns="sap.m"
+            class="sapUiContentPadding"
+
+        >
+            <HBox alignItems="Center">
+                <Label
+                    class="fragmentext"
+                    text="Add More Products to Purchase Order"
+                />
+
+                <HBox width="100%" />
+
+             <Button
+                    id="helloDialogButton"
+                    icon="sap-icon://decline"
+                    press=".onClose"
+                />
+            </HBox>
+        </VBox>
+       
+        
+        <HBox class="fragtile">
+            <GenericTile
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting products "
+                header="SCAN PRODUCTS"
+                subheader="Subtitle"
+               press="onScanBarcode"
+                frameType="TwoByHalf"
+            >
+                <TileContent
+                    unit="EUR"
+                    footer="Current Quarter"
+                >
+                    <ImageContent src="sap-icon://bar-code" class="newprofile" />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting"
+                header="SEARCH FOR PRODUCTS"
+                press="onSearch"
+                frameType="TwoByHalf"
+            >
+                <TileContent
+                    unit="EUR"
+                    footer="Current Quarter"
+                >
+                    <ImageContent src="sap-icon://search" class="newprofile"/>
+                </TileContent>
+            </GenericTile>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

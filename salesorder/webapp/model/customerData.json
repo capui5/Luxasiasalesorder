@@ -1,0 +1,18 @@
+{
+  "customer": [
+     {
+        "name": "Tejasri",
+        "surname": "Bonala",
+        "email": "tejabonala11@gmail.com",
+        "mobileNumber": "7286974652"
+     },
+     {
+        "name": "saisri",
+        "surname": "Bonala",
+        "email": "saisribonala@gmail.com",
+        "mobileNumber": "9848490742"
+     }
+  ]
+}
+
+  

@@ -1,0 +1,81 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.reviewallcampaigns"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Page>
+        <OverflowToolbar class="header" id="otbSubheader">
+                    <Text
+                        text="LUXASIA"
+                        class="mainmenutext"
+                    />
+                </OverflowToolbar>
+            <Bar class="mycustombar">
+                <contentLeft>
+                    <Button
+                        icon="sap-icon://arrow-left"
+                        size="1rem"
+                        color="#000000"
+                        press="onNavBack"
+                        class="navbutton"
+                    />
+                    <Text text="CURRENT CAMPAIGNS" />
+                </contentLeft>
+            </Bar>
+      
+
+        <content>
+            <Table
+                id="campaignTable"
+                items="{/Customers}"
+                class="myCustomMargin"
+            >
+                <columns>
+                    <Column>
+                        <Text
+                            text="DATE FROM"
+                            class="titleText"
+                        />
+                    </Column>
+                    <Column>
+                        <Text
+                            text="DATE TO"
+                            class="titleText"
+                        />
+                    </Column>
+                    <Column>
+                        <Text
+                            text="BRAND"
+                            class="titleText"
+                        />
+                    </Column>
+                    <Column>
+                        <Text
+                            text="TYPE OF CAMPAIGN"
+                            class="titleText"
+                        />
+                    </Column>
+                    <Column>
+                        <Text
+                            text="DESCRIPTION"
+                            class="titleText"
+                        />
+                    </Column>  
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{datefrom}" />
+                            <Text text="{dateto}" />
+                            <Text text="{brand}" />
+                            <Text text="{type of campaign}" />
+                             <Text text="{description}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,161 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.salescompletion"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Page showHeader="false">
+      <OverflowToolbar class="header" id="otbSubheader">
+            <Text
+                text="LUXASIA"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+            <Bar class="salebar">
+                <contentLeft>
+                    <Button
+                        icon="sap-icon://arrow-left"
+                        size="1rem"
+                        press="onNavBack"
+                        class="navbutton"
+                    />
+                </contentLeft>
+                <contentMiddle>
+                    <Button
+                        text="Pending Transactions"
+                        press="onPendingTransactions"
+                        class="myTitleButton"
+                    />
+                    <Button
+                        text="Completed Transactions"
+                        press="onCompletedTransactions"
+                        class="myTitleButton"
+                    />
+                </contentMiddle>
+                <contentRight>
+                    <Text
+                        id="dateDisplay"
+                        text="{CurrentDate>/currentDate}"
+                    />
+                </contentRight>
+            </Bar>
+        <Bar class="mysubheader">
+            <contentLeft>
+                <Text
+                    text="Today's Transactions"
+                    class="myText"
+                />
+            </contentLeft>
+            <contentRight>
+                <SearchField
+                    placeholder="Search"
+                    liveChange="onSearch"
+                />
+                <Button
+                    text="My Transactions"
+                    press="onMyTransactions"
+                    class="mytranscations"
+                />
+                <Button
+                    text="Store Transactions"
+                    press="onCompletedTransactions"
+                    class="completetranscation"
+                />
+            </contentRight>
+        </Bar>
+        <content>
+            <Table
+                id="salesTable"
+                items="{SalesData>/salesData}"
+            >
+                <columns>
+                    <Column>
+                        <Text text="Sale ID" />
+                    </Column>
+                    <Column>
+                        <Text text="Products" />
+                    </Column>
+                    <Column>
+                        <Text text="Price" />
+                    </Column>
+                    <Column>
+                        <Text text="Total" />
+                    </Column>
+                    <Column>
+                        <Text text="Customer" />
+                    </Column>
+                    <Column>
+                        <Text text="Status" />
+                    </Column>
+                    <Column>
+                        <Text text="Reference" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text
+                                text="{SalesData>SaleId}"
+                                class="myBlackText"
+                            />
+                            <VBox>
+                                <items>
+                                    <List
+                                        items="{SalesData>Products}"
+                                        mode="None"
+                                    >
+                                        <items>
+                                            <CustomListItem>
+                                                <HBox>
+                                                    <items>
+                                                        <Text
+                                                            text="{SalesData>Name}"
+                                                            class="myBlackText"
+                                                        />
+                                                        <Button
+                                                            icon="sap-icon://delete"
+                                                            press="onDeleteProduct"
+                                                            class="deleteicon"
+                                                        />
+                                                    </items>
+                                                </HBox>
+                                            </CustomListItem>
+                                        </items>
+                                    </List>
+                                </items>
+                            </VBox>
+                            <VBox>
+                                <Text
+                                    text="{= ${SalesData>Products/0/Price} }"
+                                    class="myBlackText"
+                                />
+                                <Text
+                                    text="{= ${SalesData>Products/1/Price} }"
+                                    class="myBlackText"
+                                />
+                            </VBox>
+
+                            <Text
+                                text="{path: 'SalesData>Products', formatter: '.calculateTotalPrice'}"
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="{= ${SalesData>Products/0/Customer} }"
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="{= ${SalesData>Products/0/Status} }"
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="{= ${SalesData>Products/0/Reference} }"
+                                class="myBlackText"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

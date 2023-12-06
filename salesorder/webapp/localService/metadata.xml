@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZSDGW_CE_APP_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Subscription" sap:semantics="subscriptions" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="32" sap:label="Sub. ID" sap:creatable="false" sap:updatable="false" sap:filterable="false"/>
+                <Property Name="user" Type="Edm.String" MaxLength="12" m:FC_TargetPath="SyndicationAuthorName" m:FC_KeepInContent="false" sap:label="User Name" sap:creatable="false" sap:filterable="false"/>
+                <Property Name="updated" Type="Edm.DateTime" Precision="0" m:FC_TargetPath="SyndicationUpdated" m:FC_KeepInContent="false" sap:label="Time Stamp" sap:creatable="false" sap:filterable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="255" m:FC_TargetPath="SyndicationTitle" m:FC_KeepInContent="false" sap:label="Title" sap:filterable="false"/>
+                <Property Name="deliveryAddress" Type="Edm.String" sap:label="Delivery Address" sap:filterable="false"/>
+                <Property Name="persistNotifications" Type="Edm.Boolean" sap:label="Persist Notification" sap:filterable="false"/>
+                <Property Name="collection" Type="Edm.String" MaxLength="40" sap:label="Collection" sap:filterable="false"/>
+                <Property Name="filter" Type="Edm.String" sap:label="Filter" sap:filterable="false"/>
+                <Property Name="select" Type="Edm.String" MaxLength="255" sap:label="Select" sap:filterable="false"/>
+                <Property Name="changeType" Type="Edm.String" MaxLength="30" sap:label="Change Type"/>
+            </EntityType>
+            <EntityType Name="Notification" sap:semantics="notifications" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="32" sap:label="Notification ID"/>
+                <Property Name="collection" Type="Edm.String" MaxLength="40" sap:label="Collection"/>
+                <Property Name="title" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_KeepInContent="false" sap:label="Notif. Text"/>
+                <Property Name="updated" Type="Edm.DateTime" Precision="0" m:FC_TargetPath="SyndicationUpdated" m:FC_KeepInContent="false" sap:label="Time Stamp"/>
+                <Property Name="changeType" Type="Edm.String" MaxLength="30" sap:label="Change Type"/>
+                <Property Name="entriesOfInterest" Type="Edm.Int32" sap:label="No. of Entries"/>
+                <Property Name="recipient" Type="Edm.String" MaxLength="112" sap:label="Recipient" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Store" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="StoreId"/>
+                </Key>
+                <Property Name="StoreId" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="StoreName" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Street" Type="Edm.String" MaxLength="30"/>
+                <Property Name="PostlCode" Type="Edm.String" MaxLength="10"/>
+                <Property Name="City" Type="Edm.String" MaxLength="25"/>
+                <Property Name="Country" Type="Edm.String" MaxLength="3"/>
+            </EntityType>
+            <EntityType Name="Brand" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BrandId"/>
+                </Key>
+                <Property Name="BrandId" Type="Edm.String" Nullable="false" MaxLength="4"/>
+                <Property Name="BrandType" Type="Edm.String" MaxLength="1"/>
+                <Property Name="BrandDesc" Type="Edm.String" MaxLength="30"/>
+            </EntityType>
+            <EntityType Name="Product" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ArticleNo"/>
+                </Key>
+                <Property Name="ArticleNo" Type="Edm.String" Nullable="false" MaxLength="40"/>
+                <Property Name="ArticleDesc" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Brand_Id" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Barcode" Type="Edm.String" MaxLength="40"/>
+            </EntityType>
+            <EntityType Name="Customer" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CustomerNo"/>
+                </Key>
+                <Property Name="Dob" Type="Edm.DateTime" Precision="7" sap:label="Date"/>
+                <Property Name="Gender" Type="Edm.String" MaxLength="1" sap:label="Gender"/>
+                <Property Name="SalesOrg" Type="Edm.String" MaxLength="4" sap:label="Sales Org."/>
+                <Property Name="TitleP" Type="Edm.String" MaxLength="30" sap:label="Title"/>
+                <Property Name="Firstname" Type="Edm.String" MaxLength="40" sap:label="First name"/>
+                <Property Name="Lastname" Type="Edm.String" MaxLength="40" sap:label="Last name"/>
+                <Property Name="Middlename" Type="Edm.String" MaxLength="40" sap:label="2nd forename"/>
+                <Property Name="Secondname" Type="Edm.String" MaxLength="40" sap:label="2nd family name"/>
+                <Property Name="City" Type="Edm.String" MaxLength="40" sap:label="City"/>
+                <Property Name="District" Type="Edm.String" MaxLength="40" sap:label="District"/>
+                <Property Name="PostlCod1" Type="Edm.String" MaxLength="10" sap:label="Postal Code"/>
+                <Property Name="PostlCod2" Type="Edm.String" MaxLength="10" sap:label="PO box post cde"/>
+                <Property Name="PoBox" Type="Edm.String" MaxLength="10" sap:label="PO Box"/>
+                <Property Name="PoBoxCit" Type="Edm.String" MaxLength="40" sap:label="PO Box City"/>
+                <Property Name="Street" Type="Edm.String" MaxLength="60" sap:label="Street"/>
+                <Property Name="HouseNo" Type="Edm.String" MaxLength="10" sap:label="House Number"/>
+                <Property Name="Building" Type="Edm.String" MaxLength="20" sap:label="Building Code"/>
+                <Property Name="Floor" Type="Edm.String" MaxLength="10" sap:label="Floor"/>
+                <Property Name="RoomNo" Type="Edm.String" MaxLength="10" sap:label="Room Number"/>
+                <Property Name="Country" Type="Edm.String" MaxLength="3" sap:label="Country"/>
+                <Property Name="Countryiso" Type="Edm.String" MaxLength="2" sap:label="ISO code"/>
+                <Property Name="Region" Type="Edm.String" MaxLength="3" sap:label="Region"/>
+                <Property Name="Tel1Numbr" Type="Edm.String" MaxLength="30" sap:label="Telephone"/>
+                <Property Name="Tel1Ext" Type="Edm.String" MaxLength="10" sap:label="Extension"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:label="Fax"/>
+                <Property Name="FaxExtens" Type="Edm.String" MaxLength="10" sap:label="Extension"/>
+                <Property Name="EMail" Type="Edm.String" MaxLength="241" sap:label="E-Mail Address"/>
+                <Property Name="LanguP" Type="Edm.String" MaxLength="2" sap:label="Language"/>
+                <Property Name="LangupIso" Type="Edm.String" MaxLength="2" sap:label="Lang. (ISO)"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:semantics="currency-code"/>
+                <Property Name="CurrencyIso" Type="Edm.String" MaxLength="3" sap:label="ISO code crcy"/>
+                <Property Name="TitleKey" Type="Edm.String" MaxLength="4" sap:label="Title"/>
+                <Property Name="OnlyChangeComaddress" Type="Edm.Boolean" sap:label="Checkbox"/>
+                <Property Name="Katr1" Type="Edm.String" MaxLength="2" sap:label="Age Group"/>
+                <Property Name="Katr2" Type="Edm.String" MaxLength="2" sap:label="Occupation"/>
+                <Property Name="Katr3" Type="Edm.String" MaxLength="2" sap:label="Income SGD"/>
+                <Property Name="Katr4" Type="Edm.String" MaxLength="2" sap:label="Skin concerns"/>
+                <Property Name="Katr5" Type="Edm.String" MaxLength="2" sap:label="Consultation Content"/>
+                <Property Name="Katr6" Type="Edm.String" MaxLength="3" sap:label="CRM Cust Cls"/>
+                <Property Name="Katr7" Type="Edm.String" MaxLength="3" sap:label="DNC FLAG"/>
+                <Property Name="Katr8" Type="Edm.String" MaxLength="3" sap:label="Mkt Consent"/>
+                <Property Name="CustomerNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Customer"/>
+            </EntityType>
+            <EntityType Name="SalesOrderHead" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesorderNo"/>
+                </Key>
+                <Property Name="SoldTo" Type="Edm.String" MaxLength="10" sap:label="Customer"/>
+                <Property Name="SalesorderNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Sales Document"/>
+                <Property Name="Zcampaign" Type="Edm.String" MaxLength="30" sap:label="M.Campaign ID"/>
+                <Property Name="DocType" Type="Edm.String" MaxLength="4" sap:label="Sales Doc. Type"/>
+                <Property Name="PointConsumed" Type="Edm.Decimal" Precision="10" Scale="2" sap:label="Point Consumed"/>
+                <Property Name="SalesOrg" Type="Edm.String" MaxLength="4" sap:label="Sales Org."/>
+                <Property Name="CampType" Type="Edm.String" MaxLength="4" sap:label="Type"/>
+                <Property Name="DistrChan" Type="Edm.String" MaxLength="2" sap:label="Distr. Channel"/>
+                <Property Name="PointBalance" Type="Edm.Decimal" Precision="10" Scale="2" sap:label="Point Balance"/>
+                <Property Name="Division" Type="Edm.String" MaxLength="2" sap:label="Division"/>
+                <Property Name="SalesGrp" Type="Edm.String" MaxLength="3" sap:label="Sales Group"/>
+                <Property Name="SalesOff" Type="Edm.String" MaxLength="4" sap:label="Sales Office"/>
+                <Property Name="ReqDateH" Type="Edm.DateTime" Precision="7" sap:label="Request.dlv.dt"/>
+                <Property Name="DateType" Type="Edm.String" MaxLength="1" sap:label="Prop.date type"/>
+                <Property Name="PurchDate" Type="Edm.DateTime" Precision="7" sap:label="PO date"/>
+                <Property Name="PoMethod" Type="Edm.String" MaxLength="4" sap:label="Pur. ord. type"/>
+                <Property Name="PoSupplem" Type="Edm.String" MaxLength="4" sap:label="Supplement"/>
+                <NavigationProperty Name="to_items" Relationship="ZSDGW_CE_APP_SRV.TO_ITEMS" FromRole="FromRole_TO_ITEMS" ToRole="ToRole_TO_ITEMS"/>
+            </EntityType>
+            <EntityType Name="SalesOrderItem" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesorderNo"/>
+                    <PropertyRef Name="ItmNumber"/>
+                </Key>
+                <Property Name="SalesorderNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Sales Document"/>
+                <Property Name="ItmNumber" Type="Edm.String" Nullable="false" MaxLength="6" sap:label="Item"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="18" sap:label="Article"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="4" sap:label="Site"/>
+                <Property Name="TargetQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Target quantity"/>
+                <Property Name="TargetQu" Type="Edm.String" MaxLength="3" sap:label="Target qty UoM" sap:semantics="unit-of-measure"/>
+                <Property Name="ItemCateg" Type="Edm.String" MaxLength="4" sap:label="Item category"/>
+                <Property Name="ShortText" Type="Edm.String" MaxLength="40" sap:label="Description"/>
+            </EntityType>
+            <Association Name="TO_ITEMS" sap:content-version="1">
+                <End Type="ZSDGW_CE_APP_SRV.SalesOrderHead" Multiplicity="1" Role="FromRole_TO_ITEMS"/>
+                <End Type="ZSDGW_CE_APP_SRV.SalesOrderItem" Multiplicity="*" Role="ToRole_TO_ITEMS"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TO_ITEMS">
+                        <PropertyRef Name="SalesorderNo"/>
+                    </Principal>
+                    <Dependent Role="ToRole_TO_ITEMS">
+                        <PropertyRef Name="SalesorderNo"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="ZSDGW_CE_APP_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="SubscriptionCollection" EntityType="ZSDGW_CE_APP_SRV.Subscription" sap:content-version="1"/>
+                <EntitySet Name="NotificationCollection" EntityType="ZSDGW_CE_APP_SRV.Notification" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="StoreSet" EntityType="ZSDGW_CE_APP_SRV.Store" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <EntitySet Name="BrandSet" EntityType="ZSDGW_CE_APP_SRV.Brand" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <EntitySet Name="ProductSet" EntityType="ZSDGW_CE_APP_SRV.Product" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <EntitySet Name="CustomerSet" EntityType="ZSDGW_CE_APP_SRV.Customer" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <EntitySet Name="SalesOrderHeadSet" EntityType="ZSDGW_CE_APP_SRV.SalesOrderHead" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <EntitySet Name="SalesOrderItemSet" EntityType="ZSDGW_CE_APP_SRV.SalesOrderItem" sap:searchable="true" sap:requires-filter="true" sap:content-version="1"/>
+                <AssociationSet Name="TO_ITEMSSet" Association="ZSDGW_CE_APP_SRV.TO_ITEMS" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SalesOrderHeadSet" Role="FromRole_TO_ITEMS"/>
+                    <End EntitySet="SalesOrderItemSet" Role="ToRole_TO_ITEMS"/>
+                </AssociationSet>
+            </EntityContainer>
+            <atom:link rel="self" href="http://portal.luxasia.com:44320/sap/opu/odata/sap/ZSDGW_CE_APP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://portal.luxasia.com:44320/sap/opu/odata/sap/ZSDGW_CE_APP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

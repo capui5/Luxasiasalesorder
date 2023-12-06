@@ -1,0 +1,93 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.mainmenu"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+<Page showHeader="false" >
+  <OverflowToolbar class="header" id="otbSubheader">
+            <Text
+                text="LUXASIA"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+    <VBox class="hero-container">
+        <Text
+            text="WELCOME TEST"
+            level="H4"
+            class="welcome1"
+        />
+        <Text
+            text="WHAT WOULD YOU LIKE TO DO?"
+            level="H2"
+            class="select1"
+        />
+    </VBox>
+<HBox class="tile-container">
+        <GenericTile
+            class="tileLayout tile-1"
+            header="SEARCH FOR CUSTOMERS"
+            press="searchcustomer"
+        >
+            <TileContent>
+                <ImageContent
+                    src="sap-icon://search"
+                    class="tile-icon"
+                />
+            </TileContent>
+        </GenericTile>
+        <GenericTile
+            class="tileLayout tile-2"
+            header="CREATE NEW PROFILE"
+            press="onOpenDialog"
+        >
+            <TileContent>
+                <ImageContent
+                    src="sap-icon://person-placeholder"
+                    class="tile-icon"
+                />
+            </TileContent>
+        </GenericTile>
+
+        <GenericTile
+            class="tileLayout tile-3"
+            header="CASH AND CARRY"
+            press="onOpenFrag"
+        >
+            <TileContent>
+                <ImageContent
+                    src="sap-icon://tag"
+                    class="tile-icon"
+                />
+            </TileContent>
+        </GenericTile>
+
+        <GenericTile
+            class="tileLayout tile-4"
+            header="TODAY'S TRANSACTION"
+           press="transaction"
+        >
+            <TileContent>
+                <ImageContent
+                    src="sap-icon://credit-card"
+                    class="tile-icon"
+                />
+            </TileContent>
+        </GenericTile>
+
+        <GenericTile
+            class="tileLayout tile-5"
+            header="CONTACT LIST"
+            press="contact"
+        >
+            <TileContent>
+                <ImageContent
+                    src="sap-icon://contacts"
+                    class="tile-icon"
+                />
+            </TileContent>
+        </GenericTile>
+      </HBox>
+</Page>
+</mvc:View>

@@ -1,0 +1,267 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.transaction"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Page
+        showHeader="false"
+        id="myPage"
+    >
+        <OverflowToolbar
+            class="header"
+            id="otbHeader"
+        >
+            <Text
+                text="LUXASIA"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+        <f:Form
+            id="FormChange354"
+            editable="true"
+        >
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    labelSpanXL="3"
+                    labelSpanL="3"
+                    labelSpanM="3"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="2"
+                    emptySpanL="2"
+                    emptySpanM="4"
+                    emptySpanS="0"
+                    columnsXL="1"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false"
+                />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement>
+                            <f:fields>
+                                <Input
+                                    id="firstNameInput"
+                                    value="{path: 'CustomerNoModel>/Firstnames/0'}"
+                                    placeholder="CUSTOMER NO"
+                                />
+                                <Select
+                                    visible="true"
+                                    items="{SalesEmployeeModel>/}"
+                                    id="country"
+                                    selectedKey="{}"
+                                >
+                                    <items>
+                                        <core:Item
+                                            text="{SalesEmployeeModel>Pernr}"
+                                            key="{}"
+                                        />
+                                    </items>
+                                </Select>
+                                <DatePicker
+                                    id="DP2"
+                                    value="{viewModel>/currentDate}"
+                                    dateValue="{viewModel>/currentDate}"
+                                    displayFormat="yyyy-MM-dd"
+                                    change="handleChange"
+                                    class="sapUiSmallMarginBottom"
+                                />
+                                <CheckBox
+                                    id="salesorderreason"
+                                    text="Return"
+                                    selected="false"
+                                    select="onClick"
+                                />
+                                <!-- <Select visible="false"  items="{mainModel>/OrderReasonSet}" id="input" selectedKey="{}">
+									<items>
+										<core:Item text="{mainModel>OrderReasonDesc}" key="{mainModel>OrderReasonKey}"/>
+									</items>
+                                    </Select> -->
+                                <MultiComboBox
+                                    visible="false"
+                                    id="orderreason"
+                                    items="{mainModel>/OrderReasonSet}"
+                                    placeholder="ORDER REASON"
+                                    selectedKeys ="(SelectedItems>OrderReasonKey)"
+                                >
+                                    <core:Item
+                                        key="{mainModel>OrderReasonKey}"
+                                        text="{mainModel>OrderReasonDesc}"
+                                    />
+                                </MultiComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+        <Table
+            id="transactiontable"
+            items="{SelectedItems>/selectedItems}"
+        >
+            <headerToolbar>
+                <OverflowToolbar class="otbSubheader">
+                    <Text
+                        text="POS TRANSACTION ID"
+                        class="transtext"
+                    />
+                    <ToolbarSpacer />
+                    <Button
+                        text="ADD"
+                        class="add1"
+                        press="onAddProduct"
+                    />
+        
+                  
+                </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column width="17em">
+                    <Text text="SELECT PROMOTION" />
+                </Column>
+                 <Column >
+                    <Text text="FREE ITEM" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="BAR CODE" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Begin"
+                >
+                    <Text text="PRODUCT" />
+                </Column>
+
+                <Column>
+                    <Text text="Quantity" />
+                </Column>
+                <Column>
+                    <Text text="UOM" />
+                </Column>
+                <Column>
+                    <Text text="Price" />
+                </Column>
+                <Column visible="false">
+                    <Text text="Discount" />
+                    <!-- Initially, set visibility to false -->
+                </Column>
+                <Column visible="false">
+                    <Text text="Net Price" />
+                    <!-- Initially, set visibility to false -->
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <MultiComboBox
+                            id="Icampaign"
+                            items="{CampaignModel>/}"
+                            class="wide-select custom-margin"
+                            placeholder="SELECT PROMOTION"
+                              selectedKeys="{SelectedItems>CampaignId}"
+                        
+                        >
+                            <core:Item
+                                key="{CampaignModel>CampaignId}"
+                                text="{CampaignModel>CampaignIdDesc}"
+                            />
+                        </MultiComboBox>
+                        	<CheckBox  selected="{SelectedItems>IsSelected}" />
+                        <ObjectIdentifier text="{SelectedItems>Barcode}" />
+                        <HBox>
+                            <items>
+                                <ObjectIdentifier
+                                    text="{SelectedItems>ArticleDesc}"
+                                />
+                                <!-- <Button
+                                    icon="sap-icon://delete"
+                                    press="onDeleteProduct"
+                                /> -->
+                            </items>
+                        </HBox>
+                        <StepInput
+                            value="{SelectedItems>quantity}"
+                            max=""
+                            min="0"
+                            step="1"
+                            width="80px"
+                            validationMode="LiveChange"
+                            change="onQuantityChange"
+                        />
+                        <ObjectIdentifier text="{SelectedItems>UOM}" />
+                        <ObjectNumber number="{SelectedItems>RetailPrice}" />
+                        <Text text="{SelectedItems>Discount}" />
+                        <Text text="{SelectedItems>NetPrice}" />
+                        <!-- <StepInput
+                        value="{mainModel>quantity}"
+                        max=""
+                        min="0"
+                        step="1"
+                        width="80px"
+                        validationMode="LiveChange"
+                        change="onQuantityChange"
+                    /> -->
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+            <OverflowToolbar
+                class="customfooter"
+                id="otFooter"
+            >
+                <VBox alignItems="Start">
+                    <MultiComboBox
+                        id="Campaign"
+                        items="{CampaignModel>/}"
+                        class="wide-select custom-margin"
+                        placeholder="SELECT PROMOTION"
+                        selectedKeys="{selectedPromotion>/selectedPromotion}"
+                    >
+                        <core:Item
+                            key="{CampaignModel>CampaignId}"
+                            text="{CampaignModel>CampaignIdDesc}"
+                        />
+                    </MultiComboBox>
+                    <Button
+                        text="APPLY PROMOTION"
+                        press="onAddPromotion"
+                        class="transadd"
+                    />
+                </VBox>
+                <ToolbarSpacer />
+
+                <VBox alignItems="End">
+                    <Text
+                        text="Total: {/TotalAmount}"
+                        class="myBlackText"
+                    />
+                    <ToolbarSpacer />
+                    <HBox alignItems="End">
+                        <Button
+                            text="CANCEL"
+                            press="onCancelPress"
+                            class="transcancel"
+                        />
+                        <Button
+                            text="SAVE SALE"
+                            press="onSavePress"
+                            class="transsave"
+                        />
+                    </HBox>
+                </VBox>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

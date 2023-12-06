@@ -1,0 +1,62 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="scanandadd"
+       showHeader="false"
+    >
+        <VBox
+            xmlns="sap.m"
+            class="sapUiContentPadding"
+
+        >
+            <HBox alignItems="Center">
+                <Label
+                    class="fragmentext1"
+                
+                />
+
+                <HBox width="100%" />
+
+             <Button
+                    id="helloDialogButton"
+                    icon="sap-icon://decline"
+                    press=".onCloseFragment"
+                />
+            </HBox>
+        </VBox>
+       
+        
+        <HBox class="fragtile">
+            <GenericTile
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting products "
+                header="SCAN PRODUCTS"
+                subheader="Subtitle"
+                press="onScanBarcode"
+                frameType="TwoByHalf"
+            >
+                <TileContent
+                    unit="EUR"
+                    footer="Current Quarter"
+                >
+                    <ImageContent src="sap-icon://bar-code" class="newprofile" />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting"
+                header="SEARCH FOR PRODUCTS"
+                press="ProductSearch"
+                frameType="TwoByHalf"
+            >
+                <TileContent
+                    unit="EUR"
+                    footer="Current Quarter"
+                >
+                    <ImageContent src="sap-icon://search" class="newprofile"/>
+                </TileContent>
+            </GenericTile>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,101 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.brand"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    models="myData"
+>
+    <SplitContainer id="splitContainer">
+    
+        <masterPages>
+            <Page
+                id="master"
+                title="MY BRANDS"
+            >
+                <content>
+                    <List
+                        items="{ path: 'SelectedBrandName>/selectedBrandNames'}"
+                    >
+                        <CustomListItem>
+                            <HBox>
+                              <HBox width="90%">
+                                <VBox
+                                    class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"
+                                >
+                                    <Title text="{SelectedBrandName>value}" />
+                                </VBox>
+                                 </HBox>
+                                  <HBox width="10%">
+                                        <VBox >
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                press="onDeletePress"
+                                            />
+                                        </VBox>
+                                    </HBox>
+                            </HBox>
+                        </CustomListItem>
+                    </List>
+                </content>
+
+                <Button
+                    text="Login"
+                    width="100%"
+                    press="Login"
+                    class="Login"
+                />
+            </Page>
+        </masterPages>
+
+        <detailPages>
+       
+            <Page
+                id="detail"
+                title="ADD NEW BRANDS"
+            >
+            
+
+                <content>
+                    <List
+                        headerLevel="H2"
+                        items="{BrandStoreModel>/}"
+                        id="brandList"
+                    >
+                        <items>
+                            <CustomListItem
+                            >
+                                <HBox
+                                    alignItems="Center"
+                                    class="flexContainer"
+                                    justifyContent="SpaceBetween"
+                                >
+                                    <HBox width="90%">
+                                        <VBox >
+                                            <Title
+                                             
+                                                text="{BrandStoreModel>BrandDesc}"
+                                             
+                                            />
+                                        </VBox>
+                                    </HBox>
+
+                                    <HBox width="10%">
+                                        <VBox class="centered">
+                                            <Button
+                                                icon="sap-icon://add"
+                                                press="onAddButtonPress"
+                                            />
+                                        </VBox>
+                                    </HBox>
+                                </HBox>
+                            </CustomListItem>
+                        </items>
+                    </List>
+                </content>
+                
+            </Page>
+          
+        </detailPages>
+    </SplitContainer>
+</mvc:View>

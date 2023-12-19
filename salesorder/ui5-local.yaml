@@ -34,6 +34,15 @@ server:
             url: https://portal.luxasia.com:44320
             client: '250'
             destination: ECCQAS
+          - path: /odata
+            url: https://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: https://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com
+            destination: LUXASIA_CAP
     - name: sap-fe-mockserver
       beforeMiddleware: csp
       configuration:

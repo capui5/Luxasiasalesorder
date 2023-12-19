@@ -3,7 +3,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
-    xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core" xmlns:fb="sap.ui.comp.filterbar"
 >
     <Page showHeader="false">
       <OverflowToolbar class="header" id="otbSubheader">
@@ -48,10 +48,10 @@
                 />
             </contentLeft>
             <contentRight>
-                <SearchField
+                <!-- <SearchField
                     placeholder="Search"
-                    liveChange="onSearch"
-                />
+                    change="onSearch"
+                /> -->
                 <Button
                     text="My Transactions"
                     press="onMyTransactions"
@@ -65,37 +65,65 @@
             </contentRight>
         </Bar>
         <content>
+        <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search="onGoPress" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+							<fb:filterGroupItems>
+								<fb:FilterGroupItem name="Name" label="Search By Sale Order No" groupName="Group1" visibleInFilterBar="true">
+									<fb:control>
+										<SearchField id="salesOrderSearchField"
+                    placeholder="Search"
+                    change="onSearch"
+                />
+									</fb:control>
+								</fb:FilterGroupItem>
+								<fb:FilterGroupItem name="Begin Date" label="Begin Date" groupName="Group1" visibleInFilterBar="true">
+									<fb:control>
+										<DatePicker id="salesOrderBeginDate"  displayFormat="MM/dd/yyyy"/>
+									</fb:control>
+								</fb:FilterGroupItem>
+								<fb:FilterGroupItem name="End Date" label="End Date" groupName="Group1" visibleInFilterBar="true">
+									<fb:control>
+										<DatePicker id="salesOrderEndDate"  displayFormat="MM/dd/yyyy"/>
+									</fb:control>
+								</fb:FilterGroupItem>
+							</fb:filterGroupItems>
+						</fb:FilterBar>
             <Table
                 id="salesTable"
-                items="{SalesData>/salesData}"
+                items="{mainModel>/SalesOrderHeadSet}"
             >
                 <columns>
                     <Column>
-                        <Text text="Sale ID" />
+                        <Text text="Sale Order No" />
                     </Column>
                     <Column>
-                        <Text text="Products" />
+                        <Text text="DocType" />
                     </Column>
                     <Column>
-                        <Text text="Price" />
+                        <Text text="DocDate" />
                     </Column>
                     <Column>
-                        <Text text="Total" />
+                        <Text text="Currency" />
                     </Column>
                     <Column>
-                        <Text text="Customer" />
-                    </Column>
-                    <Column>
-                        <Text text="Status" />
-                    </Column>
-                    <Column>
-                        <Text text="Reference" />
+                        <Text text="Net Price" />
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem>
+                    <ColumnListItem type="Active">
                         <cells>
-                            <Text
+                            <Text text="{mainModel>SalesorderNo}"/>
+                            <Text text="{mainModel>DocType}"/>
+                            <!-- <Text text="{mainModel>DocDate}"/> -->
+                            <Text text="{
+				        path: 'mainModel>DocDate',
+				        type: 'sap.ui.model.type.Date',
+				        formatOptions: {
+				          pattern: 'MM/dd/yyyy'
+				        }
+				      }" />
+                            <Text text="{mainModel>Currency}"/>
+                            <Text text="{mainModel>NetPrice}"/>
+                            <!-- <Text
                                 text="{SalesData>SaleId}"
                                 class="myBlackText"
                             />
@@ -151,7 +179,7 @@
                             <Text
                                 text="{= ${SalesData>Products/0/Reference} }"
                                 class="myBlackText"
-                            />
+                            /> -->
                         </cells>
                     </ColumnListItem>
                 </items>

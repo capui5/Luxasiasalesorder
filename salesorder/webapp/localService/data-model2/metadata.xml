@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="DataModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="USERS" EntityType="DataModel.USERS">
+                    <NavigationPropertyBinding Path="brands" Target="BRANDS"/>
+                </EntitySet>
+                <EntitySet Name="BRANDS" EntityType="DataModel.BRANDS"/>
+            </EntityContainer>
+            <EntityType Name="USERS">
+                <Key>
+                    <PropertyRef Name="Email"/>
+                    <PropertyRef Name="sID"/>
+                </Key>
+                <Property Name="Email" Type="Edm.String" Nullable="false"/>
+                <Property Name="sID" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="brands" Type="Collection(DataModel.BRANDS)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="BRANDS">
+                <Key>
+                    <PropertyRef Name="email"/>
+                    <PropertyRef Name="storeID"/>
+                    <PropertyRef Name="BRANDID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid"/>
+                <Property Name="email" Type="Edm.String" Nullable="false"/>
+                <Property Name="storeID" Type="Edm.String" Nullable="false"/>
+                <Property Name="BRANDID" Type="Edm.String" Nullable="false"/>
+                <Property Name="BrandDESC" Type="Edm.String"/>
+            </EntityType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

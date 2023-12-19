@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
-
 specVersion: "3.1"
 metadata:
   name: com.luxasia.salesorder
@@ -9,7 +7,7 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        ignoreCertError: false
         ui5:
           path:
             - /resources
@@ -18,8 +16,29 @@ server:
         backend:
           - path: /sap
             url: https://portal.luxasia.com:44320
-            client: '250'
+            client: "250"
             destination: ECCQAS
+          - path: /odata
+            url: https://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: https://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/
+            destination: LUXASIA_CAP
+          - path: /odata/v4/data-model/
+            url: http://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com
+            destination: LUXASIA_CAP
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -36,3 +55,12 @@ server:
             mockdataPath: ./webapp/localService/data
             generateMockData: true
         annotations: []
+        service:
+          - urlPath: /sap/opu/odata/sap/ZSDGW_CE_APP_SRV
+            generateMockData: true
+            metadataXmlPath: ./webapp/localService/metadata.xml
+            mockdataRootPath: ./webapp/localService/data
+          - urlPath: /odata/v4/data-model/
+            metadataXmlPath: ./webapp/localService/data-model2/metadata.xml
+            mockdataRootPath: ./webapp/localService/data-model2/mockdata
+            generateMockData: true

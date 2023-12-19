@@ -1,0 +1,6 @@
+POST https://luxasia-otc-npr-cf-ap11-development-luxasia-cap-srv.cfapps.ap11.hana.ondemand.com/odata/v4/data-model/UsersLuxasia
+Content-Type: application/json
+
+{
+   
+}

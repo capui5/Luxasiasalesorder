@@ -1,0 +1,124 @@
+<core:FragmentDefinition
+    xmlns="sap.m" xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+    	<Dialog title="Condition Type" showHeader="true" contentWidth="35rem">
+		<beginButton>
+			<Button text="Confirm" type="Emphasized" press="onConditionTypeConfirm"/>
+		</beginButton>
+        <endButton>
+			<Button text="Cancel" press="onConditionTypeCancel"/>
+		</endButton>
+		<content>
+       <f:Form
+                    editable="true"
+                >
+                    <f:layout>
+                        <f:ResponsiveGridLayout
+                            breakpointXL="1000"
+                            labelSpanXL="4"
+                            labelSpanL="4"
+                            labelSpanM="4"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="3"
+                            columnsL="2"
+                            columnsM="2"
+                            singleContainerFullSize="false"
+                        />
+                    </f:layout>
+                    <f:formContainers>
+                        <f:FormContainer>
+                            <f:formElements>
+                                <f:FormElement label="Condition Type">
+                                    <f:fields>
+                                         <Select forceSelection="false"
+                                            items="{mainModel>/ConditionsSet}"
+                                            >
+                                            <items>
+                                                <core:Item
+                                                    text="{mainModel>CondTypeDesc}"
+                                                    key="{mainModel>CondType}"
+                                                
+                                                />
+                                            </items>
+                                        </Select>
+                                       
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="Condition Type">
+                                    <f:fields>
+                                         <Select  forceSelection="false"
+                                            items="{mainModel>/ConditionsSet}"
+                                            >
+                                            <items>
+                                                <core:Item
+                                                    text="{mainModel>CondTypeDesc}"
+                                                    key="{mainModel>CondType}"
+                                                
+                                                />
+                                            </items>
+                                        </Select>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="Condition Type">
+                                    <f:fields>
+                                         <Select forceSelection="false"
+                                            items="{mainModel>/ConditionsSet}"
+                                            >
+                                            <items>
+                                                <core:Item
+                                                    text="{mainModel>CondTypeDesc}"
+                                                    key="{mainModel>CondType}"
+                                                
+                                                />
+                                            </items>
+                                        </Select>
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                        <f:FormContainer>
+                            <f:formElements>
+                                <f:FormElement label="Amount">
+                                    <f:fields>
+                                        <HBox>
+                                        <Input type="Number" width="15rem"
+                                        />
+                                        <Button icon="sap-icon://reset" type="Transparent" press="handleResetConditionType1"/>
+                                        </HBox>
+                                    </f:fields>
+                                </f:FormElement>
+                               <f:FormElement label="Amount">
+                                    <f:fields>
+                                        <HBox>
+                                        <Input type="Number"  width="15rem"
+                                        />
+                                        <Button icon="sap-icon://reset" type="Transparent" press="handleResetConditionType2"/>
+                                        </HBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="Amount">
+                                    <f:fields>
+                                       <HBox>
+                                        <Input type="Number" width="15rem"
+                                        />
+                                        <Button  icon="sap-icon://reset" type="Transparent" press="handleResetConditionType3"/>
+                                        </HBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="">
+                                    <f:fields>
+                                        <Label design="Bold" text="Total Price Incl Tax : {TotalTaxNetModel>/totaltaxandnetprice} {SelectedItems>/selectedItems/0/Currency}"/>
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                    </f:formContainers>
+                </f:Form>
+	</content>
+	</Dialog>
+</core:FragmentDefinition>

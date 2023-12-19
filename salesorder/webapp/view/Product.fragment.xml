@@ -72,7 +72,9 @@
                         />
                         <Text text="{ProductSetModel>Barcode}" />
                         <Text text="{ProductSetModel>ArticleDesc}" />
-                        <ObjectNumber number="{ProductSetModel>ArticleNo}" />
+                        
+                        <!-- <ObjectNumber number="{ProductSetModel>ArticleNo}" /> -->
+                        <ObjectNumber number="{path:'ProductSetModel>ArticleNo', formatter:'.formatter.precendingZerosRemvoal'}"/>
                          <StepInput
                             id="CurrentValue"
                             value="{ProductSetModel>quantity}"

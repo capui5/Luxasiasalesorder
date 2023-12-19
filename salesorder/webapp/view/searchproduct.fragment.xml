@@ -46,20 +46,30 @@
                 >
                     <Text text="PRODUCT" />
                 </Column>
+                  <Column
+                    minScreenWidth="Desktop"
+                    demandPopin="true"
+                >
+                    <Text text="ARTICLE TYPE" />
+                </Column>
                 <Column
                     minScreenWidth="Desktop"
                     demandPopin="true"
                     hAlign="Center"
                 >
                     <Text text="ARTICLE NO" />
-                </Column>
-                <Column>
+                </Column >
+                <Column  >
                     <Text text="QUANTITY" />
                 </Column>
-                <Column>
+                <Column   minScreenWidth="Desktop"
+                 demandPopin="true">
                     <Text text="UOM" />
                 </Column>
-                <Column>
+                <Column   minScreenWidth="Desktop"
+                  demandPopin="true"
+                
+                >
                     <Text text="Price" />
                 </Column>
             </columns>
@@ -72,10 +82,13 @@
                         />
                         <Text text="{ProductSetModel>Barcode}" />
                         <Text text="{ProductSetModel>ArticleDesc}" />
-                        <ObjectNumber number="{ProductSetModel>ArticleNo}" />
+                        <Text text="{ProductSetModel>ArticleType}" />
+                        <!-- <ObjectNumber number="{ProductSetModel>ArticleNo}" /> -->
+                        <ObjectNumber number="{path:'ProductSetModel>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"/>
                          <StepInput
                             id="CurrentValue"
                             value="{ProductSetModel>quantity}"
+                            min="1"
                             width="100px"
                             class="step_input"
                         />

@@ -21,14 +21,17 @@ sap.ui.define([
              * @override
              */
             init: function () {
-                // if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
-                //     // Reloaded the page
-                //     window.location.href = "index.html"; // Redirect to index.html
-                //   } else {
-                //     // Normal load or other conditions
-                //     // Your app's usual routing or functionality
-                //   }
-                // call the base component's init function
+           
+                if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+                    // Reloaded the page
+                    window.location.href = "index.html"; // Redirect to index.html
+                  } else {
+                    // Normal load or other conditions
+                    // Your app's usual routing or functionality
+                    if(window.location.host.indexOf("luxasia") != (-1))
+                    window.location.hash = "#SalesOrder-Managed?sap-ui-app-id-hint=saas_approuter_com.luxasia.salesorder";
+                  }
+                  
                 UIComponent.prototype.init.apply(this, arguments);
 
                 // enable routing
@@ -36,7 +39,8 @@ sap.ui.define([
 
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
-            }
+            },
+            
         });
     }
 );

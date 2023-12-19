@@ -5,17 +5,14 @@ sap.ui.define([
   "sap/m/MessageBox",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "sap/ndc/BarcodeScanner",
-  "com/luxasia/salesorder/util/formatter"
-], function (Controller, JSONModel, ODataModel, MessageBox, Filter, FilterOperator, BarcodeScanner,
-  formatter
+  "sap/ndc/BarcodeScanner"
+], function (Controller, JSONModel, MessageBox, Filter, FilterOperator
 ) {
   "use strict";
 
   return Controller.extend("com.luxasia.salesorder.controller.transaction", {
-    formatter: formatter,
     onInit: function () {
-
+      
       var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
       var currentDate = new Date();
       var formattedDate = oDateFormat.format(currentDate);
@@ -24,15 +21,7 @@ sap.ui.define([
         currentDate: currentDate
 
       });
-      this.getView().setModel(oModel, "DateModel")
-      var tModel = new sap.ui.model.json.JSONModel("viewModel")
-      this.getView().setModel(tModel, "viewModel");
-      var taxModel = new sap.ui.model.json.JSONModel("TaxModel")
-      this.getView().setModel(taxModel, "TaxModel");
-
-      var TotalTaxNetModel = new sap.ui.model.json.JSONModel("TotalTaxNetModel")
-      this.getView().setModel(TotalTaxNetModel, "TotalTaxNetModel");
-
+      this.getView().setModel(oModel, "viewModel");
 
       var oQuantityModel = new JSONModel();
       this.getView().setModel(oQuantityModel, "quantityModel");
@@ -42,7 +31,6 @@ sap.ui.define([
       this.getView().setModel(esModel, "SalesEmployeesModel")
 
       var HModel = this.getOwnerComponent().getModel("HeaderCampaignModel")
-      this.getView().setModel(HModel, "HeaderCampaignModel");
 
 
       var rModel = this.getOwnerComponent().getModel("ResponseModel");
@@ -58,15 +46,6 @@ sap.ui.define([
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
       var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
 
-
-      var oBrandData = oBrandModel.getProperty("/selectedBrandNames");
-
-
-      var sStoreId = oStoreModel.getProperty("/selectedStoreId");
-
-      var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
-      var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
-      var sStoreId = oStoreModel.getProperty("/selectedStoreId");
       if (oBrandModel) {
         var oBrandData = oBrandModel.getProperty("/selectedBrandNames");
 
@@ -75,7 +54,57 @@ sap.ui.define([
             return brand.Brand_Id;
           });
 
+          var sStoreId = oStoreModel.getProperty("/selectedStoreId");
+          var filterCampaignCat = new sap.ui.model.Filter({
+            path: "CampaignCat",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: "I"
+          });
 
+          var filterPlant = new sap.ui.model.Filter({
+            path: "Plant",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: sStoreId
+          });
+          var filterBrandId = aBrandIds.map(function (brandId) {
+            return new sap.ui.model.Filter(
+              "BrandId",
+              sap.ui.model.FilterOperator.EQ,
+              brandId)
+          });
+          var combinedFilter = new sap.ui.model.Filter({
+            filters: filterBrandId,
+            and: false // Set to 'false' for OR logic between filters
+          });
+
+          var filterDocDate = new sap.ui.model.Filter({
+            path: "DocDate",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: "2023-12-23T00:00:00"
+          });
+
+          var aFilters = [filterCampaignCat, filterPlant, combinedFilter, filterDocDate];
+          oModel.read("/CampaignSet", {
+            filters: aFilters,
+            success: function (response) {
+              var oNewModel = that.getView().getModel("CampaignModel");
+              oNewModel.setData(response.results);
+            },
+            error: function (error) {
+              console.error("Error fetching data:", error);
+            }
+          });
+        }
+      }
+      if (oBrandModel) {
+        var oBrandData = oBrandModel.getProperty("/selectedBrandNames");
+
+        if (Array.isArray(oBrandData) && oBrandData.length > 0) {
+          var aBrandIds = oBrandData.map(function (brand) {
+            return brand.Brand_Id;
+          });
+
+          var sStoreId = oStoreModel.getProperty("/selectedStoreId");
           var filterCampaignCat = new sap.ui.model.Filter({
             path: "CampaignCat",
             operator: sap.ui.model.FilterOperator.EQ,
@@ -105,14 +134,11 @@ sap.ui.define([
           });
 
           var aFilters = [filterCampaignCat, filterPlant, combinedFilter, filterDocDate];
-          var oModel = this.getOwnerComponent().getModel("mainModel");
           oModel.read("/CampaignSet", {
             filters: aFilters,
             success: function (response) {
               var oNewModel = that.getView().getModel("HeaderCampaignModel");
               oNewModel.setData(response.results);
-
-              console.log(oNewModel)
             },
             error: function (error) {
               console.error("Error fetching data:", error);
@@ -125,6 +151,7 @@ sap.ui.define([
 
       var oRouter = this.getOwnerComponent().getRouter();
       oRouter.getRoute("transaction").attachPatternMatched(this._onRouteMatched, this);
+
       var oCartModel = new JSONModel();
       this.getView().setModel(oCartModel, "cartModel");
 
@@ -155,10 +182,10 @@ sap.ui.define([
 
       // this.calculateTotalPrice();
 
-
+    
 
       var oModel = this.getOwnerComponent().getModel("mainModel");
-      var email = "''";
+      var email= "''";
       // Read data from the model using the provided URL
       oModel.read("/SalesEmployees", {
         urlParameters: {
@@ -167,7 +194,7 @@ sap.ui.define([
         },
         success: function (data) {
           // Handle the fetched data
-
+      
           esModel.setData(data.results);
           // You can process the data here
         },
@@ -177,7 +204,7 @@ sap.ui.define([
         }
       });
     },
-    handleLoadItems: function (evt) {
+    handleLoadItems:function(evt){
       var that = this;
       this.oControlEvent = evt;
       that.oControlEvent.getSource().getBinding("items").resume();
@@ -185,50 +212,50 @@ sap.ui.define([
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
       var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
       var sStoreId = oStoreModel.getProperty("/selectedStoreId");
-      var filterCampaignCat = new sap.ui.model.Filter({
-        path: "CampaignCat",
-        operator: sap.ui.model.FilterOperator.EQ,
-        value1: "I"
-      });
+          var filterCampaignCat = new sap.ui.model.Filter({
+            path: "CampaignCat",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: "I"
+          });
 
-      var filterPlant = new sap.ui.model.Filter({
-        path: "Plant",
-        operator: sap.ui.model.FilterOperator.EQ,
-        value1: sStoreId
-      });
+          var filterPlant = new sap.ui.model.Filter({
+            path: "Plant",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: sStoreId
+          });
 
-      var filterDocDate = new sap.ui.model.Filter({
-        path: "DocDate",
-        operator: sap.ui.model.FilterOperator.EQ,
-        value1: "2023-12-23T00:00:00"
-      });
+          var filterDocDate = new sap.ui.model.Filter({
+            path: "DocDate",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: "2023-12-23T00:00:00"
+          });
 
-      var filterArticle = new sap.ui.model.Filter({
-        path: "Article",
-        operator: sap.ui.model.FilterOperator.EQ,
-        value1: evt.getSource().getBindingContext("SelectedItems").getObject().ArticleType
-      });
+          var filterArticle = new sap.ui.model.Filter({
+            path: "Article",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: evt.getSource().getBindingContext("SelectedItems").getObject().ArticleType
+          });
 
-      var filterBrand = new sap.ui.model.Filter({
-        path: "BrandId",
-        operator: sap.ui.model.FilterOperator.EQ,
-        value1: evt.getSource().getBindingContext("SelectedItems").getObject().Brand_Id
-      });
+          var filterBrand = new sap.ui.model.Filter({
+            path: "BrandId",
+            operator: sap.ui.model.FilterOperator.EQ,
+            value1: evt.getSource().getBindingContext("SelectedItems").getObject().Brand_Id
+          });
 
-      var aFilters = [filterCampaignCat, filterPlant, filterDocDate, filterArticle, filterBrand];
-      var oModel = this.getOwnerComponent().getModel("mainModel");
-      oModel.read("/CampaignSet", {
-        filters: aFilters,
-        success: function (response) {
-          var oNewModel = that.getView().getModel("CampaignModel");
-          oNewModel.setData(response.results);
-          that.getView().getModel("CampaignModel").updateBindings(true);
-          that.oControlEvent.getSource().getBinding("items").resume();
-        },
-        error: function (error) {
-          console.error("Error fetching data:", error);
-        }
-      });
+          var aFilters = [filterCampaignCat, filterPlant, filterDocDate, filterArticle, filterBrand];
+          var oModel = this.getOwnerComponent().getModel("mainModel");
+          oModel.read("/CampaignSet", {
+            filters: aFilters,
+            success: function (response) {
+              var oNewModel = that.getView().getModel("CampaignModel");
+              oNewModel.setData(response.results);
+              that.getView().getModel("CampaignModel").updateBindings(true);
+              that.oControlEvent.getSource().getBinding("items").resume();
+            },
+            error: function (error) {
+              console.error("Error fetching data:", error);
+            }
+          });
     },
     updateCurrentDate: function (oDateFormat) {
       var currentDate = new Date();
@@ -247,15 +274,6 @@ sap.ui.define([
       }
     },
 
-    _onRouteMatched: function (evt) {
-      var that = this;
-      that.onAddPromotion(true);
-      this.conditionTypeArr = [];
-      this.oControlEvent = evt;
-      that.oControlEvent.getSource().getBinding("items").resume();
-      var compaignItems = evt.getSource().getBinding("items");
-      that.onTableUpdateFinished(true);
-    },
     // _onRouteMatched: function (oEvent) {
     //     var oArgs = oEvent.getParameter("arguments");
 
@@ -292,7 +310,7 @@ sap.ui.define([
     //         var total = aItems.reduce(function (sum, item) {
     //             return sum + (item.RetailPrice * item.quantity);
     //         }, 0);
-
+ 
     //         oModel.setProperty("/totalPrice", total);
     //     },
     //     onQuantityChange: function (oEvent) {
@@ -314,25 +332,25 @@ sap.ui.define([
       }
 
     },
-    onAfterRendering: function () {
+    onAfterRendering:function(){
       var that = this;
       var oModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
       var aModel = this.getOwnerComponent().getModel("SalesEmployeesModel");
 
       //this.SalesEmpId = oModel.getProperty("/results/0/Pernr");
-      window.setTimeout(function () {
+      window.setTimeout(function(){
         var salesEmpDropDownItems = that.getView().byId("employee").getItems();
-        for (var m = 0; m < salesEmpDropDownItems.length; m++) {
-          if (salesEmpDropDownItems[m].getBindingContext("SalesEmployeesModel").getObject().Pernr == that.getOwnerComponent().getModel("SalesEmployeeModel").getProperty("/results/0/Pernr")) {
+        for(var m=0;m<salesEmpDropDownItems.length;m++){
+          if(salesEmpDropDownItems[m].getBindingContext("SalesEmployeesModel").getObject().Pernr == that.getOwnerComponent().getModel("SalesEmployeeModel").getProperty("/results/0/Pernr")){
             that.getView().byId("employee").setSelectedItem(salesEmpDropDownItems[m]);
             that.onAddPromotion(true);
             break;
           }
-
+        
         }
         that.onTableUpdateFinished();
-      }, 2000);
-
+      },2000);
+  
     },
     onAddProduct: function () {
       this.pDialog ??= this.loadFragment({
@@ -351,7 +369,7 @@ sap.ui.define([
         });
         this.pDialog = null;
       }
-
+     
     },
     ProductSearch: function () {
       var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
@@ -428,78 +446,9 @@ sap.ui.define([
 
 
     },
-
-    //     onAddToSaleProducts: function () {
-    //       // this.onTableUpdateFinished();
-    //       var aSelectedItems = [];
-    //       var oStepInput = this.getView().byId("CurrentValue");
-    //       var selectedQuantity = oStepInput.getValue();
-    //       var oTable = this.getView().byId("producttable");
-    //       var aListItems = oTable.getSelectedItems();
-
-    //       aListItems.forEach(function (oListItem) {
-    //         var oBindingContext = oListItem.getBindingContext("ProductSetModel");
-    //         if (oBindingContext) {
-    //           var oSelectedItem = oBindingContext.getObject();
-    //           var itemQuantity = oSelectedItem.quantity;
-    //           if (itemQuantity > 0) {
-    //             aSelectedItems.push(oSelectedItem);
-    //           } else {
-    //             console.error("Selected item quantity should be greater than 0.");
-    //           }
-    //         } else {
-    //           console.error("BindingContext is undefined for the selected item.");
-    //         }
-    //       });
-    //       // Access the existing "SelectedItems" model and update the selected items
-    //       var oModel = this.getView().getModel("SelectedItems");
-    //     if (oModel) {
-    //         var oData = oModel.getData();
-    //         var existingSelectedItems = oData.selectedItems || []; // Get existing selected items
-
-    //         // Combine existing and newly selected items
-    //         var updatedSelectedItems = existingSelectedItems.concat(aSelectedItems);
-
-    //         // Assign incremental ItmNumber to each newly added item in the updatedSelectedItems array
-    //         var startNumber = existingSelectedItems.length * 10; // Get the starting number based on existing items
-    //         updatedSelectedItems.forEach(function (item, index) {
-    //             if (!item.ItmNumber) {
-    //                 var paddedIndex = startNumber + (index + 1) * 10; // Incremental padding for ItemNumber
-    //                 var formattedIndex = ('000000' + paddedIndex).slice(-6);
-    //                 item.ItmNumber = formattedIndex;
-    //             }
-    //         });
-
-    //         // Update the model with the combined selected items
-    //         oData.selectedItems = updatedSelectedItems;
-    //         var totalRetailPrice = 0;
-    //         var that = this; // Store the reference to 'this'
-
-    //         // Calculate total retail price for all selected items
-    //         var oJsonModel = that.getView().getModel("TotalRetailPrice");
-    //         updatedSelectedItems.forEach(function (item) {
-
-    //             var price = parseFloat(item.RetailPrice.replace(',', '.'));
-    //             if (!isNaN(price)) {
-    //                 totalRetailPrice += price;
-    //             } else {
-    //                 console.error("Invalid RetailPrice value:", item.RetailPrice);
-    //             }
-    //         });
-    //         oJsonModel.setData(totalRetailPrice); // Update the model with the totalRetailPrice
-
-    //         // Update the model with the modified data
-    //         oModel.setData(oData);
-    //     } else {
-    //         console.error("Model 'SelectedItems' not found.");
-    //     }
-    //     var oDialog = this.getView().byId("producttablepage");
-    //     oDialog.close();
-    //     var oDialog = this.getView().byId("scanandadd");
-    //     oDialog.close();
-    //     that.onAddPromotion(true);
-    // },
+  
     onAddToSaleProducts: function () {
+      // this.onTableUpdateFinished();
       var aSelectedItems = [];
       var oStepInput = this.getView().byId("CurrentValue");
       var selectedQuantity = oStepInput.getValue();
@@ -520,187 +469,153 @@ sap.ui.define([
           console.error("BindingContext is undefined for the selected item.");
         }
       });
-
       // Access the existing "SelectedItems" model and update the selected items
       var oModel = this.getView().getModel("SelectedItems");
-      if (oModel) {
+    if (oModel) {
         var oData = oModel.getData();
         var existingSelectedItems = oData.selectedItems || []; // Get existing selected items
 
-        // Loop through the selected items to check if the barcode already exists
-        aSelectedItems.forEach(function (newItem) {
-          var existingItem = existingSelectedItems.find(function (item) {
-            return item.Barcode === newItem.Barcode;
-          });
+        // Combine existing and newly selected items
+        var updatedSelectedItems = existingSelectedItems.concat(aSelectedItems);
 
-          if (existingItem) {
-            // If the barcode already exists, update the quantity instead of adding a new entry
-            existingItem.quantity += newItem.quantity;
-          } else {
-            // If the barcode does not exist, add it to the list
-            existingSelectedItems.push(newItem);
-          }
-        });
-        // Find the maximum existing ItmNumber
-        // Find the maximum existing ItmNumber
-        var maxItmNumber = existingSelectedItems.reduce(function (max, item) {
-          var itmNumber = parseInt(item.ItmNumber);
-          return itmNumber > max ? itmNumber : max;
-        }, 0);
-
-        existingSelectedItems.forEach(function (item, index) {
-          if (!item.ItmNumber) {
-            var nextIndex = maxItmNumber + 10 + (index * 10); // Adjust the starting index to 10 for the first item
-            while (existingSelectedItems.some(existingItem => existingItem.ItmNumber === nextIndex.toString().padStart(6, '0'))) {
-              nextIndex += 10;
+        // Assign incremental ItmNumber to each newly added item in the updatedSelectedItems array
+        var startNumber = existingSelectedItems.length * 10; // Get the starting number based on existing items
+        updatedSelectedItems.forEach(function (item, index) {
+            if (!item.ItmNumber) {
+                var paddedIndex = startNumber + (index + 1) * 10; // Incremental padding for ItemNumber
+                var formattedIndex = ('000000' + paddedIndex).slice(-6);
+                item.ItmNumber = formattedIndex;
             }
-            item.ItmNumber = nextIndex.toString().padStart(6, '0');
-          }
         });
-
 
         // Update the model with the combined selected items
-        oData.selectedItems = existingSelectedItems;
+        oData.selectedItems = updatedSelectedItems;
         var totalRetailPrice = 0;
         var that = this; // Store the reference to 'this'
 
         // Calculate total retail price for all selected items
         var oJsonModel = that.getView().getModel("TotalRetailPrice");
-        existingSelectedItems.forEach(function (item) {
-          var price = parseFloat(item.RetailPrice.replace(',', '.'));
-          if (!isNaN(price)) {
-            totalRetailPrice += price * item.quantity; // Multiply by quantity
-          } else {
-            console.error("Invalid RetailPrice value:", item.RetailPrice);
-          }
+        updatedSelectedItems.forEach(function (item) {
+         
+            var price = parseFloat(item.RetailPrice.replace(',', '.'));
+            if (!isNaN(price)) {
+                totalRetailPrice += price;
+            } else {
+                console.error("Invalid RetailPrice value:", item.RetailPrice);
+            }
         });
         oJsonModel.setData(totalRetailPrice); // Update the model with the totalRetailPrice
 
         // Update the model with the modified data
         oModel.setData(oData);
-      } else {
+    } else {
         console.error("Model 'SelectedItems' not found.");
+    }
+    var oDialog = this.getView().byId("producttablepage");
+    oDialog.close();
+    var oDialog = this.getView().byId("scanandadd");
+    oDialog.close();
+    that.onAddPromotion(true);
+},
+    onScanBarcode: function () {
+      var that = this;
+
+      if (sap.ndc && sap.ndc.BarcodeScanner) {
+        sap.ndc.BarcodeScanner.scan(
+          function (mResult) {
+            var sText = mResult.text;
+
+            if (isValidBarcode(sText)) {
+              // Access the ProductSetModel from the view
+              var oModel = that.getView().getModel("ProductSetModel");
+
+              if (!oModel) {
+                console.error("ProductSetModel not found.");
+                return;
+              }
+
+              // Retrieve the array of objects from the model
+              var oModelData = oModel.getData();
+
+              // Check if oModelData is an array
+              if (Array.isArray(oModelData)) {
+                // Use Array.find() to search for the object with the matching Barcode
+                var oFoundItem = oModelData.find(function (item) {
+                  return item.Barcode === sText;
+                });
+
+                // 'oFoundItem' will contain the object with the matching Barcode if found
+                if (oFoundItem) {
+             
+
+                  // Access the SelectedItems model from the view
+                  var oJsonModel = that.getView().getModel("SelectedItems");
+
+                  // Ensure that the selectedItems property exists in the model
+                  if (!oJsonModel.getProperty("/selectedItems")) {
+                    oJsonModel.setProperty("/selectedItems", []);
+                  }
+
+                  // Get the array of selected items from the model
+                  var aSelectedItems = oJsonModel.getProperty("/selectedItems");
+
+                  // Push the found item into the array
+                  aSelectedItems.push(oFoundItem);
+
+                  // Set the updated array back to the model
+                  oJsonModel.setProperty("/selectedItems", aSelectedItems);
+
+                  if (oModel) {
+                    var oData = oModel.getData();
+
+                    // Assign incremental ItmNumber to each item in selectedItems array
+                    aSelectedItems.forEach(function (item, index) {
+                      // Incremental padding for ItemNumber (e.g., 0010, 0020, etc.)
+                      var paddedIndex = (index + 1) * 10; // Increase by 10 for every index
+
+                      // Format the paddedIndex to a 4-digit string (e.g., 0010, 0020)
+                      var formattedIndex = ('000000' + paddedIndex).slice(-6);
+
+                      // Assign the formatted ItmNumber to each item
+                      item.ItmNumber = formattedIndex;
+                    });
+
+                    // Add the modified selected items back to the model data
+                    oData.selectedItems = aSelectedItems;
+
+                    // Update the model with the modified data
+                    oModel.setData(oData);
+                  } else {
+                    console.error("Model 'SelectedItems' not found.");
+                  }
+
+
+                  // Navigate to the transaction page and pass the selected items
+                  that.getOwnerComponent().getRouter().navTo("transaction", {
+                    selectedItems: encodeURIComponent(JSON.stringify(aSelectedItems)),
+                  });
+                } else {
+                  // Show an error message if barcode is not found
+                  sap.m.MessageBox.error("Barcode not found: " + sText);
+                }
+              }
+            } else {
+              sap.m.MessageBox.error("Invalid barcode: " + sText);
+            }
+          },
+          function (Error) {
+            // Handle errors when scanning fails
+            sap.m.MessageBox.error("Scanning failed: " + Error);
+          }
+        );
+      } else {
+        console.error("BarcodeScanner is not defined in sap.ndc");
       }
 
-      var oDialog = this.getView().byId("producttablepage");
-      oDialog.close();
-      var oDialog = this.getView().byId("scanandadd");
-      oDialog.close();
-      that.onAddPromotion(true);
+      function isValidBarcode(barcode) {
+        return barcode.trim().length > 0;
+      }
     },
-
-
-    // onScanBarcode: function () {
-    //   var that = this;
-
-    //   if (sap.ndc && sap.ndc.BarcodeScanner) {
-    //     sap.ndc.BarcodeScanner.scan(
-    //       function (mResult) {
-    //         var sText = mResult.text;
-
-    //         if (isValidBarcode(sText)) {
-    //           // Access the ProductSetModel from the view
-    //           var oModel = that.getView().getModel("ProductSetModel");
-
-    //           if (!oModel) {
-    //             console.error("ProductSetModel not found.");
-    //             return;
-    //           }
-
-    //           // Retrieve the array of objects from the model
-    //           var oModelData = oModel.getData();
-
-    //           // Check if oModelData is an array
-    //           if (Array.isArray(oModelData)) {
-    //             // Use Array.find() to search for the object with the matching Barcode
-    //             var oFoundItem = oModelData.find(function (item) {
-    //               return item.Barcode === sText;
-    //             });
-
-    //             // 'oFoundItem' will contain the object with the matching Barcode if found
-    //             if (oFoundItem) {
-    //               // Access the SelectedItems model from the view
-    //               var oJsonModel = that.getView().getModel("SelectedItems");
-
-    //               // Ensure that the selectedItems property exists in the model
-    //               if (!oJsonModel.getProperty("/selectedItems")) {
-    //                 oJsonModel.setProperty("/selectedItems", []);
-    //               }
-
-    //               // Get the array of selected items from the model
-    //               var aSelectedItems = oJsonModel.getProperty("/selectedItems");
-    //               // Check if the item already exists in the selectedItems array
-    //               var existingItem = aSelectedItems.find(function (item) {
-    //                 return item.ArticleNo === oFoundItem.ArticleNo;
-    //               });
-
-    //               if (existingItem) {
-    //                 // If the item already exists, increase the quantity
-    //                 existingItem.quantity += 1;
-    //                 console.log("Quantity incremented for existing item:", existingItem);
-    //               } else {
-    //                 // If the item is not found, push it to the array with quantity 1
-    //                 oFoundItem.quantity = 1;
-    //                 aSelectedItems.push(oFoundItem);
-    //                 console.log("New item added to selectedItems:", oFoundItem);
-    //               }
-
-
-    //               // Set the updated array back to the model
-    //               oJsonModel.setProperty("/selectedItems", aSelectedItems);
-
-
-    //               if (oModel) {
-    //                 var oData = oModel.getData();
-
-    //                 // Assign incremental ItmNumber to each item in selectedItems array
-    //                 aSelectedItems.forEach(function (item, index) {
-    //                   // Incremental padding for ItemNumber (e.g., 0010, 0020, etc.)
-    //                   var paddedIndex = (index + 1) * 10; // Increase by 10 for every index
-
-    //                   // Format the paddedIndex to a 4-digit string (e.g., 0010, 0020)
-    //                   var formattedIndex = ('000000' + paddedIndex).slice(-6);
-
-    //                   // Assign the formatted ItmNumber to each item
-    //                   item.ItmNumber = formattedIndex;
-    //                 });
-
-    //                 // Add the modified selected items back to the model data
-    //                 oData.selectedItems = aSelectedItems;
-
-    //                 // Update the model with the modified data
-    //                 oModel.setData(oData);
-    //               } else {
-    //                 console.error("Model 'SelectedItems' not found.");
-    //               }
-
-
-    //               // Navigate to the transaction page and pass the selected items
-    //               that.getOwnerComponent().getRouter().navTo("transaction", {
-    //                 selectedItems: encodeURIComponent(JSON.stringify(aSelectedItems)),
-    //               });
-    //             } else {
-    //               // Show an error message if barcode is not found
-    //               sap.m.MessageBox.error("Barcode not found: " + sText);
-    //             }
-    //           }
-    //         } else {
-    //           sap.m.MessageBox.error("Invalid barcode: " + sText);
-    //         }
-    //       },
-    //       function (Error) {
-    //         // Handle errors when scanning fails
-    //         sap.m.MessageBox.error("Scanning failed: " + Error);
-    //       }
-    //     );
-    //   } else {
-    //     console.error("BarcodeScanner is not defined in sap.ndc");
-    //   }
-
-    //   function isValidBarcode(barcode) {
-    //     return barcode.trim().length > 0;
-    //   }
-    // },
 
     CloseSearchProduct: function () {
       var oDialog = this.getView().byId("producttablepage");
@@ -735,178 +650,44 @@ sap.ui.define([
     //   // Recalculate total price or perform any other necessary actions
     //   this.calculateTotalPrice();
     // },
-    onScanBarcode: function () {
-      var that = this;
-
-      if (sap.ndc && sap.ndc.BarcodeScanner) {
-        sap.ndc.BarcodeScanner.scan(
-          function (mResult) {
-            var sText = mResult.text;
-
-            if (isValidBarcode(sText)) {
-              // Access the ProductSetModel from the view
-              var oModel = that.getView().getModel("ProductSetModel");
-
-              if (!oModel) {
-                console.error("ProductSetModel not found.");
-                return;
-              }
-
-              // Retrieve the array of objects from the model
-              var oModelData = oModel.getData();
-
-              // Check if oModelData is an array
-              if (Array.isArray(oModelData)) {
-                // Use Array.find() to search for the object with the matching Barcode
-                var oFoundItem = oModelData.find(function (item) {
-                  return item.Barcode === sText;
-                });
-
-                // 'oFoundItem' will contain the object with the matching Barcode if found
-                if (oFoundItem) {
-                  // Access the SelectedItems model from the view
-                  var oJsonModel = that.getView().getModel("SelectedItems");
-
-                  // Ensure that the selectedItems property exists in the model
-                  if (!oJsonModel.getProperty("/selectedItems")) {
-                    oJsonModel.setProperty("/selectedItems", []);
-                  }
-
-                  // Get the array of selected items from the model
-                  var aSelectedItems = oJsonModel.getProperty("/selectedItems");
-                  // Check if the item already exists in the selectedItems array
-                  var existingItem = aSelectedItems.find(function (item) {
-                    return item.ArticleNo === oFoundItem.ArticleNo;
-                  });
-
-                  if (existingItem) {
-                    // If the item already exists, increase the quantity
-                    existingItem.quantity += 1;
-                    console.log("Quantity incremented for existing item:", existingItem);
-                  } else {
-                    // If the item is not found, push it to the array with quantity 1
-                    oFoundItem.quantity = 1;
-                    aSelectedItems.push(oFoundItem);
-                    console.log("New item added to selectedItems:", oFoundItem);
-                  }
-
-                  // Set the updated array back to the model
-                  oJsonModel.setProperty("/selectedItems", aSelectedItems);
-
-                  if (oModel) {
-                    var oData = oModel.getData();
-
-                    // Assign incremental ItmNumber to each item in selectedItems array
-                    aSelectedItems.forEach(function (item, index) {
-                      // Incremental padding for ItemNumber (e.g., 000010, 000020, etc.)
-                      var paddedIndex = (index + 1) * 10; // Increase by 10 for every index
-
-                      // Format the paddedIndex to a 4-digit string (e.g., 0010, 0020)
-                      var formattedIndex = ('000000' + paddedIndex).slice(-6);
-
-                      // Assign the formatted ItmNumber to each item
-                      item.ItmNumber = formattedIndex;
-                    });
-
-                    // Add the modified selected items back to the model data
-                    oData.selectedItems = aSelectedItems;
-
-                    // Update the model with the modified data
-                    oModel.setData(oData);
-                    that.onAddPromotion(true);
-                  } else {
-                    console.error("Model 'SelectedItems' not found.");
-                  }
-                } else {
-                  // Show an error message if barcode is not found
-                  sap.m.MessageBox.error("Barcode not found: " + sText);
-                }
-              }
-            } else {
-              sap.m.MessageBox.error("Invalid barcode: " + sText);
-            }
-          },
-          function (Error) {
-            // Handle errors when scanning fails
-            sap.m.MessageBox.error("Scanning failed: " + Error);
-          }
-        );
-      } else {
-        console.error("BarcodeScanner is not defined in sap.ndc");
-      }
-
-      function isValidBarcode(barcode) {
-        return barcode.trim().length > 0;
-      }
-
-    },
-
     onTableUpdateFinished: function () {
       console.log("Updating total net price...");
-
+     
       var oModel = this.getView().getModel("SelectedItems");
       var aItems = oModel.getProperty("/selectedItems");
-
-      // Calculate total Tax Price 
-      var totalTaxPrice = aItems.reduce(function (sum, item) {
-        if (item.TaxAmount !== undefined && !isNaN(item.TaxAmount)) {
-          return sum + parseFloat(item.TaxAmount);
-        } else {
-          console.warn("Item TaxAmount is undefined or not a valid number. Skipping from calculation.");
-          return sum;
-        }
-      }, 0);
-      totalTaxPrice = parseFloat(totalTaxPrice.toFixed(2));
-      var TaxPriceModel = this.getView().getModel("TaxModel");
-      TaxPriceModel.setProperty("/totaltaxPrice", totalTaxPrice);
-
-      // Calculate total Net Price 
+     
       var totalNetPrice = aItems.reduce(function (sum, item) {
-        if (item.NetPrice !== undefined && !isNaN(item.NetPrice)) {
-          return sum + parseFloat(item.NetPrice);
-        } else {
-          console.warn("Item NetPrice is undefined or not a valid number. Skipping from calculation.");
-          return sum;
-        }
+          if (item.NetPrice !== undefined && !isNaN(item.NetPrice)) {
+              return sum + parseFloat(item.NetPrice);
+          } else {
+              console.warn("Item NetPrice is undefined or not a valid number. Skipping from calculation.");
+              return sum;
+          }
       }, 0);
-
+     
       totalNetPrice = parseFloat(totalNetPrice.toFixed(2));
-
+     
+      console.log("Total Net Price:", totalNetPrice);
+     
       var viewModel = this.getView().getModel("viewModel");
       viewModel.setProperty("/totalNetPrice", totalNetPrice);
-
-      // To calculate the total of both NET & TAX Price
-      var totalNetPrice = viewModel.getProperty("/totalNetPrice");
-      var totalTaxPrice = TaxPriceModel.getProperty("/totaltaxPrice");
-      var totalNetAndTaxPrice = totalNetPrice + totalTaxPrice;
-
-      if (!isNaN(totalNetAndTaxPrice)) {
-        totalNetAndTaxPrice = parseFloat(totalNetAndTaxPrice.toFixed(2));
-      } else {
-        console.error("The totalNetAndTaxPrice is not a valid number.");
-      }
-      var totalamountModel = this.getView().getModel("TotalTaxNetModel");
-      totalamountModel.setProperty("/totaltaxandnetprice", totalNetAndTaxPrice)
-
-
-
     },
     onQuantityChange: function (oEvent) {
-      var that = this;
+      var that =this;
       var newQuantity = oEvent.getParameter("value");
       var oQuantityModel = this.getView().getModel("quantityModel");
-
+ 
       oQuantityModel.setProperty("/selectedQuantity", newQuantity);
       that.onAddPromotion(true);
       // Recalculate total price
       that.onTableUpdateFinished();
     },
     onAddPromotion: function (defaultFlag) {
-
+   
       var that = this;
       var datePicker = this.getView().byId("DP2");
       var selectedDate = datePicker.getDateValue();
-
+     
       if (!selectedDate) {
         sap.m.MessageBox.error("Please select a valid date.");
         return;
@@ -915,25 +696,25 @@ sap.ui.define([
 
       // Initialize the selectedCampaignConditionType
       var selectedCampaignConditionType = "";
-
+  
       // Get the selected campaign's Conditiontype from the model
       var oComboBox = this.getView().byId("Campaign");
       var oSelectedItem = oComboBox.getSelectedItem();
-
+      
       // Check if an item is selected and if a binding context is available
       if (oSelectedItem && oSelectedItem.getBindingContext("HeaderCampaignModel")) {
-        var oBindingContext = oSelectedItem.getBindingContext("HeaderCampaignModel");
-        selectedCampaignConditionType = oBindingContext.getProperty("ConditionType");
+          var oBindingContext = oSelectedItem.getBindingContext("HeaderCampaignModel");
+          selectedCampaignConditionType = oBindingContext.getProperty("ConditionType");
       } else {
-        // Handle the case when no item is selected or binding context is empty
-        // For example, set a default value or handle the logic accordingly
-        selectedCampaignConditionType = "";
-
+          // Handle the case when no item is selected or binding context is empty
+          // For example, set a default value or handle the logic accordingly
+          selectedCampaignConditionType = "";
+        
       }
       var comboBox = this.byId("employee");
       var selectedText = comboBox.getSelectedItem().getText();
-
-
+   
+     
       var comboBox = this.byId("orderreason");
       var selectedKey = comboBox.getSelectedKey();
       console.log("Selected Key:", selectedKey);
@@ -949,12 +730,11 @@ sap.ui.define([
 
       var oCartModel = this.getView().getModel("SelectedItems");
       var selectedItems = oCartModel.getProperty("/selectedItems");
+ 
 
-      if (defaultFlag != true) {
-        if (!selectedItems || selectedItems.length === 0) {
-          sap.m.MessageBox.error("Please select items for the promotion.");
-          return;
-        }
+      if (!selectedItems || selectedItems.length === 0) {
+        sap.m.MessageBox.error("Please select items for the promotion.");
+        return;
       }
 
       var oTable = this.byId("transactiontable");
@@ -974,27 +754,27 @@ sap.ui.define([
       }
 
       var aModelData = this.getOwnerComponent().getModel("CampaignModel").getData();
-
+     
 
       // Check if there is at least one CampaignId in aModelData
       var selectedCampaignId = (aModelData.length) ? aModelData[0].CampaignId : "";
       var salesOrderItems = selectedItems.map(function (item) {
-
+ 
 
 
         // Ensure item.CampaignId is an array
         var campaignIdForItem = Array.isArray(item.CampaignId) ? item.CampaignId : [];
         var conditionTypeForItem = Array.isArray(item.ConditionType) ? item.ConditionType : [];
-
-
+     
+        
         var ConditionType = "";
-        for (var m = 0; m < that.getOwnerComponent().getModel("CampaignModel").getData().length; m++) {
-          if (that.getOwnerComponent().getModel("CampaignModel").getData()[m].CampaignId == item.CampaignId) {
-            ConditionType = that.getOwnerComponent().getModel("CampaignModel").getData()[m].ConditionType;
-            break;
-          }
-        }
-
+        for(var m = 0 ; m < that.getOwnerComponent().getModel("CampaignModel").getData().length ; m++){
+	          if(that.getOwnerComponent().getModel("CampaignModel").getData()[m].CampaignId == campaignIdForItem[0]){
+		            ConditionType = that.getOwnerComponent().getModel("CampaignModel").getData()[m].ConditionType;
+		              break;
+	              }
+              }
+      
         return {
           "FreeItem": false,
           "Zcampaign": defaultFlag == true ? "" : item.CampaignId, // Join array elements into a string
@@ -1024,86 +804,76 @@ sap.ui.define([
         "CampType": "",
         "PointBalance": "0.00",
         "SaveDocument": "",
-        "ConditionType": defaultFlag == true ? "" : selectedCampaignConditionType,
+        "ConditionType":defaultFlag == true ? "" : selectedCampaignConditionType,
         "to_items": salesOrderItems
       };
 
-      if (defaultFlag != true) {
-        var oBusyDialog = new sap.m.BusyDialog({
-          title: "Applying Promotion",
-          text: "Please wait...."
+      if (defaultFlag != true){
+      var oBusyDialog = new sap.m.BusyDialog({
+        title: "Applying Promotion",
+        text: "Please wait...."
+    });
+     oBusyDialog.open();
+  }
+  var that=this;
+
+	this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
+    success: function (response) {
+   
+      if (defaultFlag != true){
+        oBusyDialog.close();
+        }
+
+
+        var oExistingModel = that.getView().getModel("SelectedItems");
+  
+ 
+        // Get the current data from the model
+        var oData = oExistingModel.getProperty("/selectedItems");
+
+        // Merge the new data into the existing data
+        var responseData = response.to_items.results; // Adjust this based on the actual path in your response
+
+        // Find matching items based on ItmNumber
+        oData.forEach(function (existingItem) {
+          var newItem = responseData.find(function (newItem) {
+            return existingItem.ItmNumber === newItem.ItmNumber;
+          });
+
+          if (newItem) {
+            Object.assign(existingItem, newItem);
+          }
+          
         });
-        oBusyDialog.open();
-      }
-      var that = this;
 
-      this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
-        success: function (response) {
+        // Update the property with the updated array
+        oExistingModel.setProperty("/selectedItems", oData);
+        that.onTableUpdateFinished();
+        if (defaultFlag != true){
+          sap.m.MessageBox.success("Applied Promotion Successfully", {
+            onClose: function () {
 
-          if (defaultFlag != true) {
-            oBusyDialog.close();
-          }
-
-
-          var oExistingModel = that.getView().getModel("SelectedItems");
-
-
-          // Get the current data from the model
-          var oData = oExistingModel.getProperty("/selectedItems");
-
-          // Merge the new data into the existing data
-          var responseData = response.to_items.results; // Adjust this based on the actual path in your response
-
-          // Find matching items based on ItmNumber
-          oData.forEach(function (existingItem) {
-
-            var newItem = responseData.find(function (newItem) {
-              return existingItem.ItmNumber === newItem.ItmNumber;
-            });
-
-            if (newItem) {
-              Object.assign(existingItem, newItem);
             }
-
-          });
-
-          // Update the property with the updated array
-          oData.forEach(function (item) {
-            item.Discount = parseFloat(item.Discount).toFixed(2);
-            item.NetPrice = parseFloat(item.NetPrice).toFixed(2);
-            item.RetailPrice = parseFloat(item.RetailPrice).toFixed(2);
-            item.TargetQty = parseFloat(item.TargetQty).toFixed(2);
-            item.TaxAmount = parseFloat(item.TaxAmount).toFixed(2);
-          });
-
-
-          oExistingModel.setProperty("/selectedItems", oData);
-          that.onTableUpdateFinished();
-          if (defaultFlag != true) {
-            sap.m.MessageBox.success("Applied Promotion Successfully", {
-              onClose: function () {
-
-              }
-            });
-          }
-        },
-        error: function (error) {
-          if (defaultFlag != true) {
-            oBusyDialog.close();
-          }
-          var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
-
-          var errorMessage = "An error occurred. Details:\n";
-          errorDetails.forEach(function (detail) {
-            errorMessage += "- " + detail.message + "\n";
-          });
-
-          // Show the error message in a message box or dialog
-          sap.m.MessageBox.error(errorMessage, {
-            title: "Error"
           });
         }
-      });
+    },
+    error: function (error) {
+       if (defaultFlag != true){
+        oBusyDialog.close();
+        }
+        var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
+
+        var errorMessage = "An error occurred. Details:\n";
+        errorDetails.forEach(function (detail) {
+          errorMessage += "- " + detail.message + "\n";
+        });
+
+        // Show the error message in a message box or dialog
+        sap.m.MessageBox.error(errorMessage, {
+          title: "Error"
+        });
+    }
+  });
 
     },
     //     OnAddPromotion: function () {
@@ -1275,56 +1045,42 @@ sap.ui.define([
     //         }
     //       });
     // },
-    onDeleteItem: function (oEvent) {
+    onDeleteItem: function(oEvent) {
       var that = this; // Preserve the reference to 'this'
-
+  
       sap.m.MessageBox.confirm(
-        "Are you sure you want to delete this product?", {
-        title: "Confirmation",
-        onClose: function (oAction) {
-          if (oAction === sap.m.MessageBox.Action.OK) {
-            var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("SelectedItems");
-            var oModel = oContext.getModel("SelectedItems");
-            var sPath = oContext.getPath();
-            var iIndex = parseInt(sPath.split("/")[sPath.split("/").length - 1]);
-
-            var aSelectedBrands = oModel.getProperty("/selectedItems");
-            aSelectedBrands.splice(iIndex, 1); // Remove the item from the array
-            oModel.setProperty("/selectedItems", aSelectedBrands);
-            that.onTableUpdateFinished();
-          } else {
-            // Handle cancel action or do nothing if cancel is pressed
+          "Are you sure you want to delete this product?", {
+              title: "Confirmation",
+              onClose: function(oAction) {
+                  if (oAction === sap.m.MessageBox.Action.OK) {
+                      var oButton = oEvent.getSource();
+                      var oContext = oButton.getBindingContext("SelectedItems");
+                      var oModel = oContext.getModel("SelectedItems");
+                      var sPath = oContext.getPath();
+                      var iIndex = parseInt(sPath.split("/")[sPath.split("/").length - 1]);
+  
+                      var aSelectedBrands = oModel.getProperty("/selectedItems");
+                      aSelectedBrands.splice(iIndex, 1); // Remove the item from the array
+                      oModel.setProperty("/selectedItems", aSelectedBrands);
+                      that.onTableUpdateFinished();
+                  } else {
+                      // Handle cancel action or do nothing if cancel is pressed
+                  }
+              }
           }
-        }
-      }
       );
-    },
+  },
+  
+  
+  
 
 
 
-    onSavePress:function(){
-      var oCartModel = this.getView().getModel("SelectedItems");
-      var selectedItems = oCartModel.getProperty("/selectedItems");
-      if (!selectedItems || selectedItems.length === 0) {
-           sap.m.MessageBox.error("Please select items to Create Sales Order.");
-           return;
-       }
-      var storeType = this.getView().getModel("StoreModel").getProperty("/selectedStoreType");
-      if(storeType == "B"){
-          this.onConditionTypeButtonPress();
-      }else{
-        this.onSavePressServicecall();
-      }
-    },
-
-
-    onSavePressServicecall: function () {
+    onSavePress: function () {
       var that = this;
-
       var comboBox = this.byId("employee");
       var selectedText = comboBox.getSelectedItem().getText();
-
+     
       var datePicker = this.getView().byId("DP2");
       var selectedDate = datePicker.getDateValue();
       var milliseconds = selectedDate.getTime();
@@ -1335,12 +1091,6 @@ sap.ui.define([
       var selectedItems = oCartModel.getProperty("/selectedItems");
       var OrderReason = this.getView().byId("orderreason").getSelectedKey();
 
-
-
-      // if (!selectedItems || selectedItems.length === 0) {
-      //   sap.m.MessageBox.error("Please select items to Create Sales Order.");
-      //   return;
-      // }
       var hasZeroQuantity = selectedItems.some(function (item) {
         return item.quantity === 0;
       });
@@ -1350,9 +1100,11 @@ sap.ui.define([
         sap.m.MessageBox.error("Please select a quantity greater than 0 for each item.");
         return;
       }
+      
+
       var salesOrderItems = [];
 
-      var that = this;
+
       selectedItems.forEach(function (item, index) {
         var salesOrderItem = {
           "FreeItem": false,
@@ -1384,8 +1136,7 @@ sap.ui.define([
         "PointBalance": "0.00",
         "SaveDocument": "X",
         "PurchaseOrdNo": this.getView().byId("poreferenceno").getValue(),
-        "to_items": salesOrderItems,
-        "to_conditions": this.conditionTypeArr
+        "to_items": salesOrderItems
       };
       var bIsChecked = this.byId("salesorderreason").getSelected(); // Replace 'yourCheckBoxId' with the actual ID
 
@@ -1397,35 +1148,22 @@ sap.ui.define([
       }
       var salesOrderItems = [];
 
+    
 
-
-
+    
       var oBusyDialog = new sap.m.BusyDialog({
         title: "Creating Sales order",
         text: "Please wait...."
-      });
-      oBusyDialog.open();
-      this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
+    });
+    oBusyDialog.open();
+    this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
         success: function (response) {
           oBusyDialog.close();
           var salesOrderNo = response.SalesorderNo; // Replace 'SalesorderNo' with the actual property name from your response
 
           sap.m.MessageBox.success("Sales Order created successfully. Sales Order No: " + salesOrderNo, {
             onClose: function () {
-              var oModel = that.getOwnerComponent().getModel("SelectedItems");
-              oModel.setData({ modelData: {} });
-              oModel.updateBindings(true);
-              var viewModel = that.getView().getModel("viewModel");
-              viewModel.setData({ modelData: {} });
-              viewModel.updateBindings(true);
-              var TaxModel = that.getView().getModel("TaxModel");
-              TaxModel.setData({ modelData: {} });
-              TaxModel.updateBindings(true);
-              var TotalTaxNetModel = that.getView().getModel("TotalTaxNetModel");
-              TotalTaxNetModel.setData({ modelData: {} });
-              TotalTaxNetModel.updateBindings(true);
-              that.oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-              that.oRouter.navTo("mainmenu");
+
             }
           });
         },
@@ -1433,10 +1171,12 @@ sap.ui.define([
         error: function (error) {
           oBusyDialog.close();
           var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
+
           var errorMessage = "An error occurred. Details:\n";
           errorDetails.forEach(function (detail) {
             errorMessage += "- " + detail.message + "\n";
           });
+
           // Show the error message in a message box or dialog
           sap.m.MessageBox.error(errorMessage, {
             title: "Error"
@@ -1444,105 +1184,23 @@ sap.ui.define([
         }
       });
     },
-   
-    onConditionTypeButtonPress: function () {
-      if (!this.conditionType) {
-        this.conditionType = new sap.ui.xmlfragment("com.luxasia.salesorder.view.conditionType", this);
+    onConditionTypeCheckBox:function(evt){
+      if(this.getView().getModel("SelectedItems").oData.selectedItems.length == 0){
+        evt.getSource().setSelected(false);
+        sap.m.MessageBox.error("Please add an items for the Payment Type.");
+      }      
+    else
+    this.getView().byId("onConditionTypeButton").setVisible(evt.getParameter("selected"));
+    },
+    onConditionTypeButtonPress:function(){
+      if(!this.conditionType){
+        this.conditionType = new sap.ui.xmlfragment("com.luxasia.salesorder.view.conditionType",this);
         this.getView().addDependent(this.conditionType);
       }
       this.conditionType.open();
-    },
-    onConditionTypeConfirm: function (evt) {
-      this.conditionTypeArr = [];
-      var conditionType1 = this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[0].getFields()[0].getSelectedKey();
-      var conditionType2 = this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[1].getFields()[0].getSelectedKey();
-      var conditionType3 = this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[2].getFields()[0].getSelectedKey();
-      //amount fields
-      var amount1 = this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[0].getFields()[0].getItems()[0].getValue();
-      var amount2 = this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[1].getFields()[0].getItems()[0].getValue();
-      var amount3 = this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[2].getFields()[0].getItems()[0].getValue();
-      //totalAmount comparison
-      var totalNetPrice = this.getView().getModel("TotalTaxNetModel").getProperty("/totaltaxandnetprice");
-      amount1 = amount1.length == 0 ? 0 : parseFloat(amount1);
-      amount2 = amount2.length == 0 ? 0 : parseFloat(amount2);
-      amount3 = amount3.length == 0 ? 0 : parseFloat(amount3);
-      var totalPaymentPrice = amount1 + amount2 + amount3;
-      totalPaymentPrice = totalPaymentPrice.toFixed(2);
-      totalPaymentPrice = parseFloat(totalPaymentPrice);
-      if (conditionType1.length == 0 && conditionType2.length == 0 && conditionType3.length == 0) {
-        sap.m.MessageBox.error("Please select atleast one Payment type");
-      } else if (totalNetPrice > totalPaymentPrice) {
-        sap.m.MessageBox.error("Entered amount is lesser than the total price");
-      } else if (totalPaymentPrice > totalNetPrice) {
-        sap.m.MessageBox.error("Entered amount is greater than the total price");
-      } else {
-        if (conditionType1.length > 0 && amount1.toString().length > 0) {
-          this.conditionTypeArr.push({
-            "CondType": conditionType1,
-            "CondValue": amount1.toString(),
-            "Currency": "SGD"
-          });
-        }
-        if (conditionType2.length > 0 && amount2.toString().length > 0) {
-          this.conditionTypeArr.push({
-            "CondType": conditionType2,
-            "CondValue": amount2.toString(),
-            "Currency": "SGD"
-          });
-        }
-        if (conditionType3.length > 0 && amount3.toString().length > 0) {
-          this.conditionTypeArr.push({
-            "CondType": conditionType3,
-            "CondValue": amount3.toString(),
-            "Currency": "SGD"
-          });
-        }
-        this.conditionType.close();
-        this.onSavePressServicecall();
-      }
-
-    },
-    onConditionTypeCancel: function () {
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[0].getFields()[0].setSelectedKey(null);
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[1].getFields()[0].setSelectedKey(null);
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[2].getFields()[0].setSelectedKey(null);
-      //amount fields
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[0].getFields()[0].getItems()[0].setValue("");
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[1].getFields()[0].getItems()[0].setValue("");
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[2].getFields()[0].getItems()[0].setValue("");
-      this.conditionType.close();
-    },
-    handleResetConditionType1: function (evt) {
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[0].getFields()[0].setSelectedKey(null);
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[0].getFields()[0].getItems()[0].setValue("");
-    },
-    handleResetConditionType2: function (evt) {
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[1].getFields()[0].setSelectedKey(null);
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[1].getFields()[0].getItems()[0].setValue("");
-    },
-    handleResetConditionType3: function (evt) {
-      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[2].getFields()[0].setSelectedKey(null);
-      this.conditionType.getContent()[0].getFormContainers()[1].getFormElements()[2].getFields()[0].getItems()[0].setValue("");
-    },
+    }
     // Assume 'onSalesOrderResponse' is triggered after receiving the sales order response
 
-    onCancelPress: function () {
-      var that = this;
-      var oModel = that.getOwnerComponent().getModel("SelectedItems");
-      oModel.setData({ modelData: {} });
-      oModel.updateBindings(true);
-      var viewModel = this.getView().getModel("viewModel");
-      viewModel.setData({ modelData: {} });
-      viewModel.updateBindings(true);
-      var TaxModel = that.getView().getModel("TaxModel");
-      TaxModel.setData({ modelData: {} });
-      TaxModel.updateBindings(true);
-      var TotalTaxNetModel = that.getView().getModel("TotalTaxNetModel");
-      TotalTaxNetModel.setData({ modelData: {} });
-      TotalTaxNetModel.updateBindings(true);
-      var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-      oRouter.navTo("mainmenu");
-    }
 
 
 

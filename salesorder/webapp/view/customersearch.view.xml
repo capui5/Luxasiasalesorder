@@ -4,7 +4,7 @@
     displayBlock="true"
     xmlns="sap.m"
     xmlns:m="sap.m"
-    xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core" xmlns:fb="sap.ui.comp.filterbar"
 >
     <Page showHeader="false">
         <OverflowToolbar class="header" id="otbSubheader">
@@ -29,13 +29,13 @@
             </contentRight>
         </Bar>
         <content>
-            <FlexBox
+            <!-- <FlexBox
                 class="flex-spacing"
                 alignItems="Start"
                 justifyContent="SpaceAround"
-                wrap="Wrap"
-            >
-                <Input visible="false" id="customerno" placeholder="Customer No" />  
+                wrap="Wrap">         
+                
+                <Input visible="false" id="customerno" placeholder="Customer No" />
                 <Input id="mobileInput" placeholder="Mobile Number" />
                 <Input id="emailInput" placeholder="Email Address" />
                 <Input id="nameInput" placeholder="Firstname" />
@@ -46,25 +46,86 @@
                     class="wide-button1 top-spacing"
                     id="searchButton"
                 />
-            </FlexBox>
-
+            </FlexBox> -->
+            <!-- <HBox class="filterBar sapUiSmallMarginTop sapUiSmallMarginBegin sapUiSmallMarginEnd">
+				<VBox justifyContent="Center" class="sapUiSmallMargin filter" alignItems="Center">
+					<Label wrapping="true" textAlign="Center" text="Filters:"/>
+				</VBox>
+                <VBox alignContent="Center" visible="false" class="sapUiTinyMargin">
+					<Label wrapping="true" textAlign="Center" text="Customer Number:"/>
+					<Input visible="false" id="customerno" placeholder="Customer No" />
+				</VBox>
+				<VBox alignContent="Center" class="sapUiTinyMargin">
+					<Label wrapping="true" textAlign="Center" text="Mobile Number:"/>
+					<Input id="mobileInput" placeholder="Mobile Number" />
+				</VBox>
+				<VBox alignContent="Center" class="sapUiTinyMargin">
+					<Label wrapping="true" textAlign="Center" text="Email:"/>
+					<Input id="emailInput" placeholder="Email Address" />
+				</VBox>
+				<VBox alignContent="Center" class="sapUiTinyMargin">
+					<Label wrapping="true" textAlign="Center" text="First Name:"/>
+					<Input id="nameInput" placeholder="Firstname" />
+				</VBox>
+				<VBox alignContent="Center" class="sapUiTinyMargin">
+					<Label wrapping="true" textAlign="Center" text="Last Name:"/>
+					<Input id="surnameInput" placeholder="Lastname" />
+				</VBox>
+				<VBox alignContent="Center" justifyContent="Center" class="sapUiTinyMargin" alignItems="Center">
+					<Button
+                    text="Search"
+                    press="onSearch"
+                    class="wide-button1 top-spacing"
+                    id="searchButton"
+                />
+				</VBox>
+			</HBox> -->
+            <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search="onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+							<fb:filterGroupItems>
+                                <fb:FilterGroupItem visible="false" name="Name" label="Customer No" groupName="Group1" visibleInFilterBar="true">
+									<fb:control>
+									<Input visible="false" id="customerno" placeholder="Customer No" />
+									</fb:control>
+								</fb:FilterGroupItem>
+								<fb:FilterGroupItem name="Name" label="Mobile Number" groupName="Group2" visibleInFilterBar="true">
+									<fb:control>
+									<Input id="mobileInput" placeholder="Mobile Number" />
+									</fb:control>
+								</fb:FilterGroupItem>
+								<fb:FilterGroupItem name="Begin Date" label="Email Address" groupName="Group3" visibleInFilterBar="true">
+									<fb:control>
+										<Input id="emailInput" placeholder="Email Address" />
+									</fb:control>
+								</fb:FilterGroupItem>
+								<fb:FilterGroupItem name="End Date" label="First Name" groupName="Group4" visibleInFilterBar="true">
+									<fb:control>
+										<Input id="nameInput" placeholder="Firstname" />
+									</fb:control>
+								</fb:FilterGroupItem>
+                                <fb:FilterGroupItem name="End Date" label="Last Name" groupName="Group5" visibleInFilterBar="true">
+									<fb:control>
+										<Input id="surnameInput" placeholder="Lastname" />
+									</fb:control>
+								</fb:FilterGroupItem>
+							</fb:filterGroupItems>
+						</fb:FilterBar>
            <Table
     id="customerTable"
     visible="false"
     inset="false"
-    class="myCustomTable"
+    class="myCustomTable" items="{customerModel>/}"
 >
     <columns>
       <Column hAlign="Center" demandPopin="true">
             <Text text="CUSTOMER NO" />
         </Column>
-        <Column hAlign="Center" demandPopin="true">
+        <Column hAlign="Center" demandPopin="true" minScreenWidth="Desktop">
             <Text text="MOBILE NUMBER" />
         </Column>
-        <Column hAlign="Center" demandPopin="true">
+        <Column hAlign="Center" demandPopin="true" minScreenWidth="Desktop">
             <Text text="EMAIL ADDRESS" />
         </Column>
-        <Column hAlign="Center" demandPopin="true">
+        <Column hAlign="Center" demandPopin="true" minScreenWidth="Tablet">
             <Text text="FIRST NAME" />
         </Column>
         <Column hAlign="Center" demandPopin="true" minScreenWidth="Desktop">
@@ -79,19 +140,16 @@
     <items>
         <ColumnListItem press="onPress"> 
          <cells>
-                <Text text="{mainModel>CustomerNo}" class="myBlackText" />
-            </cells>
-            <cells>
-                <Text text="{mainModel>Tel1Numbr}" class="myBlackText" />
-            </cells>
-            <cells>
-                <Text text="{mainModel>EMail}" class="myBlackText" />
-            </cells>
-            <cells>
-                <Text text="{mainModel>Firstname}" class="myBlackText" />
-            </cells>
-            <cells>
-                <Text text="{mainModel>}" class="myBlackText" /> 
+                <Text text="{customerModel>CustomerNo}" class="myBlackText" />
+           
+                <Text text="{customerModel>Tel1Numbr}" class="myBlackText" />
+           
+                <Text text="{customerModel>EMail}" class="myBlackText" />
+           
+                <Text text="{customerModel>Firstname}" class="myBlackText" />
+          
+                <Text text="{customerModel>Lastname}" class="myBlackText" /> 
+                <Button icon="sap-icon://arrow-right" press="onCustomerPress"/>
             </cells>
 
         </ColumnListItem>

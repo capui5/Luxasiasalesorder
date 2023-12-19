@@ -1,4 +1,50 @@
 /*MainMenu*/
+.filterBar {
+    background-color: grey;
+    height: 4rem;
+}
+
+.filterBar .sapMLabel {
+    color: white;
+}
+
+.filterBar .sapMBtnInner {
+    text-align: left;
+    color: white;
+    padding-left: 2px !important;
+}
+
+.filterBar .sapMInputBaseContentWrapper {
+    background: white !important;
+    border: 0px;
+}
+
+.filterBar .sapMInputBaseIcon {
+    color: white !important;
+    background-color: white !important;
+}
+
+.filterBar .sapMTokenizerIndicator {
+    color: white !important;
+}
+
+.filterBar .sapMInputBaseContentWrapper:hover {
+    background: white !important;
+    border: 0px;
+}
+
+.filterBar .sapMInputBaseInner {
+    /* color: white !important; */
+}
+
+.filterBar .sapMInputBaseInner::placeholder {
+    color: white !important;
+}
+
+
+.returnFormClass>.sapUiFormResGrid>.sapUiRespGrid>.sapUiFormResGridLastContL  {
+    padding-bottom: 1rem !important;
+}
 .mainmenutext{
     padding: 5px;
     color:white;
@@ -7,6 +53,7 @@
     }
     .header.sapMIBar {
         background: black;  
+        height: 50px;
     }
     .header.sapMTBStandard{
         border-bottom: none;
@@ -363,7 +410,7 @@ div#application-luxasia-display-component---customersearch--surnameInput-content
 }
 
 .wide-select {
-    width: 400px;
+    width: 350px;
 }
 
 .wide-select::placeholder {
@@ -390,7 +437,7 @@ div#container-luxasia---storeselection--storeSelect-content {
     border-radius: 30px;
     height: 40px;
     padding: 3px;
-    width: 400px;
+    width: 350px;
     margin-top: 20px;
 }
 
@@ -414,23 +461,6 @@ div#container-luxasia---storeselection--storeSelect-content {
 
 /*Storeselection*/
 /*Brand*/
-div#application-luxasia-display-component---brand--master-intHeader-BarPH {
-    background: black;
-}
-/* div#container-luxasia---brand--master-intHeader-BarPH {
-    background: black;
-} */
-span#application-luxasia-display-component---brand--master-title-inner {
-    color: white;
-}
-
-div#application-luxasia-display-component---brand--detail-intHeader-BarPH {
-    background: black;
-}
-
-span#application-luxasia-display-component---brand--detail-title-inner {
-    color: white;
-}
 
 .Login .sapMBtnInner {
     color: #fff;
@@ -457,13 +487,6 @@ span#application-luxasia-display-component---brand--detail-title-inner {
     width: 100%;
 }
 
-
-div#application-luxasia-display-component---brand--splitContainer-Master {
-    width: 50%;
-}
-div#container-luxasia---brand--splitContainer-Master {
-    width: 50%;
-}
 /*Brand*/
 /*Newcustomer*/
 .Newcustomer {
@@ -800,9 +823,9 @@ margin-left: 80px;
 margin-right: 80px;
 margin-bottom: 30px
 }
-.products .sapMFlexItem{
+/* .products .sapMFlexItem{
 
-}
+} */
 
 /* transaction */
 
@@ -894,6 +917,9 @@ span#__button2-__table0-1-inner {
     border-radius: 20px;
  
 }
+.transsave.sapMBtn:hover>.sapMBtnDefault.sapMBtnHoverable{
+border: none;
+}
 .transsave .sapMBtnContent {
     color: white;
 }
@@ -980,9 +1006,27 @@ padding-left: 65px;
     width: auto;
     outline: none;
 }
-.sapUiSizeCompact .sapMPageFooter .sapMIBar {
-    height: 80px;
-}
 .myCustomTable{
     margin-top:2.5rem;
     }
+.transadd.sapMBtnBase{
+    background-color: rgb(8 78 88);
+    width: 251px;
+    border-radius: 20px;
+ 
+}
+.transadd.sapMBtnBase:hover{
+    background-color: rgb(8 78 88);
+    width: 251px;
+    border-radius: 20px;
+ 
+}
+.transadd.sapMBtn:hover>.sapMBtnDefault.sapMBtnHoverable{
+    background-color: rgb(8, 168, 168);
+    width: 251px;
+    border-radius: 20px;
+    border:none
+}
+.transadd .sapMBtnContent {
+    color: white;
+}

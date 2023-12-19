@@ -19,10 +19,10 @@
                 />
 
                 <HBox width="100%" />
-                 <Select items="" id="CASHCARRY" selectedKey="{Country}">
+                 <Select items="{LocalTouristModel>/}" id="CASHCARRY" >
 									<items>
-										<core:Item text="CNCLOCAL" key="1"/>
-                                        <core:Item text="CNCTOURIST" key="2"/>
+										<core:Item text="{LocalTouristModel>CustomerNo}" key="1"/>
+                                   
 									</items>
 								</Select>
 

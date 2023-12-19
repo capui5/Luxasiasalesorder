@@ -31,6 +31,9 @@ sap.ui.define([
         },
 
         onNextPage: function () {
+            var oModel = this.getOwnerComponent().getModel("CustomerNoModel");
+            oModel.setData({ modelData: {} });
+            oModel.updateBindings(true);
             this.getRouter().navTo("newcustomer");
         },
 
@@ -43,20 +46,20 @@ sap.ui.define([
 
             var filterString = "";
             if (Customerno) {
-                filterString += "CustomerNo eq '" + Customerno + "'";
+                filterString = [new sap.ui.model.Filter("Firstname", "EQ" , Customerno)];
             }
 
             if (Firstname) {
-                filterString += "Firstname eq '" + Firstname + "'";
+                filterString =  [new sap.ui.model.Filter("Firstname", "EQ" , Firstname)];;
             }
             if (EMail) {
-                filterString += (filterString ? " and " : "") + "EMail eq '" + EMail + "'";
+                filterString =  [new sap.ui.model.Filter("EMail", "EQ" , EMail)];;
             }
             if (Lastname) {
-                filterString += (filterString ? " and " : "") + "Lastname eq '" + Lastname + "'";
+                filterString =  [new sap.ui.model.Filter("Lastname", "EQ" , Lastname)];;
             }
             if (Tel1Numbr) {
-                filterString += (filterString ? " and " : "") + "Tel1Numbr eq '" + Tel1Numbr + "'";
+                filterString =  [new sap.ui.model.Filter("Tel1Numbr", "EQ" , Tel1Numbr)];;
             }
 
             if (!filterString) {
@@ -64,40 +67,100 @@ sap.ui.define([
                 return;
             }
 
-            var oDataUrl = "./sap/opu/odata/sap/ZSDGW_CE_APP_SRV/CustomerSet?$filter=" + filterString;
+            var oDataUrl = "/CustomerSet";
 
-            jQuery.ajax({
-                url: oDataUrl,
-                dataType: "json",
+            this.getOwnerComponent().getModel("mainModel").read(oDataUrl, {
+                filters: filterString,
                 success: function (data) {
-                    var searchResults = data.d ? data.d.results : (data.value || []);
+                    var searchResults = data ? data.results : (data.value || []);
+                    if (searchResults.length === 0) {
+                        // Show a message indicating that the customer was not found
+                        sap.m.MessageBox.information("Customer not found.", {
+                            title: "Info"
+                        });
+                        return;
+                    }
+                    // var oMainModel = this.getView().getModel("mainModel");
+                    // oMainModel.setData({
+                    //     d: {
+                    //         results: searchResults
+                    //     }
+                    // });
+                    var customerModel = new sap.ui.model.json.JSONModel(data.results);
+                    this.getView().setModel(customerModel,"customerModel");
+                    // var oTable = this.getView().byId("customerTable");
+                    // oTable.setModel(oMainModel);
+                    // oTable.bindAggregation("items", {
+                    //     path: "/d/results/",
+                    //     template: new sap.m.ColumnListItem({
+                    //         cells: [
+                    //             new sap.m.Text({ text: "{CustomerNo}" }),
+                    //             new sap.m.Text({ text: "{Tel1Numbr}" }),
+                    //             new sap.m.Text({ text: "{EMail}" }),
+                    //             new sap.m.Text({ text: "{Firstname}" }),
+                    //             new sap.m.Text({ text: "{Lastname}" }),
+                    //             new sap.m.Button({
+                    //                 icon : "sap-icon://arrow-right",
+                    //                 press: function(evt) {
+                        //                     var oModel = this.getOwnerComponent().getModel("CustomerNoModel");
+                        //                     oModel.setData({ modelData: {} });
+                        //                     oModel.updateBindings(true);
+                    //                     var oButton = evt.getSource();
+                    //                     var oBindingContext = oButton.getBindingContext();
+                    //                     var sCustomerFirstname = oBindingContext.getProperty("CustomerNo");
+                                    
+                    //                     // Store Firstname in the model
+                    //                     var oCustomerNoModel = this.getView().getModel("CustomerNoModel");
+                    //                     if (!oCustomerNoModel) {
+                    //                         oCustomerNoModel = new sap.ui.model.json.JSONModel();
+                    //                         this.getView().setModel(oCustomerNoModel, "CustomerNoModel");
+                    //                     }
+                                    
+                    //                     var aCustomerFirstnames = oCustomerNoModel.getProperty("/Firstnames") || [];
+                    //                     aCustomerFirstnames.push(sCustomerFirstname);
+                    //                     oCustomerNoModel.setProperty("/Firstnames", aCustomerFirstnames);
+                                    
+                    //                     // Perform navigation or other actions here
+                    //                     var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                    //                     oRouter.navTo("transaction");
+                    //                 }.bind(this)
+                    //             })
+                    //         ]
+                    //     })
+                    // });
 
-                    var oMainModel = this.getView().getModel("mainModel");
-                    oMainModel.setData({
-                        d: {
-                            results: searchResults
-                        }
+                    this.getView().byId("customerTable").setVisible(true);
+                  
+                }.bind(this),
+                
+
+                error: function () {
+                    var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
+
+                    var errorMessage = "An error occurred. Details:\n";
+                    errorDetails.forEach(function (detail) {
+                      errorMessage += "- " + detail.message + "\n";
                     });
-
-                    var oTable = this.getView().byId("customerTable");
-                    oTable.setModel(oMainModel);
-                    oTable.bindAggregation("items", {
-                        path: "/d/results",
-                        template: new sap.m.ColumnListItem({
-                            cells: [
-                                new sap.m.Text({ text: "{CustomerNo}" }),
-                                new sap.m.Text({ text: "{Tel1Numbr}" }),
-                                new sap.m.Text({ text: "{EMail}" }),
-                                new sap.m.Text({ text: "{Firstname}" }),
-                                new sap.m.Text({ text: "{Lastname}" }),
-                                new sap.m.Button({
-                                    icon : "sap-icon://arrow-right",
-                                    press: function(evt) {
-                                        var oModel = this.getOwnerComponent().getModel("CustomerNoModel");
+          
+                    // Show the error message in a message box or dialog
+                    sap.m.MessageBox.error(errorMessage, {
+                      title: "Error"
+                    });
+                  }
+              
+            });
+        },
+        onCustomerPress:function(evt){
+            var oTable = this.getView().byId("customerTable");
+            var oModel = this.getOwnerComponent().getModel("CustomerNoModel");
                                         oModel.setData({ modelData: {} });
                                         oModel.updateBindings(true);
                                         var oButton = evt.getSource();
-                                        var oBindingContext = oButton.getBindingContext();
+                                        var oRow = oButton.getParent().getParent(); // Adjust this based on your table structure
+
+                                        // Get the binding context of the row
+                                        var oBindingContext = oButton.getParent().getBindingContext("customerModel");
+                                    
                                         var sCustomerFirstname = oBindingContext.getProperty("CustomerNo");
                                     
                                         // Store Firstname in the model
@@ -114,21 +177,7 @@ sap.ui.define([
                                         // Perform navigation or other actions here
                                         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                                         oRouter.navTo("transaction");
-                                    }.bind(this)
-                                })
-                            ]
-                        })
-                    });
-
-                    oTable.setVisible(true);
-                }.bind(this),
-
-                error: function () {
-                    MessageToast.show("Error loading customer data.");
-                }
-            });
         },
-
         onNavigateToCustomerSearchTable: function () {
             var oTable = this.getView().byId("customerTable");
             var aSelectedItems = oTable.getSelectedItems();

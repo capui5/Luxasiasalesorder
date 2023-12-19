@@ -16,7 +16,7 @@
         </VBox>
 
         <HBox
-            width="800px"
+            width="350px"
             alignItems="Center"
             justifyContent="Center"
         >
@@ -25,7 +25,6 @@
                 justifyContent="Center"
             >
                 <Image
-                    src="images/qrtourl.png"
                     id="qrcode"
                     width="250px"
                     height="250px"

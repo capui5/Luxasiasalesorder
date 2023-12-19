@@ -13,14 +13,14 @@
     >
         <OverflowToolbar
             class="header"
-            id="otbHeader"
+            id="transheader"
         >
             <Text
                 text="LUXASIA"
                 class="mainmenutext"
             />
         </OverflowToolbar>
-        <f:Form
+        <!-- <f:Form
             id="FormChange354"
             editable="true"
         >
@@ -78,11 +78,6 @@
                                     selected="false"
                                     select="onClick"
                                 />
-                                <!-- <Select visible="false"  items="{mainModel>/OrderReasonSet}" id="input" selectedKey="{}">
-									<items>
-										<core:Item text="{mainModel>OrderReasonDesc}" key="{mainModel>OrderReasonKey}"/>
-									</items>
-                                    </Select> -->
                                 <MultiComboBox
                                     visible="false"
                                     id="orderreason"
@@ -95,6 +90,131 @@
                                         text="{mainModel>OrderReasonDesc}"
                                     />
                                 </MultiComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form> -->
+
+        <f:Form
+            id="FormChange354"
+            editable="true"
+            class="returnFormClass"
+        >
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    breakpointXL="1000"
+                    labelSpanXL="4"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="3"
+                    columnsL="2"
+                    columnsM="2"
+                    singleContainerFullSize="false"
+                />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement label="Customer No">
+                            <f:fields>
+                                <Input
+                                    id="firstNameInput"
+                                    value="{path: 'CustomerNoModel>/Firstnames/0'}"
+                                    placeholder="CUSTOMER NO"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Sales Employee">
+                            <f:fields>
+                                <ComboBox
+                                    visible="true"
+                                    items="{SalesEmployeesModel>/}"
+                                    id="employee"
+                                    selectionChange="onSelectionChange"
+                                >
+                                    <items>
+                                        <core:Item
+                                            text="{SalesEmployeesModel>Pernr}"
+                                        />
+                                    </items>
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Header Campaign">
+                            <f:fields>
+                                <ComboBox
+                                    id="Campaign"
+                                    items="{HeaderCampaignModel>/}"
+                                    class="wide-select custom-margin"
+                                    placeholder="SELECT PROMOTION"
+                                    selectedKey="{selectedPromotion>/selectedPromotion}"
+                                >
+                                    <core:Item
+                                        key="{HeaderCampaignModel>CampaignId}"
+                                        text=" {HeaderCampaignModel>CampaignId} {HeaderCampaignModel>CampaignIdDesc}"
+                                    />
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Document Date">
+                            <f:fields>
+                                <DatePicker
+                                    id="DP2"
+                                    value="{DateModel>/currentDate}"
+                                    dateValue="{DateModel>/currentDate}"
+                                    displayFormat="yyyy-MM-dd"
+                                    change="handleChange"
+                                    class="sapUiSmallMarginBottom"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement label="Return">
+                            <f:fields>
+                                <CheckBox
+                                    id="salesorderreason"
+                                    selected="false"
+                                    select="onClick"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            id="orderFormElement"
+                            visible="false"
+                            label="Order Reason"
+                        >
+                            <f:fields>
+                                <ComboBox
+                                    id="orderreason"
+                                    items="{mainModel>/OrderReasonSet}"
+                                    selectionChange="onSelectionChange"
+                                >
+                                    <items>
+                                        <core:Item
+                                            key="{mainModel>OrderReasonKey}"
+                                            text="{mainModel>OrderReasonDesc}"
+                                        />
+                                    </items>
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="PO Ref No">
+                            <f:fields>
+                                <Input
+                                    id="poreferenceno"
+                                    placeholder="PO Ref No"
+                                />
                             </f:fields>
                         </f:FormElement>
                     </f:formElements>
@@ -114,18 +234,21 @@
                     <ToolbarSpacer />
                     <Button
                         text="ADD"
-                        class="add1"
+                        class="transadd"
                         press="onAddProduct"
                     />
-        
-                  
+                    <Button
+                        text="APPLY PROMOTION"
+                        press="onAddPromotion"
+                        class="transadd"
+                    />
                 </OverflowToolbar>
             </headerToolbar>
             <columns>
-                <Column width="17em">
+                <Column>
                     <Text text="SELECT PROMOTION" />
                 </Column>
-                 <Column >
+                <Column minScreenWidth="Desktop">
                     <Text text="FREE ITEM" />
                 </Column>
                 <Column
@@ -138,47 +261,128 @@
                 <Column
                     minScreenWidth="Tablet"
                     demandPopin="true"
-                    hAlign="Begin"
+                    hAlign="Center"
+                >
+                    <Text text="ARTICLE NO" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
                 >
                     <Text text="PRODUCT" />
                 </Column>
-
-                <Column>
+                <Column
+                    hAlign="Center"
+                    minScreenWidth="Desktop"
+                >
                     <Text text="Quantity" />
                 </Column>
-                <Column>
+                <Column
+                    hAlign="Center"
+                    minScreenWidth="Desktop"
+                >
+                    <Text />
+                </Column>
+                <Column
+                    hAlign="Center"
+                    minScreenWidth="Desktop"
+                >
                     <Text text="UOM" />
+                </Column>
+                <Column
+                    hAlign="Center"
+                    minScreenWidth="Desktop"
+                >
+                    <Text text="Currency" />
                 </Column>
                 <Column>
                     <Text text="Price" />
                 </Column>
-                <Column visible="false">
-                    <Text text="Discount" />
+                <Column width="150px">
+                    <Text text="Discount"  />
+
+                    <footer>
+                        <FlexBox
+						width="150px"
+                            direction="Column"
+                            alignItems="Start"
+                        >
+                            <Text
+                                text="Total Net Price      :"
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="Total Tax Price      :"
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="Total Price Incl Tax :"
+                                class="myBlackText"
+                            />
+                        </FlexBox>
+                    </footer>
+
                     <!-- Initially, set visibility to false -->
                 </Column>
-                <Column visible="false">
+                <Column>
                     <Text text="Net Price" />
+
+                    <footer>
+                        <FlexBox
+                            direction="Column"
+                            alignItems="Start"
+                        >
+                            <Text
+                                text="{viewModel>/totalNetPrice} {SelectedItems>/selectedItems/0/Currency} "
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="{TaxModel>/totaltaxPrice} {SelectedItems>/selectedItems/0/Currency} "
+                                class="myBlackText"
+                            />
+                            <Text
+                                text="{TotalTaxNetModel>/totaltaxandnetprice} {SelectedItems>/selectedItems/0/Currency}"
+                                class="myBlackText"
+                            />
+                        </FlexBox>
+                    </footer>
                     <!-- Initially, set visibility to false -->
                 </Column>
             </columns>
             <items>
                 <ColumnListItem vAlign="Middle">
                     <cells>
-                        <MultiComboBox
+                        <!-- <ComboBox id="Icampaign" items="{CampaignModel>/}" class="wide-select custom-margin" placeholder="SELECT PROMOTION"
+							selectedKey="{SelectedItems>CampaignId}">
+							<items>
+							<core:Item key="{CampaignModel>CampaignId}" text="{CampaignModel>CampaignIdDesc}"/>
+							</items>
+						</ComboBox> -->
+                        <ComboBox
                             id="Icampaign"
-                            items="{CampaignModel>/}"
+                            items="{
+					path: 'CampaignModel>/',
+					suspended: true
+				}"
+                            loadItems="handleLoadItems"
                             class="wide-select custom-margin"
                             placeholder="SELECT PROMOTION"
-                              selectedKeys="{SelectedItems>CampaignId}"
-                        
+                            selectedKey="{SelectedItems>CampaignId}"
                         >
-                            <core:Item
-                                key="{CampaignModel>CampaignId}"
-                                text="{CampaignModel>CampaignIdDesc}"
-                            />
-                        </MultiComboBox>
-                        	<CheckBox  selected="{SelectedItems>IsSelected}" />
+                            <items>
+                                <core:Item
+                                    key="{CampaignModel>CampaignId}"
+                                    text="{CampaignModel>CampaignId} {CampaignModel>CampaignIdDesc}"
+                                />
+                            </items>
+                        </ComboBox>
+                        <CheckBox selected="{SelectedItems>IsSelected}" />
                         <ObjectIdentifier text="{SelectedItems>Barcode}" />
+                        <!-- <ObjectIdentifier text="{SelectedItems>ArticleNo}"/> -->
+                        <ObjectIdentifier
+                            text="{path:'SelectedItems>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"
+                        />
                         <HBox>
                             <items>
                                 <ObjectIdentifier
@@ -192,16 +396,21 @@
                         </HBox>
                         <StepInput
                             value="{SelectedItems>quantity}"
-                            max=""
-                            min="0"
+                       
+                            min="1"
                             step="1"
                             width="80px"
                             validationMode="LiveChange"
                             change="onQuantityChange"
                         />
+                        <Button
+                            icon="sap-icon://delete"
+                            press="onDeleteItem"
+                        />
                         <ObjectIdentifier text="{SelectedItems>UOM}" />
-                        <ObjectNumber number="{SelectedItems>RetailPrice}" />
-                        <Text text="{SelectedItems>Discount}" />
+                        <Text text="{SelectedItems>Currency}" />
+                        <ObjectNumber number=" {SelectedItems>RetailPrice}" />
+                        <Text text=" {SelectedItems>Discount}" />
                         <Text text="{SelectedItems>NetPrice}" />
                         <!-- <StepInput
                         value="{mainModel>quantity}"
@@ -218,49 +427,32 @@
         </Table>
         <footer>
             <OverflowToolbar
-                class="customfooter"
-                id="otFooter"
+                class=""
+                id=""
             >
-                <VBox alignItems="Start">
-                    <MultiComboBox
-                        id="Campaign"
-                        items="{CampaignModel>/}"
-                        class="wide-select custom-margin"
-                        placeholder="SELECT PROMOTION"
-                        selectedKeys="{selectedPromotion>/selectedPromotion}"
-                    >
-                        <core:Item
-                            key="{CampaignModel>CampaignId}"
-                            text="{CampaignModel>CampaignIdDesc}"
-                        />
-                    </MultiComboBox>
-                    <Button
-                        text="APPLY PROMOTION"
-                        press="onAddPromotion"
-                        class="transadd"
-                    />
-                </VBox>
+                <!-- <CheckBox
+                    text="Boutique"
+                    select="onConditionTypeCheckBox"
+                />
+                <Button
+                    id="onConditionTypeButton"
+                    visible="false"
+                    text="Payment Type"
+                    press="onConditionTypeButtonPress"
+                /> -->
+
                 <ToolbarSpacer />
 
-                <VBox alignItems="End">
-                    <Text
-                        text="Total: {/TotalAmount}"
-                        class="myBlackText"
-                    />
-                    <ToolbarSpacer />
-                    <HBox alignItems="End">
-                        <Button
-                            text="CANCEL"
-                            press="onCancelPress"
-                            class="transcancel"
-                        />
-                        <Button
-                            text="SAVE SALE"
-                            press="onSavePress"
-                            class="transsave"
-                        />
-                    </HBox>
-                </VBox>
+                <Button
+                    text="CANCEL"
+                    press="onCancelPress"
+                    class="transcancel"
+                />
+                <Button
+                    text="SAVE SALE"
+                    press="onSavePress"
+                    class="transsave"
+                />
             </OverflowToolbar>
         </footer>
     </Page>

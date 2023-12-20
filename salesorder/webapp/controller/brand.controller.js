@@ -147,36 +147,15 @@ if (oModel) {
       var selectedBrandNames = this.getView().getModel("SelectedBrandName").getData().selectedBrandNames;
       var brandsArr=[];
       for(var m=0;m<selectedBrandNames.length;m++){
+        brandsArr.push({
+          "email": selectedBrandNames[m].email,
+          "BRANDID": selectedBrandNames[m].Brand_Id,
+          "BrandDESC": selectedBrandNames[m].value
 
+        });
       }
       var payload = {
-        "brands": [
-          {
-            "email": "christintan@luxasia.com",
-            "BRANDID": "ACR",
-            "BrandDESC": "BURBERRY"
-          },
-          {
-            "email": "christintan@luxasia.com",
-            "BRANDID": "ABR",
-            "BrandDESC": "CALVIN KLIEN"
-          },
-          {
-            "email": "christintan@luxasia.com",
-            "BRANDID": "AMR",
-            "BrandDESC": "CALVIN KLIEN"
-          },
-          {
-            "email": "christintan@luxasia.com",
-            "BRANDID": "ANR",
-            "BrandDESC": "NEW BRAND DESCRIPTION"
-          },
-          {
-            "email": "christintan@luxasia.com",
-            "BRANDID": "AVR",
-            "BrandDESC": "NEW BRAND DESCRIPTION"
-          }
-        ]
+        "brands": brandsArr
       };
       oModel.update(url, payload,{
         //filters:[filters],

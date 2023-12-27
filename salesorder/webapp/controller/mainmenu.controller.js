@@ -32,7 +32,9 @@ sap.ui.define([
 
         },
         _onRouteMatched: function (oEvent) {
+            this.oonSearchProduct(true);
             var oArgs = oEvent.getParameter("arguments");
+            
             var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
 
             var sStoreId = oStoreModel.getProperty("/selectedStoreId");
@@ -74,6 +76,10 @@ sap.ui.define([
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("brandselection");
         },
+        OnPurchasePress: function () {
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("purchasedata");
+        },
 
         onOpenDialog: function () {
             this.pDialog ??= this.loadFragment({
@@ -92,6 +98,16 @@ sap.ui.define([
                 });
                 this.pDialog = null;
             }
+        },
+
+        OnStockListPress: function(){
+            this.pDialog ??= this.loadFragment({
+                name: "com.luxasia.salesorder.view.StockList"
+            });
+            this.pDialog.then(function (dialog) {
+                dialog.open();
+
+            });
         },
 
 
@@ -117,8 +133,8 @@ sap.ui.define([
             }
         },
 
-        onSearchProduct: function () {
-            //Assuming you have already created an instance of oDataModel
+        oonSearchProduct: function (defaultFlag) {
+            // Assuming you have already created an instance of oDataModel
             var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
 
             if (oBrandModel) {
@@ -152,31 +168,27 @@ sap.ui.define([
                             and: true
                         });
 
+                        
                         if (oModel) {
-                            var oJsonModel = new sap.ui.model.json.JSONModel();
-                            var oBusyDialog = new sap.m.BusyDialog({
-                                title: "Loading Products",
-                                text: "Please wait...."
-                            });
-                            oBusyDialog.open();
 
+                            var oJsonModel = new sap.ui.model.json.JSONModel();               
                             var that = this;
                             oModel.read("/ProductSet", {
                                 filters: [oFinalFilter],
                                 success: function (response) {
-                                    oBusyDialog.close();
+                                  
+                                    for(var i =0 ; i<response.results.length;i++ ){
+                                        response.results[i].quantity = 1;
+                                    }
                                     oJsonModel.setData(response.results);
                                     oJsonModel.setSizeLimit(10000000000000);
                                     that.getView().setModel(oJsonModel, "ProductSetModel");
-
+                                    if (defaultFlag != true) {
                                     // Code to load and open the dialog
-                                    that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.searchproduct" });
-                                    that.aDialog.then(function (dialog) {
-                                        dialog.open();
-                                    });
-                                },
+                               }
+                            },
                                 error: function (error) {
-                                    oBusyDialog.close();
+                                  
                                 }
                             });
                         } else {
@@ -195,7 +207,19 @@ sap.ui.define([
 
 
         },
-
+        onSearchProduct: function () {
+            var that = this;
+        that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.searchproduct" });
+        that.aDialog.then(function (dialog) {
+            dialog.open();
+        });
+    },
+        setDefaultQuantity: function(quantity) {
+			if (!quantity || quantity < 1) {
+				return 1; 
+			}
+			return quantity;
+		},
 
         // Function to handle selection change
     
@@ -233,13 +257,18 @@ sap.ui.define([
 
             aListItems.forEach(function (oListItem) {
                 var oBindingContext = oListItem.getBindingContext("ProductSetModel");
-                if (oBindingContext) {
-                    var oSelectedItem = oBindingContext.getObject();
-                    aSelectedItems.push(oSelectedItem);
-                } else {
-                    console.error("BindingContext is undefined for the selected item.");
-                }
-            });
+                          if (oBindingContext) {
+                              var oSelectedItem = oBindingContext.getObject();
+                              var itemQuantity = oSelectedItem.quantity;
+                              if (itemQuantity > 0) {
+                                  aSelectedItems.push(oSelectedItem);
+                              } else {
+                                  console.error("Selected item quantity should be greater than 0.");
+                              }
+                          } else {
+                              console.error("BindingContext is undefined for the selected item.");
+                          }
+                      });
 
             // Access the existing "SelectedItems" model and update the selected items
             var oModel = this.getView().getModel("SelectedItems");

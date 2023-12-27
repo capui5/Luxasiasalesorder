@@ -38,15 +38,17 @@
                         </CustomListItem>
                     </List>
                 </content>
-                  
-                    
-                    
-                <Button
-                    text="Login"
-                    width="100%"
+                     <footer>
+                	<Toolbar>
+            <Button
+             width="100%"
+                    text="Create"
                     press="Login"
-                    class="Login"
+                    class="createBtn"
                 />
+                	</Toolbar>
+        </footer>
+                    
             </Page>
         </masterPages>
 

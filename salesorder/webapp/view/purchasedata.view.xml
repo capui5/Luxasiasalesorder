@@ -1,0 +1,256 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.purchasedata"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    displayBlock="true"
+>
+ 
+    <SplitContainer
+        id="SplitContDemo"
+        initialDetail="detail"
+        initialMaster="master"
+    >
+     <!-- <OverflowToolbar class="header" id="otbSubheader">
+            <Text text="LUXASIA" class="mainmenutext" />
+        </OverflowToolbar> -->
+        <masterPages>
+            <Page
+                id="master"
+              
+                backgroundDesign="List"
+                class="masterPage"
+            >
+                <headerContent>
+            <Toolbar>
+                <Button
+                    icon="sap-icon://nav-back"
+                    press="onNavBack"
+                />
+                <Title text="Purchase Orders List" />
+               
+                <Button
+                    text="Show Filters"
+                    press=".onShowFilters"
+                    class="filter"
+                />
+            </Toolbar>
+        </headerContent>
+                <content>
+                    <VBox
+                        id="filtersContainer"
+                        visible="false"
+                    >
+                        <Label
+                            text="Search By PO Number:"
+                            labelFor="poNumberInput"
+                        />
+                        <Input
+                            id="poNumberInput"
+                            value="{/filters/poNumber}"
+                            placeholder="Enter PO Number"
+                            liveChange=".onFilterChange"
+                        />
+
+                        <Label
+                            text="Start Date:"
+                            labelFor="startDatePicker"
+                        />
+                        <DatePicker
+                            id="startDatePicker"
+                            value="{/filters/startDate}"
+                            placeholder="Select Start Date"
+                            liveChange=".onFilterChange"
+                        />
+
+                        <Label
+                            text="End Date:"
+                            labelFor="endDatePicker"
+                        />
+                        <DatePicker
+                            id="endDatePicker"
+                            value="{/filters/endDate}"
+                            placeholder="Select End Date"
+                            liveChange=".onFilterChange"
+                        />
+
+                        <Button
+                            text="Go"
+                            press=".onGoButtonPress"
+                            visible="{FilterModel>/filters/goButtonVisible}"
+                        />
+                    </VBox>
+                    <!-- <List
+                        id="purchaseOrderList"
+                        itemPress=".onListItemPress"
+                        items="{mainModel>/PurchaseHeadSet}"
+                    >
+                        <items>
+                            <StandardListItem
+                                title="{mainModel>PoNumber}"
+                                type="Active"
+                            />
+                        </items>
+                    </List> -->
+                    <List
+                        id="purchaseOrderList"
+                        items="{mainModel>/PurchaseHeadSet}"
+                        mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}"
+                        selectionChange=".onListItemPress"
+                    >
+                        <items>
+                 
+                            <ObjectListItem
+                                title="PO Number: {mainModel>PoNumber}" class="poText"
+                            >
+                          
+                                 <attributes>
+                                    <ObjectAttribute
+                                        text="Document Type: {mainModel>DocType}"
+                                    />
+                                    <ObjectAttribute
+                                        text="Document Type Desc: {mainModel>DocTypeText}"
+                                    />
+ 
+                                    <ObjectAttribute
+                                        text="Delivery Status: {mainModel>DlvStatus}"
+                                    />
+                                </attributes>
+                            </ObjectListItem>
+                        </items>
+                    </List>
+                </content>
+                 <!-- <Button
+                    text="Create"
+                    press="onCreatePOPress"
+                    width="100%"
+                    class="Login"
+                />  -->
+                 <footer>
+                	<Toolbar>
+            <Button
+                    text="Create"
+                    press="onCreatePOPress"
+                    class="createBtn"
+                />
+                	</Toolbar>
+        </footer>
+            </Page>
+        </masterPages>
+
+        <detailPages>
+            <Page
+                id="detail"
+                title='Details of :'
+                backgroundDesign="Solid"
+                showNavButton="{= !${device>/system/desktop}}"
+                navButtonPress=".onPressDetailBack"
+                class="detailPage"
+            >
+                <headerContent>
+                    <Button
+                        id="gr"
+                        visible="{= ${editmode>/editable} === false}"
+                        text="Post GR"
+                        enabled="{!editmode>/editable}"
+                        press="onCreateGRPress"
+                        class="edit"
+                    />
+
+                    <Button
+                        id="edit"
+                        visible="true"
+                        text="Edit"
+                        enabled="{= ${!editmode>/editable}}"
+                        press="handleEditPress"
+                        class="edit"
+                    />
+                    <!-- <Button
+                        id="save"
+                        text="Save"
+                        visible="{editmode>/editable}"
+                        press="handleSavePress"
+                        class="transsave"
+                    />
+                    <Button
+                        id="cancel"
+                        text="Cancel"
+                        visible="{editmode>/editable}"
+                        press="handleCancelPress"
+                        class="transcancel"
+                    /> -->
+                </headerContent>
+                <Table
+                    items="{purchaseOrderDetails>/}"
+                    id="detailitem"
+                    inset="false"
+                    class="sapUiResponsiveMargin"
+                    itemPress=".onItemPress"
+                >
+                    <columns>
+                        <Column>
+                            <Text text="Item Number" />
+                        </Column>
+                        <Column demandPopin="true">
+                            <Text text="Material" />
+                        </Column>
+                        <Column
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                        >
+                            <Text text="Material Description" />
+                        </Column>
+                        <Column>
+                            <Text text="Quantity" />
+                        </Column>
+                        <Column demandPopin="true">
+                            <Text text="PoUnit" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{purchaseOrderDetails>PoItem}" />
+                                <Text text="{purchaseOrderDetails>Material}" />
+                                <Text
+                                    text="{purchaseOrderDetails>MaterialDesc}"
+                                />
+
+                                <StepInput
+                                    value="{purchaseOrderDetails>Quantity}"
+                                    enabled="{editmode>/editable}"
+                                    width="6rem"
+                                />
+
+                                <Text text="{purchaseOrderDetails>PoUnit}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <footer>
+                    <Bar>
+                        <contentRight>
+                            <Button
+                                id="save"
+                                text="Save"
+                                visible="{editmode>/editable}"
+                                press="handleSavePress"
+                                class="transsave"
+                            />
+                            <Button
+                                id="cancel"
+                                text="Cancel"
+                                visible="{editmode>/editable}"
+                                press="handleCancelPress"
+                                class="transcancel"
+                            />
+                        </contentRight>
+                    </Bar>
+                </footer>
+            </Page>
+        </detailPages>
+    </SplitContainer>
+</mvc:View>

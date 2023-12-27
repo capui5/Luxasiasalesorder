@@ -1,0 +1,87 @@
+<mvc:View controllerName="com.luxasia.salesorder.controller.SalesOrderItem"
+  	xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+<Page showHeader="false" >
+		<OverflowToolbar class="header" id="transheader">
+			<Text text="LUXASIA" class="mainmenutext"/>
+            <ToolbarSpacer />
+              
+		</OverflowToolbar>
+		
+			
+	<Table id="idProductsTable"
+		inset="false"
+		items="{SelectedCustomerModel>/}">
+			<infoToolbar>
+		<OverflowToolbar>
+				<Title titleStyle="Auto" text="SalesOrder No :{SelectedCustomerModel>/0/SalesorderNo}"/>
+			
+			</OverflowToolbar>
+		</infoToolbar>
+		<columns>
+			<Column
+			hAlign="Center"
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<Text text="Article" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Center">
+				<Text text="Article no" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Center">
+				<Text text="Quantity" />
+			</Column>
+			<Column minScreenWidth="Desktop"
+				demandPopin="true"
+			>
+				<Text text="Free Item" />
+			</Column>
+            <Column minScreenWidth="Desktop"
+				demandPopin="true"
+				>
+				<Text text="Category" />
+			</Column>
+            <Column minScreenWidth="Desktop"
+				demandPopin="true"
+				>
+				<Text text="Net Price" />
+			</Column>
+           
+		</columns>
+		<items>
+			<ColumnListItem vAlign="Middle">
+				<cells>
+				
+					<Text
+						text="{SelectedCustomerModel>ShortText}" />
+					<Text
+						text="{SelectedCustomerModel>Material}" />
+				    <Text
+						text="{SelectedCustomerModel>TargetQty}" />
+					<Text
+						text="{SelectedCustomerModel>FreeItem}" />
+                        <Text
+						text="{SelectedCustomerModel>ItemCateg}" />
+                    <Text
+						text="{SelectedCustomerModel>NetPrice}" />
+                        
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+		<footer>
+			<OverflowToolbar id="otbFooter">
+				<ToolbarSpacer/>
+				<Button class="transsave" press="onGoSalesCompletion" text="GO BACK"/>
+				
+
+			</OverflowToolbar>
+		</footer>
+		</Page>
+</mvc:View>

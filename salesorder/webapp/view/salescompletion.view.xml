@@ -6,48 +6,42 @@
     xmlns:core="sap.ui.core" xmlns:fb="sap.ui.comp.filterbar"
 >
     <Page showHeader="false">
-      <OverflowToolbar class="header" id="otbSubheader">
+    
+       <Bar class="headers">
+          <contentLeft>
             <Text
                 text="LUXASIA"
                 class="mainmenutext"
             />
-        </OverflowToolbar>
+             </contentLeft>
+             </Bar>
+    
+        
             <Bar class="salebar">
                 <contentLeft>
                     <Button
                         icon="sap-icon://arrow-left"
-                        size="1rem"
                         press="onNavBack"
                         class="navbutton"
                     />
                 </contentLeft>
-                <contentMiddle>
-                    <Button
-                        text="Pending Transactions"
-                        press="onPendingTransactions"
-                        class="myTitleButton"
-                    />
-                    <Button
-                        text="Completed Transactions"
-                        press="onCompletedTransactions"
-                        class="myTitleButton"
-                    />
-                </contentMiddle>
+              
                 <contentRight>
                     <Text
+                    class="datetext"
                         id="dateDisplay"
                         text="{CurrentDate>/currentDate}"
                     />
                 </contentRight>
             </Bar>
-        <Bar class="mysubheader">
-            <contentLeft>
+          <OverflowToolbar class="header2" id="otbSubheader">
+           
                 <Text
+                id="displayText"
                     text="Today's Transactions"
                     class="myText"
                 />
-            </contentLeft>
-            <contentRight>
+           <ToolbarSpacer/>
                 <!-- <SearchField
                     placeholder="Search"
                     change="onSearch"
@@ -62,8 +56,7 @@
                     press="onCompletedTransactions"
                     class="completetranscation"
                 />
-            </contentRight>
-        </Bar>
+               </OverflowToolbar>
         <content>
         <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search="onGoPress" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 							<fb:filterGroupItems>
@@ -89,24 +82,35 @@
 						</fb:FilterBar>
             <Table
                 id="salesTable"
-                items="{mainModel>/SalesOrderHeadSet}"
+                 items="{
+        path: 'mainModel>/SalesOrderHeadSet',
+        length: 5000
+    }"
+    
             >
                 <columns>
-                    <Column>
+                    <Column >
                         <Text text="Sale Order No" />
                     </Column>
-                    <Column>
+                    <Column hAlign="Center">
                         <Text text="DocType" />
                     </Column>
-                    <Column>
+                    <Column  minScreenWidth="Tablet"
+                    demandPopin="true">
                         <Text text="DocDate" />
                     </Column>
-                    <Column>
+                    <Column  minScreenWidth="Tablet"
+                    demandPopin="true">
                         <Text text="Currency" />
                     </Column>
-                    <Column>
+                    <Column  minScreenWidth="Tablet"
+                    demandPopin="true">
                         <Text text="Net Price" />
                     </Column>
+                     <Column hAlign="Center">
+                        <Text text="View Sales Order" />
+                    </Column>
+                    
                 </columns>
                 <items>
                     <ColumnListItem type="Active">
@@ -123,6 +127,7 @@
 				      }" />
                             <Text text="{mainModel>Currency}"/>
                             <Text text="{mainModel>NetPrice}"/>
+                             <Button icon="sap-icon://arrow-right" press="onSalesOrderPress"/>
                             <!-- <Text
                                 text="{SalesData>SaleId}"
                                 class="myBlackText"

@@ -9,11 +9,11 @@
 >
     <Page
         showHeader="false"
-        id="myPage"
+        id="stockorder1"
     >
         <OverflowToolbar
             class="header"
-            id="otbHeader"
+            id="tbHeaderr"
         >
             <Text
                 text="luxasia"
@@ -21,7 +21,7 @@
             />
         </OverflowToolbar>
         <f:Form
-            id="FormChange354"
+            id="FormChange3543"
             editable="true"
         >
             <f:layout>
@@ -35,88 +35,80 @@
                     emptySpanL="4"
                     emptySpanM="4"
                     emptySpanS="0"
-                    columnsXL="1"
-                    columnsL="1"
-                    columnsM="1"
+                    columnsXL="2"
+                    columnsL="2"
+                    columnsM="2"
                     singleContainerFullSize="false"
                 />
             </f:layout>
             <f:formContainers>
                 <f:FormContainer>
                     <f:formElements>
-                        <f:FormElement>
+                        <f:FormElement label="Store Type">
                             <f:fields>
-                                <!-- <Select
-                                    visible="true"
-                                    items="{ 
-        path: 'mainModel>/VendorSet',
-        sorter: { path: 'VendorName' }
-    }"
-                                    id="vendor"
-                                    selectedKey="{mainModel>/selectedVendorKeys/0}"
-                                    change="onVendorSelectionChange"
-                                >
-                                    <items>
-                                        <core:Item
-                                            key=""
-                                            text="Select a Vendor"
-                                        />
-                                        <core:Item
-                                            text="{mainModel>VendorName}"
-                                            key="{mainModel>VendorName}"
-                                        />
-                                    </items>
-                                </Select> -->
-
-                                <ComboBox
-                                    visible="true"
-                                    items="{ 
-        path: 'mainModel>/VendorSet',
-        length: 10000,
-        sorter: {
-            path: 'VendorName',
-            descending: false 
-        }
-    }"
-                                    id="vendor"
-                                    selectedKey="{mainModel>/selectedVendorKeys/0}"
-                                    change="onVendorSelectionChange"
-                                    placeholder="Select a Vendor"
-                                >
-                                    <items>
-                                        <core:Item
-                                            key=""
-                                            text="Select a Vendor"
-                                        />
-                                        <core:Item
-                                            text="{mainModel>VendorName}{mainModel>VendorNo}"
-                                            key="{mainModel>VendorNo}"
-                                        />
-                                    </items>
+                                <ComboBox editable="false" class="storeTypeSelect"
+                                    id="DocumentTypeComboBox" selectedKey="{StoreModel>/selectedStoreType}"
+                                    selectionChange="handleSelectionChange"
+                                    placeholder="Store Type">
+                                    <core:Item text="Boutique" key="B"/>
+                                    <core:Item
+                                        text="Consignment/Outright" key="C"/>
                                 </ComboBox>
-
-                                <DatePicker
-                                    id="DP2"
-                                    value="{/DlvDate}"
-                                    dateValue="{/DlvDate}"
-                                    change="handleChange"
-                                    class="sapUiSmallMarginBottom"
-                                    placeholder="Delivery Date"
-                                />
-                                <!-- <DatePicker
-    id="DP2"
-    value="{
-        'path':'/valueDP2',
-        'type':'sap.ui.model.type.Date',
-        'formatOptions': {
-            'pattern': 'yyyy-MM-dd'
-        }
-    }"
-    dateValue="{/valueDP2}"
-    change="handleChange"
-    class="sapUiSmallMarginBottom"
-    placeholder="Delivery Date"
-/> -->
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Storage Location" visible="{=${StoreModel>/selectedStoreType} === 'B' ? true : false}">
+                            <f:fields>
+                                <ComboBox items="{storageLocModel>/}" 
+                                    id="storageLocation" showSecondaryValues="true"
+                                    selectionChange="handleStorageLocation">
+                                    <core:ListItem text="{storageLocModel>Name}" key="{storageLocModel>Storage_loc}"
+                                    additionalText = "{storageLocModel>Storage_loc}"/>
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Delivery Date">
+                            <f:fields>
+                               <DatePicker id="deliveryDate"  displayFormat="dd.MM.yyyy" valueFormat="dd.MM.yyyy"/>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Document Type" visible="{=${StoreModel>/selectedStoreType} === 'B' ? true : false}">
+                            <f:fields>
+                                <ComboBox 
+                                    id="documentType" 
+                                    selectionChange="onDocumentType">
+                                    <core:Item text="Stock Transfer Order" key="STO"/>
+                                    <core:Item text="Stock Transfer Order Return" key="STO_RET"/>
+                                    <!-- <core:Item text="Stock Transport Order" key="STORE_TO_STORE"/> -->
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Document Type" visible="{=${StoreModel>/selectedStoreType} !== 'B' ? true : false}">
+                            <f:fields>
+                                <ComboBox 
+                                    id="documentTypeConsigment" 
+                                    selectionChange="onDocumentType">
+                                    <core:Item text="Department Store Order" key="NORMAL"/>
+                                    <core:Item text="Department Store Order return" key="EXT_RET"/>
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Supply Plant" visible="{=${StoreModel>/selectedStoreType} === 'B' ? true : false}">
+                            <f:fields>
+                                <ComboBox items="{supplyPlantModel>/}" id="supplyPlant" showSecondaryValues="true" 
+                                    selectionChange="onSupplyPlant">
+                                    <core:ListItem text="{supplyPlantModel>Name}" key="{supplyPlantModel>VendorNo}"
+                                    additionalText = "{supplyPlantModel>VendorNo}"/>
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Supply Vendor" visible="{=${StoreModel>/selectedStoreType} !== 'B' ? true : false}">
+                            <f:fields>
+                                <ComboBox items="{supplyVendorModel>/}" 
+                                    id="supplyVendor"  showSecondaryValues="true"
+                                    selectionChange="onSupplyVendor">
+                                    <core:ListItem text="{supplyVendorModel>Name}" key="{supplyVendorModel>VendorNo}"
+                                    additionalText = "{supplyVendorModel>VendorNo}"/>
+                                </ComboBox>
                             </f:fields>
                         </f:FormElement>
                     </f:formElements>
@@ -125,7 +117,7 @@
         </f:Form>
         <Table
             items="{cartpurchaseModel>/selectedItems}"
-            mode="TwoWay"
+            id="stockordertable"
         >
             <headerToolbar>
                 <OverflowToolbar class="otbSubheader">
@@ -135,12 +127,13 @@
                     />
                     <ToolbarSpacer />
                     <Button
-                        text="ADD"
-                        class="add1"
+                        text="Add Products"
+                        class="transadd"
                         press="onAddProduct"
                     />
                 </OverflowToolbar>
             </headerToolbar>
+
             <columns>
                 <Column width="12em">
                     <Text text="Bar Code" />
@@ -157,19 +150,10 @@
                     demandPopin="true"
                     hAlign="Center"
                 >
-                    <Text text="Qunatity" />
+                    <Text text="Quantity" />
                 </Column>
                 <Column hAlign="Center">
                     <Text text="UOM" />
-                </Column>
-                <Column hAlign="Center">
-                    <Text text="Price" />
-                </Column>
-                <Column
-                    hAlign="Center"
-                    minScreenWidth="Tablet"
-                >
-                    <Text text="Currency" />
                 </Column>
             </columns>
             <items>
@@ -181,68 +165,34 @@
                                 <ObjectIdentifier
                                     text="{cartpurchaseModel>ArticleDesc}"
                                 />
-                                <!-- <Button
-                                    icon="sap-icon://delete"
-                                    press="onDeleteProduct"
-                                /> -->
                             </items>
                         </HBox>
                         <StepInput
                             value="{cartpurchaseModel>quantity}"
                             max=""
-                            min="0"
+                            min="1"
                             step="1"
                             width="80px"
                             validationMode="LiveChange"
                             change="onQuantityChange"
                         />
                         <ObjectIdentifier text="{cartpurchaseModel>UOM}" />
-                        <ObjectNumber
-                            number="{cartpurchaseModel>RetailPrice}"
-                        />
-                        <!-- <StepInput
-                        value="{mainModel>quantity}"
-                        max=""
-                        min="0"
-                        step="1"
-                        width="80px"
-                        validationMode="LiveChange"
-                        change="onQuantityChange"
-                    /> -->
                     </cells>
                 </ColumnListItem>
             </items>
         </Table>
         <footer>
             <OverflowToolbar
-                class="customfooter"
-                id="otFooter"
             >
-                <VBox alignItems="Start">
-                    <!-- <MultiComboBox
-                        id="Campaign"
-                        items="{CampaignModel>/}"
-                        class="wide-select custom-margin"
-                        placeholder="SELECT PROMOTION"
-                        selectedKeys="{selectedPromotion>/selectedPromotion}"
-                    >
-                        <core:Item
-                            key="{CampaignModel>name}"
-                            text="{CampaignModel>CampaignIdDesc}"
-                        />
-                    </MultiComboBox> -->
+                <!-- <VBox alignItems="Start">
                     <Text
                         text="PH will be offered a field to key the retailer reference here"
                         class="myText"
                     />
-                </VBox>
+                </VBox> -->
                 <ToolbarSpacer />
 
                 <VBox alignItems="End">
-                    <Text
-                        text="Total: {cartpurchaseModel>/totalPrice}"
-                        class="myBlackText"
-                    />
 
                     <ToolbarSpacer />
                     <HBox alignItems="End">
@@ -252,7 +202,7 @@
                             class="transcancel"
                         />
                         <Button
-                            text="Create Dept Store Order"
+                            text="Create Purchase Order"
                             press="onPoPress"
                             class="transsave"
                         />

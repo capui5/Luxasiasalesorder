@@ -53,7 +53,7 @@
                 >
                     <Text text="ARTICLE NO" />
                 </Column>
-                <Column>
+                <Column visible="false">
                     <Text text="QUANTITY" />
                 </Column>
                 <Column>
@@ -68,7 +68,7 @@
                     <cells>
                         <ObjectIdentifier
                             title="{Name}"
-                            text="{ProductSetModel>ArticleNo}"
+                            text="{path:'ProductSetModel>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"
                         />
                         <Text text="{ProductSetModel>Barcode}" />
                         <Text text="{ProductSetModel>ArticleDesc}" />
@@ -79,6 +79,7 @@
                             id="CurrentValue"
                             value="{ProductSetModel>quantity}"
                             width="100px"
+                            min="1"
                             class="step_input"
                         />
                           <Text text="{ProductSetModel>UOM}" />

@@ -249,9 +249,14 @@ sap.ui.define([
 
     _onRouteMatched: function (evt) {
       var that = this;
+      that.onProductSearch();
       that.onAddPromotion(true);
       this.conditionTypeArr = [];
       this.oControlEvent = evt;
+      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[0].getFields()[0].getBinding("items").filter([]);
+      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[1].getFields()[0].getBinding("items").filter([])
+      this.conditionType.getContent()[0].getFormContainers()[0].getFormElements()[2].getFields()[0].getBinding("items").filter([])
+
       that.oControlEvent.getSource().getBinding("items").resume();
       var compaignItems = evt.getSource().getBinding("items");
       that.onTableUpdateFinished(true);
@@ -353,7 +358,7 @@ sap.ui.define([
       }
 
     },
-    ProductSearch: function () {
+    onProductSearch: function () {
       var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
 
       if (oBrandModel) {
@@ -388,45 +393,43 @@ sap.ui.define([
 
             if (oModel) {
               var oJsonModel = new sap.ui.model.json.JSONModel();
-              var oBusyDialog = new sap.m.BusyDialog({
-                title: "Loading Products",
-                text: "Please wait...."
-              });
-              oBusyDialog.open();
+         
 
               var that = this;
               oModel.read("/ProductSet", {
                 filters: [oFinalFilter],
                 success: function (response) {
-                  oBusyDialog.close();
+                
                   oJsonModel.setData(response.results);
+                  for(var i =0 ; i<response.results.length;i++ ){
+                    response.results[i].quantity =1;
+                }
                   oJsonModel.setSizeLimit(10000000000000);
                   that.getView().setModel(oJsonModel, "ProductSetModel");
 
-                  that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.Product" });
-                  that.aDialog.then(function (dialog) {
-                    dialog.open();
-                  });
+                
                 },
                 error: function (error) {
-                  oBusyDialog.close();
+                 
                 }
               });
             } else {
               console.error("mainModel not found.");
             }
-          } else {
-            console.error("StoreModel not found.");
-          }
-        } else {
-          console.error("SelectedBrandName model's selectedBrandNames property is empty or not an array.");
-        }
-      } else {
-        console.error("SelectedBrandName model not found or undefined.");
-      }
+          } 
+        } 
+      } 
+    },
+    ProductSearch: function () {
+    
+      var that = this;
+      that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.Product" });
+      that.aDialog.then(function (dialog) {
+        dialog.getContent()[0].removeSelections(true);
 
-
-
+        dialog.open();
+    
+      });
     },
 
     //     onAddToSaleProducts: function () {
@@ -511,7 +514,7 @@ sap.ui.define([
         if (oBindingContext) {
           var oSelectedItem = oBindingContext.getObject();
           var itemQuantity = oSelectedItem.quantity;
-          if (itemQuantity > 0) {
+          if (itemQuantity >0 ){
             aSelectedItems.push(oSelectedItem);
           } else {
             console.error("Selected item quantity should be greater than 0.");
@@ -581,11 +584,10 @@ sap.ui.define([
       } else {
         console.error("Model 'SelectedItems' not found.");
       }
-
       var oDialog = this.getView().byId("producttablepage");
-      oDialog.close();
-      var oDialog = this.getView().byId("scanandadd");
-      oDialog.close();
+    oDialog.close();
+    var oDialog = this.getView().byId("scanandadd");
+    oDialog.close();
       that.onAddPromotion(true);
     },
 
@@ -704,8 +706,11 @@ sap.ui.define([
 
     CloseSearchProduct: function () {
       var oDialog = this.getView().byId("producttablepage");
+      
       oDialog.close();
+     
     },
+   
 
     // calculateTotalPrice: function () {
     //   var oTable = this.getView().byId("transactiontable");
@@ -901,6 +906,20 @@ sap.ui.define([
       // Recalculate total price
       that.onTableUpdateFinished();
     },
+    onCheckBoxSelect: function(oEvent){
+      var oCheckBox = oEvent.getSource(); // Get the checkbox
+      var oRow = oCheckBox.getParent(); // Get the parent (Row)
+      var oCells = oRow.getCells(); // Get all cells of the row
+
+      var oDropdown = oCells[0]; // Assuming the dropdown is in the second cell
+
+      if (oCheckBox.getSelected()) {
+        oDropdown.setEnabled(false); // Disable dropdown if checkbox is selected
+      } else {
+        oDropdown.setEnabled(true); // Enable dropdown if checkbox is not selected
+      }
+      this.onAddPromotion(true);
+    },
     onAddPromotion: function (defaultFlag) {
 
       var that = this;
@@ -959,7 +978,6 @@ sap.ui.define([
 
       var oTable = this.byId("transactiontable");
       var aColumns = oTable.getColumns();
-
       // Set the visibility of the first two columns to true
       aColumns[6].setVisible(true);
       aColumns[7].setVisible(true);
@@ -981,7 +999,7 @@ sap.ui.define([
       var salesOrderItems = selectedItems.map(function (item) {
 
 
-
+        var isItemSelected = item.IsSelected === true || item.IsSelected === 'true';
         // Ensure item.CampaignId is an array
         var campaignIdForItem = Array.isArray(item.CampaignId) ? item.CampaignId : [];
         var conditionTypeForItem = Array.isArray(item.ConditionType) ? item.ConditionType : [];
@@ -996,7 +1014,7 @@ sap.ui.define([
         }
 
         return {
-          "FreeItem": false,
+          "FreeItem": isItemSelected,
           "Zcampaign": defaultFlag == true ? "" : item.CampaignId, // Join array elements into a string
           // "Zcampaign": "C-0020000342",
           "SalesorderNo": "",
@@ -1310,14 +1328,19 @@ sap.ui.define([
            sap.m.MessageBox.error("Please select items to Create Sales Order.");
            return;
        }
-      var storeType = this.getView().getModel("StoreModel").getProperty("/selectedStoreType");
-      if(storeType == "B"){
-          this.onConditionTypeButtonPress();
-      }else{
-        this.onSavePressServicecall();
-      }
-    },
-
+       var storeType = this.getView().getModel("StoreModel").getProperty("/selectedStoreType");
+       var totalamountModel = this.getView().getModel("TotalTaxNetModel");
+       var totaltaxandnetprice = totalamountModel.getProperty("/totaltaxandnetprice");
+   
+       if (storeType === "B" && totaltaxandnetprice === 0) {
+         
+           this.onSavePressServicecall(); 
+       } else if (storeType === "B") {
+           this.onConditionTypeButtonPress();
+       } else {
+           this.onSavePressServicecall();
+       }
+   },
 
     onSavePressServicecall: function () {
       var that = this;
@@ -1335,7 +1358,25 @@ sap.ui.define([
       var selectedItems = oCartModel.getProperty("/selectedItems");
       var OrderReason = this.getView().byId("orderreason").getSelectedKey();
 
+      var selectedHeaderCampaignKey = this.getView().byId("Campaign").getSelectedKey(); // Assuming "Campaign" is the ID of your ComboBox
 
+      // Initialize the selectedCampaignConditionType
+      var selectedCampaignConditionType = "";
+
+      // Get the selected campaign's Conditiontype from the model
+      var oComboBox = this.getView().byId("Campaign");
+      var oSelectedItem = oComboBox.getSelectedItem();
+
+      // Check if an item is selected and if a binding context is available
+      if (oSelectedItem && oSelectedItem.getBindingContext("HeaderCampaignModel")) {
+        var oBindingContext = oSelectedItem.getBindingContext("HeaderCampaignModel");
+        selectedCampaignConditionType = oBindingContext.getProperty("ConditionType");
+      } else {
+        // Handle the case when no item is selected or binding context is empty
+        // For example, set a default value or handle the logic accordingly
+        selectedCampaignConditionType = "";
+
+      }
 
       // if (!selectedItems || selectedItems.length === 0) {
       //   sap.m.MessageBox.error("Please select items to Create Sales Order.");
@@ -1350,13 +1391,28 @@ sap.ui.define([
         sap.m.MessageBox.error("Please select a quantity greater than 0 for each item.");
         return;
       }
+      
+      // Ensure item.CampaignId is an array
+   
+      
       var salesOrderItems = [];
 
       var that = this;
       selectedItems.forEach(function (item, index) {
+        var campaignIdForItem = Array.isArray(item.CampaignId) ? item.CampaignId : [];
+        var conditionTypeForItem = Array.isArray(item.ConditionType) ? item.ConditionType : [];
+  
+        var isItemSelected = item.IsSelected === true || item.IsSelected === 'true';
+        var ConditionType = "";
+        for (var m = 0; m < that.getOwnerComponent().getModel("CampaignModel").getData().length; m++) {
+          if (that.getOwnerComponent().getModel("CampaignModel").getData()[m].CampaignId == item.CampaignId) {
+            ConditionType = that.getOwnerComponent().getModel("CampaignModel").getData()[m].ConditionType;
+            break;
+          }
+        }
         var salesOrderItem = {
-          "FreeItem": false,
-          "Zcampaign": "",
+          "FreeItem": isItemSelected,
+          "Zcampaign": item.CampaignId,
           "SalesorderNo": "",
           "ItmNumber": item.ItmNumber.toString(),
           "Material": item.ArticleNo.toString(),
@@ -1365,6 +1421,7 @@ sap.ui.define([
           "TargetQu": "PC",
           "ItemCateg": "",
           "ShortText": "",
+          "ConditionType":  ConditionType,
         };
 
         salesOrderItems.push(salesOrderItem);
@@ -1378,12 +1435,13 @@ sap.ui.define([
         "SalesEmp": selectedText,
         "SalesorderNo": "",
         "SoldTo": this.getView().byId("firstNameInput").getValue(),
-        "ZCampaign": "",
+        "ZCampaign": selectedHeaderCampaignKey,
         "PointConsumed": "0.00",
         "CampType": "",
         "PointBalance": "0.00",
         "SaveDocument": "X",
         "PurchaseOrdNo": this.getView().byId("poreferenceno").getValue(),
+        "ConditionType": selectedCampaignConditionType,
         "to_items": salesOrderItems,
         "to_conditions": this.conditionTypeArr
       };
@@ -1450,6 +1508,7 @@ sap.ui.define([
         this.conditionType = new sap.ui.xmlfragment("com.luxasia.salesorder.view.conditionType", this);
         this.getView().addDependent(this.conditionType);
       }
+      this.conditionType.setModel(this.getOwnerComponent().getModel("mainModel"));
       this.conditionType.open();
     },
     onConditionTypeConfirm: function (evt) {
@@ -1499,6 +1558,7 @@ sap.ui.define([
         }
         this.conditionType.close();
         this.onSavePressServicecall();
+        this.onConditionTypeCancel();
       }
 
     },

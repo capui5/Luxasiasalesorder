@@ -7,7 +7,8 @@ sap.ui.define([], function () {
             articleno = articleno.replace(/^0+/, '');
             return articleno;
 			}
-        }
+        },
 
+		
 	};
 });

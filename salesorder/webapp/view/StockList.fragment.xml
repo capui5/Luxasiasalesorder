@@ -3,9 +3,8 @@
     xmlns:core="sap.ui.core"
 >
     <Dialog
-        id="purchaseorder"
-        title="CREATE NEW PROFILE"
-        showHeader="false"
+        id="scanandadd"
+       showHeader="false"
     >
         <VBox
             xmlns="sap.m"
@@ -14,16 +13,16 @@
         >
             <HBox alignItems="Center">
                 <Label
-                    class="fragmentext"
-                    text="Add More Products to Purchase Order"
+                    class="fragmentext1"
+                
                 />
 
                 <HBox width="100%" />
 
              <Button
-                    id="helloDialogButton1"
+                    id="helloDialogButton"
                     icon="sap-icon://decline"
-                    press="onDecline"
+                    press=".onCloseFragment"
                 />
             </HBox>
         </VBox>
@@ -32,9 +31,9 @@
         <HBox class="fragtile">
             <GenericTile
                 class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting products "
-                header="SCAN PRODUCTS"
+                header="BARCODE SCAN"
                 subheader="Subtitle"
-               press="onScanBar"
+                press="onScanBarcode"
                 frameType="TwoByHalf"
             >
                 <TileContent
@@ -48,7 +47,7 @@
             <GenericTile
                 class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting"
                 header="SEARCH FOR PRODUCTS"
-                press="onSearch"
+                press="ProductSearch"
                 frameType="TwoByHalf"
             >
                 <TileContent

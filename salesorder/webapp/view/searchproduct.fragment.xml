@@ -59,7 +59,7 @@
                 >
                     <Text text="ARTICLE NO" />
                 </Column >
-                <Column  >
+                <Column visible="false" >
                     <Text text="QUANTITY" />
                 </Column>
                 <Column   minScreenWidth="Desktop"
@@ -78,17 +78,17 @@
                     <cells>
                         <ObjectIdentifier
                             title="{Name}"
-                            text="{ProductSetModel>ArticleNo}"
+                            text="{path:'ProductSetModel>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"
                         />
                         <Text text="{ProductSetModel>Barcode}" />
                         <Text text="{ProductSetModel>ArticleDesc}" />
                         <Text text="{ProductSetModel>ArticleType}" />
                         <!-- <ObjectNumber number="{ProductSetModel>ArticleNo}" /> -->
                         <ObjectNumber number="{path:'ProductSetModel>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"/>
-                         <StepInput
+                         <StepInput 
                             id="CurrentValue"
                             value="{ProductSetModel>quantity}"
-                            min="1"
+                          min ="1"
                             width="100px"
                             class="step_input"
                         />

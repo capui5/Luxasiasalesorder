@@ -53,6 +53,8 @@ sap.ui.define([
             var plant = new sap.ui.model.Filter("Plant","EQ",this.sStoreId);
             var salesemp = new sap.ui.model.Filter("SalesEmp","EQ",this.SalesEmpId);
             this.handleTransactionSalesData(plant,salesemp);
+            var oText = this.getView().byId("displayText");
+            oText.setText("My Transactions...");
         },
         onSearch : function(evt){
                 var searchString = evt.getParameter("value");
@@ -109,6 +111,8 @@ sap.ui.define([
 
         onCompletedTransactions: function () {
             this.filterTransactions("Completed");
+            var oText = this.getView().byId("displayText");
+            oText.setText("Store Transactions...");
         },
 
         filterTransactions: function (status) {
@@ -127,7 +131,16 @@ sap.ui.define([
             }
         },
 
+        onSalesOrderPress: function(oEvent){
+            var oSelectedItem = oEvent.getSource().getParent();
 
+            // Get the Sales Order No from the selected row
+            var sSalesOrderNo = oSelectedItem.getCells()[0].getText(); // Assuming Sales Order No is in the first column
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("SalesOrderItem", { SSalesno: sSalesOrderNo });
+            // Now you can use sSalesOrderNo as needed
+            console.log("Sales Order No: ", sSalesOrderNo);
+          },
 
         calculateTotalPrice: function (aProducts) {
             let total = 0;
@@ -142,16 +155,8 @@ sap.ui.define([
         },
 
         onNavBack: function () {
-            var oHistory, sPreviousHash;
-
-            oHistory = History.getInstance();
-            sPreviousHash = oHistory.getPreviousHash();
-
-            if (sPreviousHash !== undefined) {
-                window.history.go(-1);
-            } else {
-                this.getRouter().navTo("View1", {}, true);
-            }
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("mainmenu");
         },
     });
 });

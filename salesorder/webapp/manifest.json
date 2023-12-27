@@ -198,6 +198,13 @@
                     "defaultBindingMode": "TwoWay"
                 }
             },
+            "SelectedCustomerModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
             "data-model1": {
                 "dataSource": "data-model1",
                 "preload": true,
@@ -301,12 +308,27 @@
                     ]
                 },
                 {
+                    "name": "purchasedata",
+                    "pattern": "purchasedata",
+                    "target": [
+                        "purchasedata"
+                    ]
+                },
+                {
+                    "name": "SalesOrderItem",
+                    "pattern": "SalesOrderItem/{SSalesno}",
+                    "target": [
+                        "SalesOrderItem"
+                    ]
+                },
+                {
                     "name": "stockorder",
                     "pattern": "stockorder",
                     "target": [
                         "stockorder"
                     ]
                 }
+                
             ],
             "targets": {
                 "Targetstoreselection": {
@@ -378,6 +400,20 @@
                     "clearControlAggregation": false,
                     "viewId": "transaction",
                     "viewName": "transaction"
+                },
+                "purchasedata": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "purchasedata",
+                    "viewName": "purchasedata"
+                },
+                "SalesOrderItem": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "SalesOrderItem",
+                    "viewName": "SalesOrderItem"
                 },
                 "stockorder": {
                     "viewType": "XML",

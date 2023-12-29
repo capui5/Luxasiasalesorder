@@ -9,6 +9,14 @@ sap.ui.define([
 
   return Controller.extend("com.luxasia.salesorder.controller.brand", {
     onInit: function () {
+      var oSplitContainer = this.byId("splitContainer");
+    if (sap.ui.Device.system.phone) {
+        // On phone, show master initially
+        oSplitContainer.toMaster(this.createId("detail"));
+    } else {
+  
+    }
+  
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
     
       var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
@@ -50,6 +58,14 @@ if (oModel) {
 
       var aModel = this.getOwnerComponent().getModel("SelectedBrandName");
       this.getView().setModel(aModel, "SelectedBrandName");
+    },
+    onBackToMasterPress: function(){
+      var oSplitContainer = this.byId("splitContainer");
+      oSplitContainer.toMaster(this.createId("master"));
+    },
+    onBackToDetailPress: function(){
+      var oSplitContainer = this.byId("splitContainer");
+      oSplitContainer.toDetail(this.createId("detail"));
     },
     _onRouteMatched: function (oEvent) {
       var that =this;

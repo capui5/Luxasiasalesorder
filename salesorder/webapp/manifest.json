@@ -327,6 +327,19 @@
                     "target": [
                         "stockorder"
                     ]
+                },
+                {
+                    "name": "StockList",
+                    "pattern": "StockList",
+                    "target": [
+                        "StockList"
+                    ]
+                },{
+                    "name": "StockInventoryList",
+                    "pattern": "StockInventoryList",
+                    "target": [
+                        "StockInventoryList"
+                    ]
                 }
                 
             ],
@@ -421,6 +434,20 @@
                     "clearControlAggregation": false,
                     "viewId": "stockorder",
                     "viewName": "stockorder"
+                },
+                "StockList": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "StockList",
+                    "viewName": "StockList"
+                },
+                "StockInventoryList": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "StockInventoryList",
+                    "viewName": "StockInventoryList"
                 }
             }
         },

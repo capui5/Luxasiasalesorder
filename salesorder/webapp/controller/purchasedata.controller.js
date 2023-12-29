@@ -7,10 +7,12 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/core/routing/History",
     "sap/ui/core/UIComponent",
-], function (Controller, JSONModel, MessageBox, Log, Filter, FilterOperator,History,UIComponent) {
+    "com/luxasia/salesorder/util/formatter"
+], function (Controller, JSONModel, MessageBox, Log, Filter, FilterOperator,History,UIComponent,formatter) {
     "use strict";
  
     return Controller.extend("luxasia.controller.purchasedata", {
+        formatter: formatter,
         onInit: function () {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
  
@@ -50,7 +52,6 @@ sap.ui.define([
             SelectedPurchaseorder.updateBindings(true);
             this.onAfterRendering();
         },
- 
         onAfterRendering: function () {
             var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
             this.sStoreId = oStoreModel.getProperty("/selectedStoreId");
@@ -79,7 +80,9 @@ sap.ui.define([
                 this.getRouter().navTo("mainmenu", {}, true);
             }
         },
+      
         onListItemPress: function (oEvent) {
+          
             var oSelectedItem = oEvent.getParameter("listItem");
        
             if (oSelectedItem) {

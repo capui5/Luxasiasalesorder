@@ -2,12 +2,14 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/ndc/BarcodeScanner"
+    "sap/ndc/BarcodeScanner",
+    "com/luxasia/salesorder/util/formatter"
 
-], function (Controller, JSONModel, MessageBox) {
+], function (Controller, JSONModel, MessageBox,BarcodeScanner, formatter) {
     "use strict";
 
     return Controller.extend("com.luxasia.salesorder.controller.stockorder", {
+        formatter: formatter,
         onInit: function (oArgs) {
             var oCartPurchaseModel = new JSONModel();
             this.getView().setModel(oCartPurchaseModel, "cartpurchaseModel");
@@ -500,6 +502,31 @@ sap.ui.define([
             this.getView().byId("documentTypeConsigment").setSelectedKey(null);
             this.getView().byId("supplyPlant").setSelectedKey(null);
             this.getView().byId("supplyVendor").setSelectedKey(null);
-        }
+        },
+        onDeletePoItem: function (e) {
+            var t = this;
+            sap.m.MessageBox.confirm("Are you sure you want to delete this product?", {
+                title: "Confirmation",
+                onClose: function (o) {
+                    if (o === sap.m.MessageBox.Action.OK) {
+                        var r = e.getSource();
+                        var n = r.getBindingContext("cartpurchaseModel");
+       
+                        if (n) {
+                            var a = n.getModel("cartpurchaseModel");
+                            var i = n.getPath();
+                            var s = parseInt(i.split("/")[i.split("/").length - 1]);
+                            var l = a.getProperty(i.substring(0, i.lastIndexOf("/")));
+                            l.splice(s, 1);
+                            a.refresh(true);
+                        } else {
+                            sap.m.MessageToast.show("Error deleting product. Please try again.");
+                        }
+                    } else {
+                   
+                    }
+                }
+            });
+        },
     });
 });

@@ -402,7 +402,7 @@ div#application-luxasia-display-component---customersearch--surnameInput-content
     background-color: rgb(8, 168, 168);
     border-radius: 50px;
     height: 30px;
-    width: 180px;
+    width: 130px;
     text-align: center;
 
 }
@@ -961,7 +961,7 @@ span#__button2-__table0-1-inner {
 .transcancel.sapMBtnBase {
     /* background-color: yellow; */
     border-radius: 20px;
-    width: 251px;
+    width: 150px;
     border: 2px solid rgb(8 78 88);
 }
 .transcancel .sapMBtnContent{
@@ -969,7 +969,7 @@ span#__button2-__table0-1-inner {
 }
 .transsave.sapMBtnBase{
     background-color: rgb(8 78 88);
-    width: 251px;
+    width: 150px;
     border-radius: 20px;
  
 }
@@ -1013,7 +1013,7 @@ border: none;
 html.sap-desktop .sapMBtn:focus>.sapMFocusable:not(.sapMBadgeIndicator):before {
     border: none;
 }
-sapMInput
+
 html.sap-desktop .sapMInput:focus>.sapMfocus.sapMInputFocus.sapMFocusable:not(.sapMBadgeIndicator):before {
     border: none;
 }
@@ -1040,11 +1040,11 @@ padding-left: 65px;
     align-items: center;
     display: flex;
 }
-.sapUiRespGrid.sapUiRespGridHSpace0.sapUiRespGridVSpace0.sapUiFormResGridMain.sapUiRespGridOverflowHidden {
+/* .sapUiRespGrid.sapUiRespGridHSpace0.sapUiRespGridVSpace0.sapUiFormResGridMain.sapUiRespGridOverflowHidden {
     justify-content: center;
     align-items: center;
     display: flex;
-} 
+}  */
 .newcusttitle{
     justify-content: center;
     align-items: center;

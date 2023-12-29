@@ -156,7 +156,61 @@ sap.ui.define([
       // this.calculateTotalPrice();
 
 
-
+      // window.onpopstate = function(event) {
+      //   if(window.location.href.indexOf("transaction") == (-1) && !(that.saveFlag)){
+      //     that._showConfirmationDialog(event);    
+      //     // history.pushState(null, null, window.location.href);
+      //   }
+      // window.onpopstate = function(event) {
+      //   if (confirm('Are you sure you want to leave?')) {
+      //       window.onpopstate = (e) => {
+      //           history.back()
+      //       }
+            
+      //       history.back()
+      //   } else {
+      //       return;
+      //   }
+    //}
+    // this._hashHandler = (function(){
+    //   var sCurrentHash;
+  
+    //   var fnHandleHashChange =function(e){
+    //       var sOldHash = e.oldURL.substr(e.oldURL.search("#")+1);
+    //       var sNewHash = e.newURL.substr(e.newURL.search("#")+1);
+  
+    //       if(sCurrentHash!==sOldHash){
+    //           return;
+    //       }
+    //       if(that.saveFlag){
+    //         window.removeEventListener("hashchange",fnHandleHashChange);
+    //           window.hasher.setHash(sOldHash.substr(1));
+    //           window.hasher.changed.active=true;
+    //           window.hasher.setHash(sNewHash.substr(1));
+    //         return;
+    //       }
+    //       if(confirm("Are you sure you want to navigate away?")){
+    //           window.removeEventListener("hashchange",fnHandleHashChange);
+    //           window.hasher.setHash(sOldHash.substr(1));
+    //           window.hasher.changed.active=true;
+    //           window.hasher.setHash(sNewHash.substr(1));
+    //       } else {
+    //           window.hasher.setHash(sOldHash.substr(1));
+    //       }
+    //   }
+  
+    //   return {
+    //       startManualHashChangeHandling: function() {
+    //           sCurrentHash = window.location.hash.substr(1);
+    //           window.hasher.changed.active=false;
+    //           window.addEventListener("hashchange",fnHandleHashChange);
+    //       },
+    //       stopManualHashChangeHandling: function() {
+    //           window.hasher.changed.active=true;
+    //           window.removeEventListener("hashchange",fnHandleHashChange);
+    //       }
+    //   };
+    // }());
       var oModel = this.getOwnerComponent().getModel("mainModel");
       var email = "''";
       // Read data from the model using the provided URL
@@ -177,6 +231,30 @@ sap.ui.define([
         }
       });
     },
+    _showConfirmationDialog: function(oEvent) {
+      var stayOnPage = confirm("Would you like to save this draft?");
+      if (!stayOnPage) {
+       
+      } else {
+        
+      }
+      // if (confirm("Are you sure you want to navigate back?")) {
+      //   var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+      //     oRouter.navTo("mainmenu");
+      // } else {
+       
+      // }
+  },
+    onBeforeRendering: function () {
+      var that = this;
+      window.onbeforeunload = function (e) {
+          var message = "Are you sure you want to leave this page?";
+          e.returnValue = message;
+          return message;
+      };
+  },
+
+
     handleLoadItems: function (evt) {
       var that = this;
       this.oControlEvent = evt;
@@ -249,6 +327,8 @@ sap.ui.define([
 
     _onRouteMatched: function (evt) {
       var that = this;
+      // this._hashHandler.startManualHashChangeHandling();
+      this.saveFlag = false;
       that.onProductSearch();
       that.onAddPromotion(true);
       this.conditionTypeArr = [];
@@ -421,7 +501,6 @@ sap.ui.define([
       } 
     },
     ProductSearch: function () {
-    
       var that = this;
       that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.Product" });
       that.aDialog.then(function (dialog) {
@@ -1322,6 +1401,7 @@ sap.ui.define([
 
 
     onSavePress:function(){
+      
       var oCartModel = this.getView().getModel("SelectedItems");
       var selectedItems = oCartModel.getProperty("/selectedItems");
       if (!selectedItems || selectedItems.length === 0) {
@@ -1482,10 +1562,12 @@ sap.ui.define([
               var TotalTaxNetModel = that.getView().getModel("TotalTaxNetModel");
               TotalTaxNetModel.setData({ modelData: {} });
               TotalTaxNetModel.updateBindings(true);
+              that.saveFlag = true;
               that.oRouter = sap.ui.core.UIComponent.getRouterFor(that);
               that.oRouter.navTo("mainmenu");
             }
           });
+          
         },
 
         error: function (error) {

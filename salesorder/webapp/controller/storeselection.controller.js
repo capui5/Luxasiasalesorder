@@ -122,10 +122,13 @@ sap.ui.define([
       if (oContext) {
         var sStoreId = oContext.getProperty("StoreId");
         var sStoreType = oContext.getProperty("StoreType");
+        var storeCount = oContext.getProperty("Country")
         var oJsonModel = this.getView().getModel("StoreModel");
+     
         if (oJsonModel) {
           oJsonModel.setProperty("/selectedStoreId", sStoreId);
           oJsonModel.setProperty("/selectedStoreType", sStoreType);
+          oJsonModel.setProperty("/selectedCountry", storeCount)
           // Save selectedStoreId to localStorage
           localStorage.setItem("selectedStoreId", sStoreId);
 

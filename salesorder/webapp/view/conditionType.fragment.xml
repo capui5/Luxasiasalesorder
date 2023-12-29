@@ -1,7 +1,7 @@
 <core:FragmentDefinition
     xmlns="sap.m" xmlns:f="sap.ui.layout.form"
     xmlns:core="sap.ui.core">
-    	<Dialog title="Condition Type" showHeader="true" contentWidth="35rem">
+    	<Dialog title="Condition Type" showHeader="true" >
 		<beginButton>
 			<Button text="Confirm" type="Emphasized" press="onConditionTypeConfirm"/>
 		</beginButton>

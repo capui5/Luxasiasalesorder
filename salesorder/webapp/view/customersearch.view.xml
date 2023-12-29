@@ -22,7 +22,7 @@
             </contentLeft>
             <contentRight>
                 <Button
-                    text="CREATE NEW PROFILE"
+                    text="NEW PROFILE"
                     press="onNextPage"
                     class="wide-button"
                 />

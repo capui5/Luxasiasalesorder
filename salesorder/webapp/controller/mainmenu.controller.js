@@ -101,13 +101,15 @@ sap.ui.define([
         },
 
         OnStockListPress: function(){
-            this.pDialog ??= this.loadFragment({
-                name: "com.luxasia.salesorder.view.StockList"
-            });
-            this.pDialog.then(function (dialog) {
-                dialog.open();
+            // this.pDialog ??= this.loadFragment({
+            //     name: "com.luxasia.salesorder.view.StockList"
+            // });
+            // this.pDialog.then(function (dialog) {
+            //     dialog.open();
 
-            });
+            // });
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("StockList");
         },
 
 

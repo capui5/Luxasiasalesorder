@@ -1,5 +1,5 @@
- <mvc:View
-    controllerName="com.luxasia.salesorder.controller.brand"
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.StockList"
     xmlns:l="sap.ui.layout"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
@@ -11,48 +11,39 @@
         <masterPages>
             <Page
                 id="master"
-                showHeader="false"
+                title="STOCK LIST"
             >
-            <OverflowToolbar >
-            <Title text="MY BRANDS"  ></Title>
-            <ToolbarSpacer />
-             <Button
-                text="ADD MORE BRAND"
-                icon="sap-icon://nav-back"
-                press="onBackToDetailPress"
-                visible="{= ${device>/system/phone} }"/>
-            </OverflowToolbar>
                 <content>
-                    <List
-                        items="{ path: 'SelectedBrandName>/selectedBrandNames'}"
+                  
+                     <List
+                         id= "inventory"
+                        items="{path:'mainModel>/InventoryHeadSet'}"
+                        mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}"
+                        selectionChange=".onListItemPress"
                     >
-                        <CustomListItem>
-                            <HBox>
-                              <HBox width="90%">
-                                <VBox
-                                    class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"
-                                >
-                                    <Title text="{SelectedBrandName>value}" />
-                                </VBox>
-                                 </HBox>
-                                  <HBox width="10%">
-                                        <VBox >
-                                            <Button
-                                                icon="sap-icon://delete"
-                                                press="onDeletePress"
-                                            />
-                                        </VBox>
-                                    </HBox>
-                            </HBox>
-                        </CustomListItem>
+                        <items>
+                            <ObjectListItem
+                                title="Stock Count: {mainModel>StockCountNo}"
+                                class="poText"
+                            >
+                                <attributes>
+                                    <ObjectAttribute
+                                        text="Sales Emp: {mainModel>SalesEmp}"
+                                    />
+                                    <ObjectAttribute
+                                        text="Status Description: {mainModel>StatusDesc}"
+                                    />
+                                </attributes>
+                            </ObjectListItem>
+                        </items>
                     </List>
                 </content>
                      <footer>
                 	<Toolbar>
             <Button
              width="100%"
-                    text="LOGIN"
-                    press="Login"
+                    text="STOCK INVENTORY"
+                    press="onInventoryPress"
                     class="createBtn"
                 />
                 	</Toolbar>
@@ -65,11 +56,11 @@
        
             <Page
                 id="detail"
-                title="ADD NEW BRANDS"
+                title="STOCKLIST DETAILS"
             >
             
 
-                <content>
+                <!-- <content>
                     <List
                         headerLevel="H2"
                         items="{BrandStoreModel>/}"
@@ -106,15 +97,7 @@
                         </items>
                     </List>
                 </content>
-                 <footer>
-        <Toolbar>
-            <Button
-                text="GO TO ADDED BRANDS"
-                icon="sap-icon://nav-back"
-                press="onBackToMasterPress"
-                visible="{= ${device>/system/phone} }"/>
-        </Toolbar>
-    </footer>
+                 -->
             </Page>
           
         </detailPages>

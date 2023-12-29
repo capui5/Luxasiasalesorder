@@ -1,0 +1,174 @@
+<mvc:View
+    controllerName="com.luxasia.salesorder.controller.StockInventoryList"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+       <Page
+        showHeader="false"
+        id="stockorder1"
+    >
+        <OverflowToolbar
+            class="header"
+            id="tbHeaderr"
+        >
+            <Text
+                text="luxasia"
+                class="mainmenutext"
+            />
+        </OverflowToolbar>
+        <f:Form
+            id="FormChange3543"
+            editable="true"
+        >
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    labelSpanXL="3"
+                    labelSpanL="3"
+                    labelSpanM="3"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="4"
+                    emptySpanL="4"
+                    emptySpanM="4"
+                    emptySpanS="0"
+                    columnsXL="2"
+                    columnsL="2"
+                    columnsM="2"
+                    singleContainerFullSize="false"
+                />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement label="Store Type">
+                            <f:fields>
+                                <ComboBox
+                                    editable="false"
+                                    class="storeTypeSelect"
+                                    id="DocumentTypeComboBox"
+                                    selectedKey="{StoreModel>/selectedStoreType}"
+                                    selectionChange="handleSelectionChange"
+                                    placeholder="Store Type"
+                                >
+                                    <core:Item
+                                        text="Boutique"
+                                        key="B"
+                                    />
+                                    <core:Item
+                                        text="Consignment/Outright"
+                                        key="C"
+                                    />
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="Storage Location"
+                        >
+                            <f:fields>
+                                <ComboBox
+                                    items="{storageLocModel>/}"
+                                    id="storageLocation"
+                                    showSecondaryValues="true"
+                                    selectionChange="handleStorageLocation"
+                                >
+                                    <core:ListItem
+                                        text="{storageLocModel>Name}"
+                                        key="{storageLocModel>Storage_loc}"
+                                        additionalText="{storageLocModel>Storage_loc}"
+                                    />
+                                </ComboBox>
+                            </f:fields>
+                        </f:FormElement>
+                        
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+        <Table
+            items="{mainModel>/InventoryDetailSet}" growing="true" growingThreshold="20"
+            id="inventoryStockTable"
+        >
+            <headerToolbar>
+                <OverflowToolbar class="otbSubheader">
+                    <Text
+                        text="Inventory Stock"
+                        class="transtext"
+                    />
+                    <ToolbarSpacer />
+                    <Button
+                        text="Add Products"
+                        class="transadd"
+                        press="onAddInventoryStock"
+                    />
+                </OverflowToolbar>
+            </headerToolbar>
+
+            <columns>
+                <Column >
+                    <Text text="Article No" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Article Desc" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="ArticleType" />
+                </Column>
+                 <Column hAlign="Center">
+                   <Text text="Barcode"/>
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Stock Qty" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Average Price" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="UOM" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{mainModel>ArticleNo}"/>
+                        <Text text="{mainModel>ArticleDesc}"/>
+                        <Text text="{mainModel>ArticleType}"/>
+                        <Text text="{mainModel>Barcode}"/>
+                        <Text text="{mainModel>AvailableQty}"/>
+                        <Text text="{mainModel>AveragePrice}"/>
+                        <Text text="{mainModel>UOM}"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+            <OverflowToolbar
+                class=""
+                id=""
+            >
+                <ToolbarSpacer />
+                <Button
+                    text="CANCEL"
+                    press="onCancelInventory"
+                    class="transcancel"
+                />
+                <Button
+                    text="Submit"
+                    press="onSubmitInventory"
+                    class="transsave"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

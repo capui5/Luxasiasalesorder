@@ -43,24 +43,26 @@ sap.ui.define([
             var Firstname = this.getView().byId("nameInput").getValue();
             var Lastname = this.getView().byId("surnameInput").getValue();
             var Customerno = this.getView().byId("customerno").getValue();
-
+            var Country = this.getView().getModel("StoreModel").getProperty("/selectedCountry");
             var filterString = "";
             if (Customerno) {
-                filterString = [new sap.ui.model.Filter("Firstname", "EQ" , Customerno)];
+                filterString = [new sap.ui.model.Filter("Firstname", "EQ" , Customerno )];
             }
 
             if (Firstname) {
-                filterString =  [new sap.ui.model.Filter("Firstname", "EQ" , Firstname)];;
+                filterString =  [new sap.ui.model.Filter("Firstname", "EQ" , Firstname),new sap.ui.model.Filter("Country", "EQ" , Country)];;
+               
             }
             if (EMail) {
-                filterString =  [new sap.ui.model.Filter("EMail", "EQ" , EMail)];;
+                filterString =  [new sap.ui.model.Filter("EMail", "EQ" , EMail),,new sap.ui.model.Filter("Country", "EQ" , Country)];;
             }
             if (Lastname) {
-                filterString =  [new sap.ui.model.Filter("Lastname", "EQ" , Lastname)];;
+                filterString =  [new sap.ui.model.Filter("Lastname", "EQ" , Lastname),,new sap.ui.model.Filter("Country", "EQ" , Country)];;
             }
             if (Tel1Numbr) {
-                filterString =  [new sap.ui.model.Filter("Tel1Numbr", "EQ" , Tel1Numbr)];;
+                filterString =  [new sap.ui.model.Filter("Tel1Numbr", "EQ" , Tel1Numbr),,new sap.ui.model.Filter("Country", "EQ" , Country)];;
             }
+          
 
             if (!filterString) {
                 MessageToast.show("No search criteria provided. Displaying all results.");

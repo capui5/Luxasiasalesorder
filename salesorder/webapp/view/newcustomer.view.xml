@@ -215,7 +215,7 @@
                     text="Create New Profile"
                     press="onCreateProfile"
                     class="wide-create"
-                    width="500px"
+                    width="300px"
                 />
               
             </HBox>

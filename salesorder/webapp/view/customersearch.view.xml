@@ -24,7 +24,7 @@
                 <Button
                     text="NEW PROFILE"
                     press="onNextPage"
-                    class="wide-button"
+                    class="wide-button-search"
                 />
             </contentRight>
         </Bar>

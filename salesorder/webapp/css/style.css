@@ -402,7 +402,7 @@ div#application-luxasia-display-component---customersearch--surnameInput-content
     background-color: rgb(8, 168, 168);
     border-radius: 50px;
     height: 30px;
-    width: 130px;
+    width: 180px;
     text-align: center;
 
 }
@@ -413,6 +413,25 @@ div#application-luxasia-display-component---customersearch--surnameInput-content
 }
 
 .wide-button .sapMBtnInner {
+    padding: 3px;
+
+}
+.wide-button-search .sapMBtnInner:not(.sapMToggleBtnPressed):not(.sapMBtnEmphasized):not(.sapMBtnAccept):not(.sapMBtnAttention):not(.sapMBtnReject):not(.sapMBtnActive):not(.sapMBtnGhost) {
+    color: #fff;
+    background-color: rgb(8, 168, 168);
+    border-radius: 50px;
+    height: 30px;
+    width: 180px;
+    text-align: center;
+
+}
+
+.wide-button-search .sapMBtnContent {
+    color: white;
+    text-align: center;
+}
+
+.wide-button-search .sapMBtnInner {
     padding: 3px;
 
 }
@@ -468,6 +487,10 @@ div#application-luxasia-display-component---customersearch--surnameInput-content
 .wide-select {
     width: 350px;
 }
+.wide-select.sapMInputBase {
+    margin-bottom: 20px;
+}
+
 
 .wide-select::placeholder {
     color: #000;
@@ -485,21 +508,18 @@ div#container-luxasia---storeselection--storeSelect-content {
     height: 35px;
     border-radius: 30px;
     background-color: rgb(8, 168, 168);
-    border: 1px solid #fff;
 }
 .next .sapMBtnInner {
-
     background-color: rgb(8, 168, 168);
     border-radius: 30px;
     height: 40px;
-    padding: 3px;
+ 
     width: 350px;
-    margin-top: 20px;
+
 }
 
 .next .sapMBtnInner:hover {
 
-    background-color: rgb(8, 78, 88);
     background-color: rgb(8, 78, 88);
 }
 
@@ -1040,11 +1060,11 @@ padding-left: 65px;
     align-items: center;
     display: flex;
 }
-/* .sapUiRespGrid.sapUiRespGridHSpace0.sapUiRespGridVSpace0.sapUiFormResGridMain.sapUiRespGridOverflowHidden {
+ .sapUiRespGrid.sapUiRespGridHSpace0.sapUiRespGridVSpace0.sapUiFormResGridMain.sapUiRespGridOverflowHidden {
     justify-content: center;
     align-items: center;
     display: flex;
-}  */
+}  
 .newcusttitle{
     justify-content: center;
     align-items: center;
@@ -1180,5 +1200,34 @@ padding-left: 65px;
     border:none
 }
 .createBtn .sapMBtnContent {
-    color: white;
+    /* color: white; */
+}
+/* Mobile (max-width: 767px) */
+@media screen and (max-width: 767px) {
+    #cashcarrydialog {
+        width: 90%;
+        margin: 2rem auto;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+    }
+ 
+    .sapUiTinyMarginBegin {
+        flex: 0 0 calc(50% - 10px);
+    }
+ 
+    .fragmentext1 {
+        padding-left: 0;
+    }
+    .fragtile {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0px;
+    }
+}
+.fragmentext{
+    font-size: larger;
+    font-weight :lighter;
+    justify-content: center;
+    padding-left: 20rem;
+ 
 }

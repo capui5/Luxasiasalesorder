@@ -63,7 +63,10 @@ sap.ui.define([
 
 
       var sStoreId = oStoreModel.getProperty("/selectedStoreId");
-
+      var datePicker = this.getView().byId("DP2");
+      var selectedDate = datePicker.getDateValue();
+      var milliseconds = selectedDate.getTime();
+      var formattedDate = new Date(new Date(selectedDate).toString().split("GMT ")[0] + " UTC ").toISOString();
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
       var oBrandModel = this.getOwnerComponent().getModel("SelectedBrandName");
       var sStoreId = oStoreModel.getProperty("/selectedStoreId");
@@ -101,7 +104,7 @@ sap.ui.define([
           var filterDocDate = new sap.ui.model.Filter({
             path: "DocDate",
             operator: sap.ui.model.FilterOperator.EQ,
-            value1: "2023-12-23T00:00:00"
+            value1: formattedDate
           });
 
           var aFilters = [filterCampaignCat, filterPlant, combinedFilter, filterDocDate];
@@ -258,6 +261,10 @@ sap.ui.define([
     handleLoadItems: function (evt) {
       var that = this;
       this.oControlEvent = evt;
+      var datePicker = this.getView().byId("DP2");
+      var selectedDate = datePicker.getDateValue();
+      var milliseconds = selectedDate.getTime();
+      var formattedDate = new Date(new Date(selectedDate).toString().split("GMT ")[0] + " UTC ").toISOString();
       that.oControlEvent.getSource().getBinding("items").resume();
       var compaignItems = evt.getSource().getBinding("items");
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
@@ -278,7 +285,7 @@ sap.ui.define([
       var filterDocDate = new sap.ui.model.Filter({
         path: "DocDate",
         operator: sap.ui.model.FilterOperator.EQ,
-        value1: "2023-12-23T00:00:00"
+        value1: formattedDate
       });
 
       var filterArticle = new sap.ui.model.Filter({
@@ -341,6 +348,26 @@ sap.ui.define([
       var compaignItems = evt.getSource().getBinding("items");
       that.onTableUpdateFinished(true);
     },
+    onSearch: function (oEvent) {
+           
+      var sQuery = oEvent.getParameter("query");
+ 
+     
+      var oTable = this.byId("producttable");
+      var oBinding = oTable.getBinding("items");
+ 
+      if (sQuery && sQuery.length > 0) {
+          var aFilters = [
+              new Filter("ArticleDesc", FilterOperator.Contains, sQuery),
+              new Filter("ArticleNo", FilterOperator.Contains, sQuery),
+              new Filter("Barcode", FilterOperator.Contains, sQuery)
+          ];
+ 
+          oBinding.filter(new Filter(aFilters, false));
+      } else {
+          oBinding.filter([]);
+      }
+  },
     // _onRouteMatched: function (oEvent) {
     //     var oArgs = oEvent.getParameter("arguments");
 
@@ -783,7 +810,7 @@ sap.ui.define([
     //   }
     // },
 
-    CloseSearchProduct: function () {
+    closeSearchProd: function () {
       var oDialog = this.getView().byId("producttablepage");
       
       oDialog.close();
@@ -1000,24 +1027,24 @@ sap.ui.define([
       this.onAddPromotion(true);
     },
     onAddPromotion: function (defaultFlag) {
-
+ 
       var that = this;
       var datePicker = this.getView().byId("DP2");
       var selectedDate = datePicker.getDateValue();
-
+ 
       if (!selectedDate) {
         sap.m.MessageBox.error("Please select a valid date.");
         return;
       }
       var selectedHeaderCampaignKey = this.getView().byId("Campaign").getSelectedKey(); // Assuming "Campaign" is the ID of your ComboBox
-
+ 
       // Initialize the selectedCampaignConditionType
       var selectedCampaignConditionType = "";
-
+ 
       // Get the selected campaign's Conditiontype from the model
       var oComboBox = this.getView().byId("Campaign");
       var oSelectedItem = oComboBox.getSelectedItem();
-
+ 
       // Check if an item is selected and if a binding context is available
       if (oSelectedItem && oSelectedItem.getBindingContext("HeaderCampaignModel")) {
         var oBindingContext = oSelectedItem.getBindingContext("HeaderCampaignModel");
@@ -1026,12 +1053,12 @@ sap.ui.define([
         // Handle the case when no item is selected or binding context is empty
         // For example, set a default value or handle the logic accordingly
         selectedCampaignConditionType = "";
-
+ 
       }
       var comboBox = this.byId("employee");
       var selectedText = comboBox.getSelectedItem().getText();
-
-
+ 
+ 
       var comboBox = this.byId("orderreason");
       var selectedKey = comboBox.getSelectedKey();
       console.log("Selected Key:", selectedKey);
@@ -1039,51 +1066,50 @@ sap.ui.define([
       var formattedDate = '/Date(' + milliseconds + ')/';
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
       var sStoreId = oStoreModel.getProperty("/selectedStoreId");
-
+ 
       if (!sStoreId) {
         sap.m.MessageBox.error("Please select a store.");
         return;
       }
-
+ 
       var oCartModel = this.getView().getModel("SelectedItems");
       var selectedItems = oCartModel.getProperty("/selectedItems");
-
+ 
       if (defaultFlag != true) {
         if (!selectedItems || selectedItems.length === 0) {
           sap.m.MessageBox.error("Please select items for the promotion.");
           return;
         }
       }
-
+ 
       var oTable = this.byId("transactiontable");
       var aColumns = oTable.getColumns();
       // Set the visibility of the first two columns to true
       aColumns[6].setVisible(true);
       aColumns[7].setVisible(true);
-
+ 
       var hasZeroQuantity = selectedItems.some(function (item) {
         return item.quantity === 0;
       });
-
+     
       if (hasZeroQuantity) {
         MessageBox.error("Please select a quantity greater than 0 for each item.");
         return;
       }
-
+     
+ 
       var aModelData = this.getOwnerComponent().getModel("CampaignModel").getData();
-
-
+ 
+ 
       // Check if there is at least one CampaignId in aModelData
+     
       var selectedCampaignId = (aModelData.length) ? aModelData[0].CampaignId : "";
+     
       var salesOrderItems = selectedItems.map(function (item) {
-
-
         var isItemSelected = item.IsSelected === true || item.IsSelected === 'true';
-        // Ensure item.CampaignId is an array
         var campaignIdForItem = Array.isArray(item.CampaignId) ? item.CampaignId : [];
         var conditionTypeForItem = Array.isArray(item.ConditionType) ? item.ConditionType : [];
-
-
+     
         var ConditionType = "";
         for (var m = 0; m < that.getOwnerComponent().getModel("CampaignModel").getData().length; m++) {
           if (that.getOwnerComponent().getModel("CampaignModel").getData()[m].CampaignId == item.CampaignId) {
@@ -1091,11 +1117,23 @@ sap.ui.define([
             break;
           }
         }
-
+     
+        if (item.quantity <= 0) {
+          MessageBox.error("Please select a quantity greater than 0 for item " + item.ArticleNo);
+          return null;
+        }
+     
+        if (item.quantity > item.AvailableQty) {
+          if (!item.outOfStockErrorDisplayed) {
+            MessageBox.error("Quantity for item " + item.ArticleNo + " is out of stock. Available quantity: " + item.AvailableQty);
+            item.outOfStockErrorDisplayed = true; // Set a flag to indicate that an error has been displayed for this item
+          }
+          return null;
+        }
+     
         return {
           "FreeItem": isItemSelected,
-          "Zcampaign": defaultFlag == true ? "" : item.CampaignId, // Join array elements into a string
-          // "Zcampaign": "C-0020000342",
+          "Zcampaign": defaultFlag == true ? "" : item.CampaignId,
           "SalesorderNo": "",
           "ItmNumber": item.ItmNumber.toString(),
           "Material": item.ArticleNo.toString(),
@@ -1107,7 +1145,10 @@ sap.ui.define([
           "ConditionType": defaultFlag == true ? "" : ConditionType
         };
       });
-
+ 
+      salesOrderItems = salesOrderItems.filter(function (item) {
+        return item !== null;
+      });
       var salesOrderPayload = {
         "Action": "NORMAL",
         "DocDate": formattedDate,
@@ -1124,7 +1165,7 @@ sap.ui.define([
         "ConditionType": defaultFlag == true ? "" : selectedCampaignConditionType,
         "to_items": salesOrderItems
       };
-
+ 
       if (defaultFlag != true) {
         var oBusyDialog = new sap.m.BusyDialog({
           title: "Applying Promotion",
@@ -1133,53 +1174,53 @@ sap.ui.define([
         oBusyDialog.open();
       }
       var that = this;
-
+ 
       this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
         success: function (response) {
-
+ 
           if (defaultFlag != true) {
             oBusyDialog.close();
           }
-
-
+ 
+ 
           var oExistingModel = that.getView().getModel("SelectedItems");
-
-
+ 
+ 
           // Get the current data from the model
           var oData = oExistingModel.getProperty("/selectedItems");
-
+ 
           // Merge the new data into the existing data
           var responseData = response.to_items.results; // Adjust this based on the actual path in your response
-
+ 
           // Find matching items based on ItmNumber
           oData.forEach(function (existingItem) {
-
+ 
             var newItem = responseData.find(function (newItem) {
               return existingItem.ItmNumber === newItem.ItmNumber;
             });
-
+ 
             if (newItem) {
               Object.assign(existingItem, newItem);
             }
-
+ 
           });
-
+ 
           // Update the property with the updated array
           oData.forEach(function (item) {
             item.Discount = parseFloat(item.Discount).toFixed(2);
             item.NetPrice = parseFloat(item.NetPrice).toFixed(2);
             item.RetailPrice = parseFloat(item.RetailPrice).toFixed(2);
-            item.TargetQty = parseFloat(item.TargetQty).toFixed(2);
+            item.TargetQty = parseFloat(item.TargetQty).toFixed(2);  
             item.TaxAmount = parseFloat(item.TaxAmount).toFixed(2);
           });
-
-
+         
+ 
           oExistingModel.setProperty("/selectedItems", oData);
           that.onTableUpdateFinished();
           if (defaultFlag != true) {
             sap.m.MessageBox.success("Applied Promotion Successfully", {
               onClose: function () {
-
+ 
               }
             });
           }
@@ -1189,20 +1230,228 @@ sap.ui.define([
             oBusyDialog.close();
           }
           var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
-
           var errorMessage = "An error occurred. Details:\n";
+         
           errorDetails.forEach(function (detail) {
             errorMessage += "- " + detail.message + "\n";
           });
-
+ 
           // Show the error message in a message box or dialog
           sap.m.MessageBox.error(errorMessage, {
             title: "Error"
           });
         }
       });
-
+ 
     },
+    // onAddPromotion: function (defaultFlag) {
+
+    //   var that = this;
+    //   var datePicker = this.getView().byId("DP2");
+    //   var selectedDate = datePicker.getDateValue();
+
+    //   if (!selectedDate) {
+    //     sap.m.MessageBox.error("Please select a valid date.");
+    //     return;
+    //   }
+    //   var selectedHeaderCampaignKey = this.getView().byId("Campaign").getSelectedKey(); // Assuming "Campaign" is the ID of your ComboBox
+
+    //   // Initialize the selectedCampaignConditionType
+    //   var selectedCampaignConditionType = "";
+
+    //   // Get the selected campaign's Conditiontype from the model
+    //   var oComboBox = this.getView().byId("Campaign");
+    //   var oSelectedItem = oComboBox.getSelectedItem();
+
+    //   // Check if an item is selected and if a binding context is available
+    //   if (oSelectedItem && oSelectedItem.getBindingContext("HeaderCampaignModel")) {
+    //     var oBindingContext = oSelectedItem.getBindingContext("HeaderCampaignModel");
+    //     selectedCampaignConditionType = oBindingContext.getProperty("ConditionType");
+    //   } else {
+    //     // Handle the case when no item is selected or binding context is empty
+    //     // For example, set a default value or handle the logic accordingly
+    //     selectedCampaignConditionType = "";
+
+    //   }
+    //   var comboBox = this.byId("employee");
+    //   var selectedText = comboBox.getSelectedItem().getText();
+
+
+    //   var comboBox = this.byId("orderreason");
+    //   var selectedKey = comboBox.getSelectedKey();
+    //   console.log("Selected Key:", selectedKey);
+    //   var milliseconds = selectedDate.getTime();
+    //   var formattedDate = '/Date(' + milliseconds + ')/';
+    //   var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
+    //   var sStoreId = oStoreModel.getProperty("/selectedStoreId");
+
+    //   if (!sStoreId) {
+    //     sap.m.MessageBox.error("Please select a store.");
+    //     return;
+    //   }
+
+    //   var oCartModel = this.getView().getModel("SelectedItems");
+    //   var selectedItems = oCartModel.getProperty("/selectedItems");
+
+    //   if (defaultFlag != true) {
+    //     if (!selectedItems || selectedItems.length === 0) {
+    //       sap.m.MessageBox.error("Please select items for the promotion.");
+    //       return;
+    //     }
+    //   }
+
+    //   var oTable = this.byId("transactiontable");
+    //   var aColumns = oTable.getColumns();
+    //   // Set the visibility of the first two columns to true
+    //   aColumns[6].setVisible(true);
+    //   aColumns[7].setVisible(true);
+
+    //   var hasZeroQuantity = selectedItems.some(function (item) {
+    //     return item.quantity === 0;
+    //   });
+
+    //   if (hasZeroQuantity) {
+    //     MessageBox.error("Please select a quantity greater than 0 for each item.");
+    //     return;
+    //   }
+
+    //   var aModelData = this.getOwnerComponent().getModel("CampaignModel").getData();
+
+
+    //   // Check if there is at least one CampaignId in aModelData
+    //   var selectedCampaignId = (aModelData.length) ? aModelData[0].CampaignId : "";
+    //   var salesOrderItems = selectedItems.map(function (item) {
+
+
+    //     var isItemSelected = item.IsSelected === true || item.IsSelected === 'true';
+    //     // Ensure item.CampaignId is an array
+    //     var campaignIdForItem = Array.isArray(item.CampaignId) ? item.CampaignId : [];
+    //     var conditionTypeForItem = Array.isArray(item.ConditionType) ? item.ConditionType : [];
+
+
+    //     var ConditionType = "";
+    //     for (var m = 0; m < that.getOwnerComponent().getModel("CampaignModel").getData().length; m++) {
+    //       if (that.getOwnerComponent().getModel("CampaignModel").getData()[m].CampaignId == item.CampaignId) {
+    //         ConditionType = that.getOwnerComponent().getModel("CampaignModel").getData()[m].ConditionType;
+    //         break;
+    //       }
+    //     }
+    //     if (item.quantity > item.AvailableQty) {
+    //       MessageBox.error("Quantity for item " + item.ArticleNo + " is out of stock. Available quantity: " + item.AvailableQty);
+    //       return null; // Return null for invalid item quantity
+    //     }
+      
+    //     return {
+    //       "FreeItem": isItemSelected,
+    //       "Zcampaign": defaultFlag == true ? "" : item.CampaignId, // Join array elements into a string
+    //       // "Zcampaign": "C-0020000342",
+    //       "SalesorderNo": "",
+    //       "ItmNumber": item.ItmNumber.toString(),
+    //       "Material": item.ArticleNo.toString(),
+    //       "Plant": sStoreId,
+    //       "TargetQty": item.quantity.toString(),
+    //       "TargetQu": "PC",
+    //       "ItemCateg": "",
+    //       "ShortText": "",
+    //       "ConditionType": defaultFlag == true ? "" : ConditionType
+    //     };
+    //   });
+
+    //   var salesOrderPayload = {
+    //     "Action": "NORMAL",
+    //     "DocDate": formattedDate,
+    //     "Plant": sStoreId,
+    //     "OrdReason": selectedKey,
+    //     "SalesEmp": selectedText,
+    //     "SalesorderNo": "",
+    //     "SoldTo": this.getView().byId("firstNameInput").getValue(),
+    //     "ZCampaign": defaultFlag == true ? "" : selectedHeaderCampaignKey,  // No need to set ZCampaign at this level
+    //     "PointConsumed": "0.00",
+    //     "CampType": "",
+    //     "PointBalance": "0.00",
+    //     "SaveDocument": "",
+    //     "ConditionType": defaultFlag == true ? "" : selectedCampaignConditionType,
+    //     "to_items": salesOrderItems
+    //   };
+
+    //   if (defaultFlag != true) {
+    //     var oBusyDialog = new sap.m.BusyDialog({
+    //       title: "Applying Promotion",
+    //       text: "Please wait...."
+    //     });
+    //     oBusyDialog.open();
+    //   }
+    //   var that = this;
+
+    //   this.getOwnerComponent().getModel("mainModel").create("/SalesOrderHeadSet", salesOrderPayload, {
+    //     success: function (response) {
+
+    //       if (defaultFlag != true) {
+    //         oBusyDialog.close();
+    //       }
+
+
+    //       var oExistingModel = that.getView().getModel("SelectedItems");
+
+
+    //       // Get the current data from the model
+    //       var oData = oExistingModel.getProperty("/selectedItems");
+
+    //       // Merge the new data into the existing data
+    //       var responseData = response.to_items.results; // Adjust this based on the actual path in your response
+
+    //       // Find matching items based on ItmNumber
+    //       oData.forEach(function (existingItem) {
+
+    //         var newItem = responseData.find(function (newItem) {
+    //           return existingItem.ItmNumber === newItem.ItmNumber;
+    //         });
+
+    //         if (newItem) {
+    //           Object.assign(existingItem, newItem);
+    //         }
+
+    //       });
+
+    //       // Update the property with the updated array
+    //       oData.forEach(function (item) {
+    //         item.Discount = parseFloat(item.Discount).toFixed(2);
+    //         item.NetPrice = parseFloat(item.NetPrice).toFixed(2);
+    //         item.RetailPrice = parseFloat(item.RetailPrice).toFixed(2);
+    //         item.TargetQty = parseFloat(item.TargetQty).toFixed(2);
+    //         item.TaxAmount = parseFloat(item.TaxAmount).toFixed(2);
+    //       });
+
+
+    //       oExistingModel.setProperty("/selectedItems", oData);
+    //       that.onTableUpdateFinished();
+    //       if (defaultFlag != true) {
+    //         sap.m.MessageBox.success("Applied Promotion Successfully", {
+    //           onClose: function () {
+
+    //           }
+    //         });
+    //       }
+    //     },
+    //     error: function (error) {
+    //       if (defaultFlag != true) {
+    //         oBusyDialog.close();
+    //       }
+    //       var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
+
+    //       var errorMessage = "An error occurred. Details:\n";
+    //       errorDetails.forEach(function (detail) {
+    //         errorMessage += "- " + detail.message + "\n";
+    //       });
+
+    //       // Show the error message in a message box or dialog
+    //       sap.m.MessageBox.error(errorMessage, {
+    //         title: "Error"
+    //       });
+    //     }
+    //   });
+
+    // },
     //     OnAddPromotion: function () {
     //       var that = this;
     //       var datePicker = this.getView().byId("DP2");

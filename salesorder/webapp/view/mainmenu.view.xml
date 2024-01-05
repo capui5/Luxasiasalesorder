@@ -27,7 +27,8 @@
                 class="select1"
             />
         </VBox>
-        <HBox class="tile-container">
+        <HeaderContainer id="container2" scrollStep="200">
+        <!-- <HBox class="tile-container">  -->
             <GenericTile
                 class="tileLayout tile-1"
                 header="SEARCH FOR CUSTOMERS"
@@ -92,7 +93,7 @@
             </GenericTile>
                 <GenericTile
                 class="tileLayout tile-6"
-                header="STOCK LIST"
+                header="STOCK TAKE REPORT"
                 press="OnStockListPress"
             >
                 <TileContent>
@@ -117,6 +118,7 @@
                 </TileContent>
             </GenericTile>
             
-        </HBox>
+         <!-- </HBox>  -->
+        </HeaderContainer>
     </Page>
 </mvc:View>

@@ -1,25 +1,92 @@
 <mvc:View
     controllerName="com.luxasia.salesorder.controller.StockList"
     xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
-    xmlns="sap.m"
+    xmlns="sap.m" xmlns:core="sap.ui.core"
     models="myData"
 >
-    <SplitContainer id="splitContainer">
+    <SplitContainer id="splitStockContainer">
     
         <masterPages>
-            <Page
-                id="master"
-                title="STOCK LIST"
+            <Page id="stockListMaster"
+                
             >
+             <customHeader>
+                    <Toolbar design="Transparent">
+                        <Button
+                            icon="sap-icon://nav-back"
+                            press="onNavBack"
+                        />
+                        <Title text="Stock List" />
+                        <ToolbarSpacer/>
+                        <Button
+                            text="Show Filters"
+                            press=".onShowFilters"
+                            class="filter"
+                        />
+                    </Toolbar>
+                </customHeader>
+                
                 <content>
-                  
+                  <f:SimpleForm
+                        id="filtersContainer"
+                        layout="ResponsiveGridLayout"
+                        labelSpanL="4"
+                        labelSpanM="4"
+                        emptySpanL="1"
+                        emptySpanM="1"
+                        columnsL="1"
+                        columnsM="1"
+                        visible="false"
+                    >
+                        <f:content>
+                            <Label text="Search By Stock Count" />
+                            <Input
+                                id="stockCountNo"
+                                placeholder="Enter Stock Count Number"
+                                liveChange=".onFilterChange"
+                            />
+ 
+                            <Label text="Start Date" />
+                            <DatePicker
+                                id="startDatePicker"
+                                placeholder="Select Start Date"
+                                liveChange=".onFilterChange"
+                            />
+ 
+                            <Label text="End Date" />
+                            <DatePicker
+                                id="endDatePicker"
+                                placeholder="Select End Date"
+                                liveChange=".onFilterChange"
+                            />
+                            <Label text="Storage Location" />
+                            <ComboBox
+                                    items="{storageLocationModel>/}"
+                                    id="storageLocation"
+                                    showSecondaryValues="true" selectedKey="0001"
+                                    selectionChange="handleStorageLocation"
+                                >
+                                    <core:ListItem
+                                        text="{storageLocationModel>Name}"
+                                        key="{storageLocationModel>Storage_loc}"
+                                        additionalText="{storageLocationModel>Storage_loc}"
+                                    />
+                                </ComboBox>
+                            <Button
+                                text="Go"
+                                press=".onGoButtonPress"
+                                visible="{FilterModel>/filters/goButtonVisible}"
+                            />
+                        </f:content>
+                    </f:SimpleForm>
                      <List
                          id= "inventory"
                         items="{path:'mainModel>/InventoryHeadSet'}"
-                        mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}"
-                        selectionChange=".onListItemPress"
+                        mode="SingleSelectMaster"
+                        selectionChange=".onListItemPress" updateFinished="onListUpdateFinished"
                     >
                         <items>
                             <ObjectListItem
@@ -55,51 +122,102 @@
         <detailPages>
        
             <Page
-                id="detail"
+                id="stockListDetail"
                 title="STOCKLIST DETAILS"
+                showNavButton="{= ${device>/system/phone} }"
+                navButtonPress="onDetailNavBack"
             >
             
+           
+            <Table
+            items="{InventoryDetails>/}" growing="true" growingThreshold="20"
+            id="inventoryStockTableDetail" class="sapUiResponsivePadding"
+        >
 
-                <!-- <content>
-                    <List
-                        headerLevel="H2"
-                        items="{BrandStoreModel>/}"
-                        id="brandList"
-                    >
-                        <items>
-                            <CustomListItem
-                            >
-                                <HBox
-                                    alignItems="Center"
-                                    class="flexContainer"
-                                    justifyContent="SpaceBetween"
-                                >
-                                    <HBox width="90%">
-                                        <VBox >
-                                            <Title
-                                             
-                                                text="{BrandStoreModel>BrandDesc}"
-                                             
-                                            />
-                                        </VBox>
-                                    </HBox>
-
-                                    <HBox width="10%">
-                                        <VBox class="centered">
-                                            <Button
-                                                icon="sap-icon://add"
-                                                press="onAddButtonPress"
-                                            />
-                                        </VBox>
-                                    </HBox>
-                                </HBox>
-                            </CustomListItem>
-                        </items>
-                    </List>
-                </content>
-                 -->
-            </Page>
-          
+            <columns>
+                <Column >
+                    <Text text="Article No" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Article Desc" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="ArticleType" />
+                </Column>
+                 <Column hAlign="Center">
+                   <Text text="Barcode"/>
+                </Column>
+                
+                <Column hAlign="Center">
+                    <Text text="Stock Qty" />
+                </Column>
+                  <Column hAlign="Center">
+                   <Text text="Count Qty"/>
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Average Price" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="UOM" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{path:'InventoryDetails>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"/>
+                        <Text text="{InventoryDetails>ArticleDesc}"/>
+                        <Text text="{InventoryDetails>ArticleType}"/>
+                        <Text text="{InventoryDetails>Barcode}"/>
+                        <Text text="{path:'InventoryDetails>AvailableQty', formatter: '.formatter.decimal'}"/>
+                         <StepInput
+                            value="{InventoryDetails>StockQty}"
+                            min="1"
+                            editable="{=${headerModel>/Status} === 'R' ? true : false}"
+                            width="80px"
+                            validationMode="LiveChange"
+                            change="onQuantityChange"
+                        />
+                         <Text text="{path:'InventoryDetails>AveragePrice', formatter: '.formatter.decimal'}"/>
+                        <Text text="{InventoryDetails>UOM}"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+                    <Bar>
+                        <contentRight>
+                              <Button  id="postAdjustment" 
+                    text="Post Adjustment"
+                    press="onPostAdjustmentPress"
+                    class="edit"
+                />
+                <Button id="recount"
+                    text="Re-Count"
+                    press="onRecountPress"
+                    class="edit"
+                />
+                <Button id="submit"
+                    text="Submit"
+                    press="onSubmitRecountedRequest"
+                    class="edit"
+                />
+                <Button id="Cancel"
+                    text="Cancel"
+                    press="onCancelPress"
+                    class="edit"
+                />
+                        </contentRight>
+                    </Bar>
+                </footer>
+           </Page>
         </detailPages>
     </SplitContainer>
 </mvc:View>

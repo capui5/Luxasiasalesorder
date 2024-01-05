@@ -1,0 +1,97 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        showHeader="false"
+    >
+        <Table
+           id= "stocklistproduct"
+            mode="MultiSelect"
+            selectionChange="onInventoryStockSelect"
+            inset="false" growing="true" growingThreshold="20"
+            items="{mainModel>/InventoryDetailSet}"
+        >
+            <headerToolbar>
+                <OverflowToolbar>
+                    <content>
+                        <Title
+                            text="SEARCH FOR PRODUCT"
+                            level="H2"
+                        />
+                          <SearchField
+            width="22em"
+            search="onSearch"
+            placeholder="Search Products"
+        />
+                        <ToolbarSpacer />
+                       
+                     
+                          <Button
+                    id="searchproductclose"
+                    icon="sap-icon://decline"
+                    press="closeSearchProd"
+                />
+                    </content>
+                </OverflowToolbar>
+            </headerToolbar>
+             <columns>
+                <Column >
+                    <Text text="Article No" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Article Desc" />
+                </Column>
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="ArticleType" />
+                </Column>
+                 <Column hAlign="Center">
+                   <Text text="Barcode"/>
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Stock Qty" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Average Price" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="UOM" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{path:'mainModel>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"/>
+                        <Text text="{mainModel>ArticleDesc}"/>
+                        <Text text="{mainModel>ArticleType}"/>
+                        <Text text="{mainModel>Barcode}"/>
+                        <Text text="{mainModel>AvailableQty}"/>
+                        <Text text="{mainModel>AveragePrice}"/>
+                        <Text text="{mainModel>UOM}"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+            <OverflowToolbar id="otbFooter">
+                <ToolbarSpacer />
+                <Button
+                    text="ADD TO STOCK"
+                    press="onAddToStockPress"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+            </OverflowToolbar>
+        </footer>
+    </Dialog>
+</core:FragmentDefinition>

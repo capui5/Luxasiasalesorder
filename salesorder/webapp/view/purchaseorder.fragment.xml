@@ -12,6 +12,8 @@
             selectionChange="onItemSelect"
             inset="false"
             items="{ProductSetModel>/}"
+            growing="true"
+            growingThreshold="20"
         >
             <headerToolbar>
                 <OverflowToolbar>
@@ -20,12 +22,19 @@
                             text="SEARCH FOR PRODUCT"
                             level="H2"
                         />
+                          <SearchField
+            width="22em"
+            search="onSearchUsingFilter"
+            placeholder="Search Products"
+        />
                         <ToolbarSpacer />
-
-                        <Button
-                            icon="sap-icon://decline"
-                            press="closeSearchProd"
-                        />
+                       
+                     
+                          <Button
+                    id="searchproductclose"
+                    icon="sap-icon://decline"
+                    press="closeSearchProd"
+                />
                     </content>
                 </OverflowToolbar>
             </headerToolbar>

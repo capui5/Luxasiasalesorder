@@ -89,7 +89,7 @@
             </f:formContainers>
         </f:Form>
         <Table
-            items="{mainModel>/InventoryDetailSet}" growing="true" growingThreshold="20"
+            items="{inventoryStockItems>/}" growing="true" growingThreshold="20"
             id="inventoryStockTable"
         >
             <headerToolbar>
@@ -129,7 +129,13 @@
                    <Text text="Barcode"/>
                 </Column>
                 <Column hAlign="Center">
+                   
+                </Column>
+                <Column hAlign="Center">
                     <Text text="Stock Qty" />
+                </Column>
+                  <Column hAlign="Center">
+                   <Text text="Count Qty"/>
                 </Column>
                 <Column hAlign="Center">
                     <Text text="Average Price" />
@@ -141,13 +147,24 @@
             <items>
                 <ColumnListItem vAlign="Middle">
                     <cells>
-                        <Text text="{mainModel>ArticleNo}"/>
-                        <Text text="{mainModel>ArticleDesc}"/>
-                        <Text text="{mainModel>ArticleType}"/>
-                        <Text text="{mainModel>Barcode}"/>
-                        <Text text="{mainModel>AvailableQty}"/>
-                        <Text text="{mainModel>AveragePrice}"/>
-                        <Text text="{mainModel>UOM}"/>
+                        <Text text="{path:'inventoryStockItems>ArticleNo',formatter:'.formatter.precendingZerosRemvoal'}"/>
+                        <Text text="{inventoryStockItems>ArticleDesc}"/>
+                        <Text text="{inventoryStockItems>ArticleType}"/>
+                        <Text text="{inventoryStockItems>Barcode}"/>
+                         <Button
+                            icon="sap-icon://delete"
+                            press="onDeleteItem"
+                        />
+                        <Text text="{path:'inventoryStockItems>AvailableQty', formatter: '.formatter.decimal'}"/>
+                         <StepInput
+                            value="{inventoryStockItems>countQty}"
+                            min="1"
+                            width="80px"
+                            validationMode="LiveChange"
+                            change="onQuantityChange"
+                        />
+                        <Text text="{path:'inventoryStockItems>AveragePrice', formatter: '.formatter.decimal'}"/>
+                        <Text text="{inventoryStockItems>UOM}"/>
                     </cells>
                 </ColumnListItem>
             </items>
@@ -160,12 +177,12 @@
                 <ToolbarSpacer />
                 <Button
                     text="CANCEL"
-                    press="onCancelInventory"
+                    press="onCancelStockInventory"
                     class="transcancel"
                 />
                 <Button
                     text="Submit"
-                    press="onSubmitInventory"
+                    press="onSubmitStockInventory"
                     class="transsave"
                 />
             </OverflowToolbar>

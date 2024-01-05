@@ -346,12 +346,6 @@ sap.ui.define([
             this.updateButtonsVisibility(true);
             this.getSplitContObj().backDetail();
         },
-       
-        onPressMasterBack: function () {
-            this.updateButtonsVisibility(true);
-            this.getSplitContObj().backMaster();
-        },
- 
         onShowFilters: function () {
             var oFiltersModel = this.getView().getModel("poModelFilters");
             oFiltersModel.setProperty("/filters/poNumber", "");
@@ -361,6 +355,12 @@ sap.ui.define([
             var oFiltersContainer = this.getView().byId("filtersContainer");
             oFiltersContainer.setVisible(!oFiltersContainer.getVisible());
         },
+        onPressMasterBack: function () {
+            this.updateButtonsVisibility(true);
+            this.getSplitContObj().backMaster();
+        },
+ 
+        
        
         onGoButtonPress: function (evt) {
             var filter1 = new sap.ui.model.Filter("StoreId", "EQ", this.sStoreId);

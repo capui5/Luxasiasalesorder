@@ -102,18 +102,20 @@
                                     id="documentType"
                                     selectionChange="onDocumentType"
                                 >
-                                    <core:Item
-                                        text="Stock Transfer Order"
+                                     <core:Item
+                                        text="Stock Transfer Order-UD"
                                         key="STO"
                                     />
                                     <core:Item
-                                        text="Stock Transfer Order Return"
+                                        text="Stock Transfer Order Return-ZUDR"
                                         key="STO_RET"
                                     />
                                     <!-- <core:Item text="Stock Transport Order" key="STORE_TO_STORE"/> -->
                                 </ComboBox>
                             </f:fields>
                         </f:FormElement>
+
+
                         <f:FormElement
                             label="Document Type"
                             visible="{=${StoreModel>/selectedStoreType} !== 'B' ? true : false}"
@@ -123,12 +125,12 @@
                                     id="documentTypeConsigment"
                                     selectionChange="onDocumentType"
                                 >
-                                    <core:Item
-                                        text="Department Store Order"
+                                <core:Item
+                                        text="Department Store Order-ZDSP"
                                         key="NORMAL"
                                     />
                                     <core:Item
-                                        text="Department Store Order return"
+                                        text="Department Store Order return-ZUDR"
                                         key="EXT_RET"
                                     />
                                 </ComboBox>

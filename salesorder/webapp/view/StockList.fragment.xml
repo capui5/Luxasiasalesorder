@@ -47,7 +47,7 @@
             <GenericTile
                 class="sapUiTinyMarginBegin sapUiTinyMarginTop tilesetting"
                 header="SEARCH FOR PRODUCTS"
-                press="ProductSearch"
+                press="onSearchInventoryStock"
                 frameType="TwoByHalf"
             >
                 <TileContent

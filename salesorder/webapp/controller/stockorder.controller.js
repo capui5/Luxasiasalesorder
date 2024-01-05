@@ -3,9 +3,11 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ndc/BarcodeScanner",
-    "com/luxasia/salesorder/util/formatter"
+    "com/luxasia/salesorder/util/formatter",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
 
-], function (Controller, JSONModel, MessageBox,BarcodeScanner, formatter) {
+], function (Controller, JSONModel, MessageBox, BarcodeScanner, formatter, Filter, FilterOperator ) {
     "use strict";
 
     return Controller.extend("com.luxasia.salesorder.controller.stockorder", {
@@ -118,7 +120,26 @@ sap.ui.define([
                 console.error("mainModel not found.");
             }
         },
-
+        onSearchUsingFilter: function (oEvent) {
+           
+            var sQuery = oEvent.getParameter("query");
+       
+           
+            var oTable = this.byId("mypurchaseDialog1");
+            var oBinding = oTable.getBinding("items");
+       
+            if (sQuery && sQuery.length > 0) {
+                var aFilters = [
+                    new Filter("ArticleDesc", FilterOperator.Contains, sQuery),
+                    new Filter("ArticleNo", FilterOperator.Contains, sQuery),
+                    new Filter("Barcode", FilterOperator.Contains, sQuery)
+                ];
+       
+                oBinding.filter(new Filter(aFilters, false));
+            } else {
+                oBinding.filter([]);
+            }
+        },
         onAddProduct: function () {
             this.PDialog ??= this.loadFragment({
                 name: "com.luxasia.salesorder.view.purchase"
@@ -236,11 +257,11 @@ sap.ui.define([
                         var sStoreId = oStoreModel.getProperty("/selectedStoreId");
 
                         var oStoreFilter = new sap.ui.model.Filter("StoreId", sap.ui.model.FilterOperator.EQ, sStoreId);
-
+                        var oTypeFilter = new sap.ui.model.Filter("Type", sap.ui.model.FilterOperator.EQ, "PO");
                         var oModel = this.getOwnerComponent().getModel("mainModel");
 
                         var oFinalFilter = new sap.ui.model.Filter({
-                            filters: [oCombinedBrandFilters, oStoreFilter],
+                            filters: [oCombinedBrandFilters, oStoreFilter, oTypeFilter],
                             and: true
                         });
 

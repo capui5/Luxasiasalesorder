@@ -10,6 +10,7 @@ sap.ui.define([
 
   return Controller.extend("com.luxasia.salesorder.controller.newcustomer", {
     onInit: function () {
+
       var aModel = this.getOwnerComponent().getModel("CustomerNoModel")
       this.getView().setModel(aModel, "CustomerNoModel");
       var oDatePicker = this.byId("datePickerId");
@@ -36,7 +37,7 @@ sap.ui.define([
 
       // var oModel = this.getOwnerComponent().getModel("BrandStoreModel");
       // console.log(oModel);
-
+    
       this.oRouter = this.getOwnerComponent().getRouter();
       var oOwnerComponent = this.getOwnerComponent();
       var oStoreModel = oOwnerComponent.getModel("StoreModel");
@@ -52,10 +53,29 @@ sap.ui.define([
       } else {
         console.error("StoreModel not found.");
       }
+      var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
+
+
+      if (oStoreModel) {
+
+        var selectedCountry = oStoreModel.getProperty("/selectedCountry");
+
+        if (selectedCountry) {
+
+          var oCountrySelect = this.byId("country");
+          var oCountryCodeSelect = this.byId("countrycode")
+          oCountrySelect.setSelectedKey(selectedCountry);
+          oCountryCodeSelect.setSelectedKey(selectedCountry)
+        } else {
+          console.warn("Selected country not found in StoreModel.");
+        }
+      } else {
+        console.error("StoreModel not found.");
+      }
       // Initialize the JSON model for CSRF token
 
-    
-    
+
+
     },
     getRouter: function () {
       return UIComponent.getRouterFor(this);
@@ -81,7 +101,20 @@ sap.ui.define([
 
     onCreateProfile: function () {
       var that = this;
-
+      var datePicker = this.getView().byId("datePickerId");
+ 
+   
+      var selectedDate = datePicker.getDateValue();
+   
+     
+      var currentDate = new Date();
+      var age = currentDate.getFullYear() - selectedDate.getFullYear();
+   
+     
+      if (age < 18) {
+          sap.m.MessageBox.error("You must be at least 18 years old to create a profile.");
+          return;
+      }
       var datePicker = this.getView().byId("datePickerId");
       var selectedDate = datePicker.getDateValue();
       var milliseconds = selectedDate.getTime();
@@ -151,48 +184,48 @@ sap.ui.define([
       var oBusyDialog = new sap.m.BusyDialog({
         title: "Creating New Customer",
         text: "Please wait...."
-    });
-    oBusyDialog.open();
+      });
+      oBusyDialog.open();
       this.getOwnerComponent().getModel("mainModel").create("/CustomerSet", payload, {
 
         success: function (data) {
-               var custno = data.CustomerNo;
+          var custno = data.CustomerNo;
 
-                var oCustomerNoModel = that.getView().getModel("CustomerNoModel");
+          var oCustomerNoModel = that.getView().getModel("CustomerNoModel");
 
-                // Check if the model exists; if not, create a new JSON model and set it to the view
-                if (!oCustomerNoModel) {
-                  oCustomerNoModel = new sap.ui.model.json.JSONModel();
-                  that.getView().setModel(oCustomerNoModel, "CustomerNoModel");
-                }
+          // Check if the model exists; if not, create a new JSON model and set it to the view
+          if (!oCustomerNoModel) {
+            oCustomerNoModel = new sap.ui.model.json.JSONModel();
+            that.getView().setModel(oCustomerNoModel, "CustomerNoModel");
+          }
 
-                // Get existing array or initialize it if it doesn't exist
-                var aCustomerFirstnames = oCustomerNoModel.getProperty("/Firstnames") || [];
+          // Get existing array or initialize it if it doesn't exist
+          var aCustomerFirstnames = oCustomerNoModel.getProperty("/Firstnames") || [];
 
-                // Add the retrieved customerNo directly to the Firstnames array
-                if (custno) {
-                  aCustomerFirstnames.push(custno); // Pushing CustomerNo into the array
-                }
+          // Add the retrieved customerNo directly to the Firstnames array
+          if (custno) {
+            aCustomerFirstnames.push(custno); // Pushing CustomerNo into the array
+          }
 
-                // Set the modified array back to the model under /Firstnames property
-                oCustomerNoModel.setProperty("/Firstnames", aCustomerFirstnames);
+          // Set the modified array back to the model under /Firstnames property
+          oCustomerNoModel.setProperty("/Firstnames", aCustomerFirstnames);
 
 
-                // Set the modified array back to the model under /Firstnames property
-                oCustomerNoModel.setProperty("/Firstnames", aCustomerFirstnames);
-                // Show a MessageBox with customer number
-                sap.m.MessageBox.success("Record successfully created\nCustomer No: " + custno, {
-                  onClose: function () {
-                    oBusyDialog.close();
-                    if (oCustomerNoModel) {
-                      oCustomerNoModel.setProperty(pathToSet, customerNumber); // Set the property at the specified path
-                    } else {
-                      console.error("CustomerNoModel not found.");
-                    }
-                  }
+          // Set the modified array back to the model under /Firstnames property
+          oCustomerNoModel.setProperty("/Firstnames", aCustomerFirstnames);
+          // Show a MessageBox with customer number
+          sap.m.MessageBox.success("Record successfully created\nCustomer No: " + custno, {
+            onClose: function () {
+              oBusyDialog.close();
+              if (oCustomerNoModel) {
+                oCustomerNoModel.setProperty(pathToSet, customerNumber); // Set the property at the specified path
+              } else {
+                console.error("CustomerNoModel not found.");
+              }
+            }
 
-                });
-              } ,
+          });
+        },
 
 
 

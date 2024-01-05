@@ -20,12 +20,18 @@
                             text="SEARCH FOR PRODUCT"
                             level="H2"
                         />
+                          <SearchField
+            width="22em"
+            search="onSearch"
+            placeholder="Search Products"
+        />
                         <ToolbarSpacer />
-                      
+                       
+                     
                           <Button
-                    id="searchproductclos"
+                    id="searchproductclose"
                     icon="sap-icon://decline"
-                    press="CloseSearchProduct"
+                    press="closeSearchProd"
                 />
                     </content>
                 </OverflowToolbar>

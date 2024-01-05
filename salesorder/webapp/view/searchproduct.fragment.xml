@@ -20,7 +20,13 @@
                             text="SEARCH FOR PRODUCT"
                             level="H2"
                         />
+                          <SearchField
+            width="22em"
+            search="onSearch"
+            placeholder="Search Products"
+        />
                         <ToolbarSpacer />
+                       
                      
                           <Button
                     id="searchproductclose"

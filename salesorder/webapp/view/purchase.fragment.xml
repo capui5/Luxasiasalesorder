@@ -15,7 +15,7 @@
             <HBox alignItems="Center">
                 <Label
                     class="fragmentext"
-                    text="Add More Products to Purchase Order"
+         
                 />
 
                 <HBox width="100%" />

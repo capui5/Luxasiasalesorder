@@ -11,16 +11,22 @@
         showHeader="false"
         class="newcustpage"
     >
-    	<OverflowToolbar class="header" id="transheader">
-			<Text text="LUXASIA" class="mainmenutext"/>
+        <OverflowToolbar
+            class="header"
+            id="transheader"
+        >
+            <Text
+                text="LUXASIA"
+                class="mainmenutext"
+            />
             <ToolbarSpacer />
-              <Button
-                    text="Create Sales Order"
-                    press="Onroutetotranspage"
-                    class="wide-button"
-                    width="200px"
-                />
-		</OverflowToolbar>
+            <Button
+                text="Create Sales Order"
+                press="Onroutetotranspage"
+                class="wide-button"
+                width="200px"
+            />
+        </OverflowToolbar>
         <VBox
             class="sapUiSmallMargin"
             alignItems="Center"
@@ -37,172 +43,171 @@
             />
         </VBox>
         <VBox class="sapUiSmallMargin">
-                <f:Form
-                    id="FormChange354wideDual"
-                    editable="true"
-                >
-                    <f:layout>
-                        <f:ResponsiveGridLayout
-                            breakpointXL="1000"
-                            
-                            labelSpanXL="4"
-                            labelSpanL="4"
-                            labelSpanM="4"
-                            labelSpanS="12"
-                            adjustLabelSpan="false"
-                            emptySpanXL="0"
-                            emptySpanL="0"
-                            emptySpanM="0"
-                            emptySpanS="0"
-                            columnsXL="3"
-                            columnsL="2"
-                            columnsM="2"
-                            singleContainerFullSize="false"
-                        />
-                    </f:layout>
-                    <f:formContainers>
-                        <f:FormContainer>
-                            <f:formElements>
-                                <f:FormElement label="Name">
-                                    <f:fields>
-                                        <Select
-                                            id="title"
-                                            selectedKey="{Country}"
-                                        >
-                                            <items>
-                                                <core:Item
-                                                    text="Mr."
-                                                    key="1"
-                                                />
-                                                <core:Item
-                                                    text="Mrs."
-                                                    key="2"
-                                                />
-                                                <core:Item
-                                                    text="Ms"
-                                                    key="3"
-                                                />
-                                            </items>
-                                        </Select>
-                                        <Input
-                                            placeholder="First Name"
-                                            id="fname"
-                                            required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Last Name">
-                                    <f:fields>
-                                        <Input
-                                            placeholder="Last Name"
-                                            id="lname"
-                                            required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Email">
-                                    <f:fields>
-                                        <Input
-                                            placeholder="Email Address"
-                                            id="email"
-                                            required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Mobile No">
-                                    <f:fields>
-                                        <Select
-                                            id="countrycode"
-                                            selectedKey="{Country}"
-                                            items="{mainModel>/CountryTelCodeSet}"
-                                            required="true"
-                                        >
-                                            <items>
-                                                <core:Item
-                                                    text="{mainModel>TelCode}"
-                                                    key="{mainModel>Land1}"
-                                                
-                                                />
-                                            </items>
+            <f:Form
+                id="FormChange354wideDual"
+                editable="true"
+            >
+                <f:layout>
+                    <f:ResponsiveGridLayout
+                        breakpointXL="1000"
+                        labelSpanXL="4"
+                        labelSpanL="4"
+                        labelSpanM="4"
+                        labelSpanS="12"
+                        adjustLabelSpan="false"
+                        emptySpanXL="0"
+                        emptySpanL="0"
+                        emptySpanM="0"
+                        emptySpanS="0"
+                        columnsXL="3"
+                        columnsL="2"
+                        columnsM="2"
+                        singleContainerFullSize="false"
+                    />
+                </f:layout>
+                <f:formContainers>
+                    <f:FormContainer>
+                        <f:formElements>
+                            <f:FormElement label="Name">
+                                <f:fields>
+                                    <Select
+                                        id="title"
+                                        selectedKey="{Country}"
+                                    >
+                                        <items>
+                                            <core:Item
+                                                text="Mr."
+                                                key="1"
+                                            />
+                                            <core:Item
+                                                text="Mrs."
+                                                key="2"
+                                            />
+                                            <core:Item
+                                                text="Ms"
+                                                key="3"
+                                            />
+                                        </items>
+                                    </Select>
+                                    <Input
+                                        placeholder="First Name"
+                                        id="fname"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Last Name">
+                                <f:fields>
+                                    <Input
+                                        placeholder="Last Name"
+                                        id="lname"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Email">
+                                <f:fields>
+                                    <Input
+                                        placeholder="Email Address"
+                                        id="email"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Mobile No">
+                                <f:fields>
+                                    <Select
+                                        id="countrycode"
+                                        selectedKey="{Country}"
+                                        items="{path: 'mainModel>/CountryTelCodeSet',
+                                                length: 5000
+                                                }"
+                                        required="true"
+                                    >
+                                        <items>
+                                            <core:Item
+                                                text="{mainModel>TelCode}"
+                                                key="{mainModel>Land1}"
+                                            />
+                                        </items>
 
-                                            <layoutData>
-                                                <l:GridData span="XL3 L2 M2 S12" />
-                                            </layoutData>
-                                        </Select>
-                                        <Input
-                                            placeholder="Mobile Number"
-                                            id="phoneno"
-                                            required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                            </f:formElements>
-                        </f:FormContainer>
-                        <f:FormContainer>
-                            <f:formElements>
-                                <f:FormElement label="Street/City"    >
-                                    <f:fields>
-                                        <Input
-                                            placeholder="Street"
-                                            id="street1"
-                                              required="true"
-                                        />
-                                        <Input
-                                            placeholder="City"
-                                            id="city"
-                                              required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Pincode">
-                                    <f:fields>
-                                        <Input
-                                            placeholder="Pincode"
-                                            id="pcode"
-                                             required="true"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Country">
-                                    <f:fields>
-                                        <Select
-                                            items="{
+                                        <layoutData>
+                                            <l:GridData span="XL3 L2 M2 S12" />
+                                        </layoutData>
+                                    </Select>
+                                    <Input
+                                        placeholder="Mobile Number"
+                                        id="phoneno"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                        </f:formElements>
+                    </f:FormContainer>
+                    <f:FormContainer>
+                        <f:formElements>
+                            <f:FormElement label="Street/City">
+                                <f:fields>
+                                    <Input
+                                        placeholder="Street"
+                                        id="street1"
+                                        required="true"
+                                    />
+                                    <Input
+                                        placeholder="City"
+                                        id="city"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Pincode">
+                                <f:fields>
+                                    <Input
+                                        placeholder="Pincode"
+                                        id="pcode"
+                                        required="true"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Country">
+                                <f:fields>
+                                    <Select
+                                        items="{
         path: 'mainModel>/CountrySet',
         length: 5000
     }"
-                                            id="country"
-                                            selectedKey="{Country}"
-                                        >
-                                            <items>
-                                                <core:Item
-                                                    text="{mainModel>Landx}"
-                                                    key="{mainModel>Land1}"
-                                                />
-                                            </items>
-                                        </Select>
-                                    </f:fields>
-                                </f:FormElement>
-                                <f:FormElement label="Date of Birth">
-                                    <f:fields>
-                                    
-                                        <DatePicker
-                                            id="datePickerId"
-                                            value="{
+                                        id="country"
+                                        selectedKey="{Country}"
+                                    >
+                                        <items>
+                                            <core:Item
+                                                text="{mainModel>Landx}"
+                                                key="{mainModel>Land1}"
+                                            />
+                                        </items>
+                                    </Select>
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="Date of Birth">
+                                <f:fields>
+                                    <DatePicker
+                                        id="datePickerId"
+                                        value="{
                             'path':'',
                             'type':'sap.ui.model.type.Date',
                             'formatOptions': {
                                 'pattern': 'yyyy-MM-dd'
                             }
                         }"
-                        required="true"
-                                            class="sapUiSmallMarginBottom"
-                                        />
-                                    </f:fields>
-                                </f:FormElement>
-                            </f:formElements>
-                        </f:FormContainer>
-                    </f:formContainers>
-                </f:Form>
+                                        required="true"
+                                        class="sapUiSmallMarginBottom"
+                                    />
+                                </f:fields>
+                            </f:FormElement>
+                        </f:formElements>
+                    </f:FormContainer>
+                </f:formContainers>
+            </f:Form>
             <Text
                 text="By Submitting this form, you agree that the Luxasia Group of Companies may collect, use, and process your personal data as provided to send you marketing information on upcoming events and promotions in accordance with the PDPA and our data protection policy available on our website! The information you provided will also be used for research and customer relationship management purposes. You may unsubscribe at any time."
                 class="pleaseenter1"
@@ -217,7 +222,6 @@
                     class="wide-create"
                     width="300px"
                 />
-              
             </HBox>
         </VBox>
     </Page>

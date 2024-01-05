@@ -2,8 +2,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/ndc/BarcodeScanner",
-    "com/luxasia/salesorder/util/formatter"
-], function (Controller, JSONModel,BarcodeScanner,formatter) {
+    "com/luxasia/salesorder/util/formatter",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, JSONModel,BarcodeScanner,formatter,Filter,FilterOperator) {
     "use strict";
 
     return Controller.extend("com.luxasia.salesorder.controller.mainmenu", {
@@ -124,7 +126,26 @@ sap.ui.define([
 
             });
         },
-
+        onSearch: function (oEvent) {
+           
+            var sQuery = oEvent.getParameter("query");
+       
+           
+            var oTable = this.byId("myDialog");
+            var oBinding = oTable.getBinding("items");
+       
+            if (sQuery && sQuery.length > 0) {
+                var aFilters = [
+                    new Filter("ArticleDesc", FilterOperator.Contains, sQuery),
+                    new Filter("ArticleNo", FilterOperator.Contains, sQuery),
+                    new Filter("Barcode", FilterOperator.Contains, sQuery)
+                ];
+       
+                oBinding.filter(new Filter(aFilters, false));
+            } else {
+                oBinding.filter([]);
+            }
+        },
         onCloseFrag: function () {
             if (this.pDialog) {
                 this.pDialog.then(function (dialog) {
@@ -612,13 +633,13 @@ sap.ui.define([
         //  },
         onQrPress: function () {
             var that = this;
-            var oModel = that.getOwnerComponent().getModel("SalesEmployeeModel")
-         
+            var oStoreModel = this.getOwnerComponent().getModel("StoreModel");           
+            var selectedCountry = oStoreModel.getProperty("/selectedCountry");
+            var oModel = that.getOwnerComponent().getModel("SalesEmployeeModel")      
             var oData = oModel.getProperty("/");
             if (oData && oData.results && oData.results.length > 0) {
                 var yourProperty = oModel.getProperty("/results/0/Pernr");
                 // Use the value of 'yourProperty' as needed
-
             } else {
                 console.error("No data available in the model or at the specified index.");
             }
@@ -628,7 +649,7 @@ sap.ui.define([
             this.oDialog.then(function (dialog) {
                 dialog.open();
                 var baseUrl = "http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=";
-                var encryptedParameter = btoa(yourProperty + "##" + new Date());
+                var encryptedParameter = btoa(selectedCountry + "##" + yourProperty + "##" + new Date());
                 var urlToRedirect = "https://luxasia-otc-npr-cf-ap11-5vubrgfy.launchpad.cfapps.ap11.hana.ondemand.com/ac4bc299-aae2-4ffc-bcab-943146543edd.salesorder.comnewcustqrnewcustqr-0.0.1/index.html?BA=" + encryptedParameter; // Replace this with your desired URL
                 var text = encodeURIComponent(urlToRedirect);
 
@@ -657,7 +678,6 @@ sap.ui.define([
                 });
                 this.pDialog = null;
             }
-
         },
         closeSearchProd: function () {
             var oDialog = this.getView().byId("searchprod");
@@ -667,6 +687,5 @@ sap.ui.define([
             var oDialog = this.getView().byId("qrfrag");
             oDialog.close();
         }
-
     });
 });

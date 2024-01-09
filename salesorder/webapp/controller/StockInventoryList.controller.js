@@ -271,6 +271,7 @@ sap.ui.define(
           var milliseconds = selectedDate.getTime();
           var formattedDate = '/Date(' + milliseconds + ')/';
           var salesEmp = this.getOwnerComponent().getModel("SalesEmployeeModel").oData.results[0].Pernr;
+          var salesEmpEmail = this.getOwnerComponent().getModel("SalesEmployeeModel").oData.results[0].Email;
           var storageLoc = this.getView().byId("storageLocation").getSelectedKey();
           var payload = {
             "StockCountNo": "",
@@ -282,6 +283,7 @@ sap.ui.define(
             "SalesEmp": salesEmp,
             "StoreId": sStoreId,
             "StorageLoc": storageLoc,
+            "CreatedByEmail" :salesEmpEmail,
             "to_inventory_detail": []
           }
           var inventoryStockItems = this.getView().getModel("inventoryStockItems").getData();

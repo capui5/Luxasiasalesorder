@@ -159,7 +159,7 @@
                 <Column hAlign="Center">
                     <Text text="Stock Qty" />
                 </Column>
-                  <Column hAlign="Center">
+                  <Column hAlign="Center" width="7rem">
                    <Text text="Count Qty"/>
                 </Column>
                 <Column hAlign="Center">
@@ -181,7 +181,7 @@
                             value="{InventoryDetails>StockQty}"
                             min="1"
                             editable="{=${headerModel>/Status} === 'R' ? true : false}"
-                            width="80px"
+                           
                             validationMode="LiveChange"
                             change="onQuantityChange"
                         />
@@ -191,28 +191,28 @@
                 </ColumnListItem>
             </items>
         </Table>
-        <footer>
-                    <Bar>
+        <footer >
+                    <Bar class="barClass">
                         <contentRight>
                               <Button  id="postAdjustment" 
                     text="Post Adjustment"
                     press="onPostAdjustmentPress"
-                    class="edit"
+                    class="stockActionBtn" 
                 />
                 <Button id="recount"
                     text="Re-Count"
                     press="onRecountPress"
-                    class="edit"
+                    class="stockActionBtn"
                 />
                 <Button id="submit"
                     text="Submit"
                     press="onSubmitRecountedRequest"
-                    class="edit"
+                    class="stockActionBtn"
                 />
                 <Button id="Cancel"
                     text="Cancel"
                     press="onCancelPress"
-                    class="edit"
+                    class="stockActionBtn"
                 />
                         </contentRight>
                     </Bar>

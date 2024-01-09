@@ -226,12 +226,10 @@ sap.ui.define([
             } else {
                 console.error("SelectedBrandName model not found or undefined.");
             }
-
-
-
         },
         onSearchProduct: function () {
             var that = this;
+         
         that.aDialog ??= that.loadFragment({ name: "com.luxasia.salesorder.view.searchproduct" });
         that.aDialog.then(function (dialog) {
             dialog.open();

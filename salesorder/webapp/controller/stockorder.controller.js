@@ -5,9 +5,10 @@ sap.ui.define([
     "sap/ndc/BarcodeScanner",
     "com/luxasia/salesorder/util/formatter",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/ui/model/FilterOperator",
+    "sap/ui/core/routing/History"
 
-], function (Controller, JSONModel, MessageBox, BarcodeScanner, formatter, Filter, FilterOperator ) {
+], function (Controller, JSONModel, MessageBox, BarcodeScanner, formatter, Filter, FilterOperator ,History) {
     "use strict";
 
     return Controller.extend("com.luxasia.salesorder.controller.stockorder", {
@@ -33,11 +34,42 @@ sap.ui.define([
                     oCartpurchaseModel.setProperty("/selectedItems", selectedItems);
                 }
             }
-            var oRouter = this.getOwnerComponent().getRouter();
-      //oRouter.getRoute("stockorder").attachPatternMatched(this._onRouteMatched, this);
+             var oRouter = this.getOwnerComponent().getRouter();
+             oRouter.getRoute("stockorder").attachPatternMatched(this._onRouteMatched, this);
+             //window.addEventListener("beforeunload", this.onBeforeUnload.bind(this));
+            //var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            //oRouter.attachRouteMatched(this._onRouteMatched , this);
         },
+        onBeforeUnload: function(event) {
+            // Customize your confirmation message
+            var confirmationMessage = "Are you sure you want to leave this page?";
+            // Display confirmation message
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+          },
+        _onRouteMatched: function(oEvent) {
+            // Check if the back navigation is triggered
+            var oHistory = History.getInstance();
+            var sPreviousHash = oHistory.getPreviousHash();
+            this.RouteMatched = true;
+          },
+          onPopState: function(event) {
+            // Your custom logic when the back button is pressed
+            if(this.RouteMatched){
+                this.RouteMatched = false; 
+                var bConfirmed = window.confirm("Are you sure you want to leave this page?");
+            if (!bConfirmed) {
+              // If not confirmed, prevent the default behavior
+              //window.history.forward();
+               setTimeout(function() {
+          window.history.forward();
+        }, 0);
+            }
+            }
+          },
         onAfterRendering:function(){
             var that = this;
+            window.addEventListener("popstate", this.onPopState.bind(this));
             //this.getView().getModel("StoreModel").setProperty("/selectedStoreType","B");
             var storeType = this.getView().getModel("StoreModel").getProperty("/selectedStoreType");
             var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
@@ -97,6 +129,23 @@ sap.ui.define([
                   //oBusyDialog.close();
                 }
               });
+              document.onmouseover = function() {
+                //User's mouse is inside the page.
+                window.innerDocClick = true;
+           }
+           document.onmouseleave = function() {
+               //User's mouse has left the page.
+               window.innerDocClick = false;
+           }
+           window.onhashchange = function(oEvent) {
+              if (window.innerDocClick != false) {
+                 window.innerDocClick = false;
+              } else {
+                //Browser back button was clicked
+                oEvent.preventDefault();
+                oEvent.stopPropagation();
+             }
+           }
         },
         loadProducts: function () {
             var oModel = this.getOwnerComponent().getModel("mainModel");
@@ -403,6 +452,8 @@ sap.ui.define([
                 var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
                 var sStoreId = oStoreModel.getProperty("/selectedStoreId");
                 var storeType = this.getView().getModel("StoreModel").getProperty("/selectedStoreType");
+                var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
+                var UserEmail = SModel.getProperty("/results/0/Email");
                 //var deliveryDate = this.getView().byId("deliveryDate").getValue();
                 var deliveryDate = this.getView().byId("deliveryDate").getValue();
                 //var selectedDate = datePicker.getDateValue();
@@ -414,6 +465,7 @@ sap.ui.define([
                     "DlvDate": deliveryDate,
                     "Action":"",
                     "StoreId" : sStoreId,
+                    "CreatedByEmail" :UserEmail,
                     "to_po_items": []
                 }
                 if(storeType == "B"){

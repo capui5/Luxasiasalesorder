@@ -27,7 +27,7 @@
                 class="select1"
             />
         </VBox>
-        <HeaderContainer id="container2" scrollStep="200">
+        <HeaderContainer id="container2" scrollStep="200" class="headerContainerClass">
         <!-- <HBox class="tile-container">  -->
             <GenericTile
                 class="tileLayout tile-1"

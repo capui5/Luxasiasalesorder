@@ -15,7 +15,9 @@ sap.ui.define([
   return Controller.extend("com.luxasia.salesorder.controller.transaction", {
     formatter: formatter,
     onInit: function () {
+   
 
+      this.getView()
       var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
       var currentDate = new Date();
       var formattedDate = oDateFormat.format(currentDate);
@@ -25,13 +27,7 @@ sap.ui.define([
 
       });
       this.getView().setModel(oModel, "DateModel")
-      var tModel = new sap.ui.model.json.JSONModel("viewModel")
-      this.getView().setModel(tModel, "viewModel");
-      var taxModel = new sap.ui.model.json.JSONModel("TaxModel")
-      this.getView().setModel(taxModel, "TaxModel");
-
-      var TotalTaxNetModel = new sap.ui.model.json.JSONModel("TotalTaxNetModel")
-      this.getView().setModel(TotalTaxNetModel, "TotalTaxNetModel");
+  
 
 
       var oQuantityModel = new JSONModel();
@@ -953,8 +949,14 @@ sap.ui.define([
     },
 
     onTableUpdateFinished: function () {
-      console.log("Updating total net price...");
+      
+      var tModel = new sap.ui.model.json.JSONModel("viewModel")
+      this.getView().setModel(tModel, "viewModel");
+      var taxModel = new sap.ui.model.json.JSONModel("TaxModel")
+      this.getView().setModel(taxModel, "TaxModel");
 
+      var TotalTaxNetModel = new sap.ui.model.json.JSONModel("TotalTaxNetModel")
+      this.getView().setModel(TotalTaxNetModel, "TotalTaxNetModel");
       var oModel = this.getView().getModel("SelectedItems");
       var aItems = oModel.getProperty("/selectedItems");
 
@@ -963,7 +965,7 @@ sap.ui.define([
         if (item.TaxAmount !== undefined && !isNaN(item.TaxAmount)) {
           return sum + parseFloat(item.TaxAmount);
         } else {
-          console.warn("Item TaxAmount is undefined or not a valid number. Skipping from calculation.");
+        
           return sum;
         }
       }, 0);
@@ -976,7 +978,6 @@ sap.ui.define([
         if (item.NetPrice !== undefined && !isNaN(item.NetPrice)) {
           return sum + parseFloat(item.NetPrice);
         } else {
-          console.warn("Item NetPrice is undefined or not a valid number. Skipping from calculation.");
           return sum;
         }
       }, 0);
@@ -1088,14 +1089,7 @@ sap.ui.define([
       aColumns[6].setVisible(true);
       aColumns[7].setVisible(true);
  
-      var hasZeroQuantity = selectedItems.some(function (item) {
-        return item.quantity === 0;
-      });
-     
-      if (hasZeroQuantity) {
-        MessageBox.error("Please select a quantity greater than 0 for each item.");
-        return;
-      }
+ 
      
  
       var aModelData = this.getOwnerComponent().getModel("CampaignModel").getData();
@@ -1673,7 +1667,8 @@ sap.ui.define([
 
     onSavePressServicecall: function () {
       var that = this;
-
+      var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
+      var UserEmail = SModel.getProperty("/results/0/Email");
       var comboBox = this.byId("employee");
       var selectedText = comboBox.getSelectedItem().getText();
 
@@ -1750,6 +1745,7 @@ sap.ui.define([
           "TargetQu": "PC",
           "ItemCateg": "",
           "ShortText": "",
+    
           "ConditionType":  ConditionType,
         };
 
@@ -1770,6 +1766,7 @@ sap.ui.define([
         "PointBalance": "0.00",
         "SaveDocument": "X",
         "PurchaseOrdNo": this.getView().byId("poreferenceno").getValue(),
+        "CreatedByEmail" : UserEmail,
         "ConditionType": selectedCampaignConditionType,
         "to_items": salesOrderItems,
         "to_conditions": this.conditionTypeArr

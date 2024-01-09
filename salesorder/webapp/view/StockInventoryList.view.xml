@@ -134,7 +134,7 @@
                 <Column hAlign="Center">
                     <Text text="Stock Qty" />
                 </Column>
-                  <Column hAlign="Center">
+                  <Column hAlign="Center" width="7rem"> 
                    <Text text="Count Qty"/>
                 </Column>
                 <Column hAlign="Center">
@@ -159,7 +159,6 @@
                          <StepInput
                             value="{inventoryStockItems>countQty}"
                             min="1"
-                            width="80px"
                             validationMode="LiveChange"
                             change="onQuantityChange"
                         />

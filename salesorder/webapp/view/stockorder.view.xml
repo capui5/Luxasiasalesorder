@@ -208,6 +208,13 @@
                 >
                     <Text text="Product" />
                 </Column>
+                  <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Article Code" />
+                </Column>
                 <Column
                     minScreenWidth="Tablet"
                     demandPopin="true"
@@ -230,6 +237,13 @@
                             <items>
                                 <ObjectIdentifier
                                     text="{cartpurchaseModel>ArticleDesc}"
+                                />
+                            </items>
+                        </HBox>
+                        <HBox>
+                             <items>
+                                <ObjectIdentifier
+                                    text="{cartpurchaseModel>ArticleNo}"
                                 />
                             </items>
                         </HBox>

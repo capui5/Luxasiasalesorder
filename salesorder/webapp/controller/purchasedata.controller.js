@@ -48,8 +48,13 @@ sap.ui.define([
         _onRouteMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments");
             var SelectedPurchaseorder = this.getView().getModel("purchaseOrderDetails");
-            SelectedPurchaseorder.setData({ modelData: {} });
-            SelectedPurchaseorder.updateBindings(true);
+            try{
+                SelectedPurchaseorder.setData({ modelData: {} });
+                SelectedPurchaseorder.updateBindings(true);
+            }catch(e){
+
+            }
+           
             this.onAfterRendering();
         },
         onAfterRendering: function () {
@@ -119,9 +124,10 @@ sap.ui.define([
             }
            
         },
+        // /583e70a0-3890-46a1-a850-6b12595b3c78.SalesUI.comluxasiasalesorder/~141223081936+0000~/
      
         loadPurchaseOrderDetails: function (sPoNumber, callback) {
-            var sServiceUrl = "/583e70a0-3890-46a1-a850-6b12595b3c78.SalesUI.comluxasiasalesorder/~141223081936+0000~/sap/opu/odata/sap/ZSDGW_CE_APP_SRV";
+            var sServiceUrl = "sap/opu/odata/sap/ZSDGW_CE_APP_SRV";
             var sDetailsUrl = sServiceUrl + "/PurchaseItemSet?$filter=PoNumber eq '" + sPoNumber + "'";
             var oSelectedPurchaseOrderModel = this.getView().getModel("selectedPurchaseOrder");
        
@@ -403,7 +409,8 @@ sap.ui.define([
             if (this._selectedPurchaseOrder) {
                 var docType = this._selectedPurchaseOrder.DocType;
                 var dlvStatus = this._selectedPurchaseOrder.DlvStatus;
-       
+                var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
+                var UserEmail = SModel.getProperty("/results/0/Email");
                 // if the DocType is ZDSP
                 // if (docType === "ZDSP") {
                 //     MessageBox.error("Cannot create Goods Receipt for ZDSP orders.");
@@ -445,6 +452,7 @@ sap.ui.define([
                     var oPayload = {
                         PoNumber: this._selectedPurchaseOrder.PoNumber,
                         Action: "GR-MIGO",
+                        "CreatedByEmail" :UserEmail,
                         to_po_items: aUpdatedItems
                     };
        

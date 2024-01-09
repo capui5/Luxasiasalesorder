@@ -8,10 +8,10 @@ sap.ui.define([
     onInit: function () {
       // To Get the Login User data  from Btp
       var lModel = this.getOwnerComponent().getModel("LoginUserModel");
-      this.getView().setModel(lModel , "LoginUserModel")
+      this.getView().setModel(lModel , "LoginUserModel");
       var mModel = this.getOwnerComponent().getModel("mainModel");
       var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
-      this.getView().setModel(SModel , "SalesEmployeeModel")
+      this.getView().setModel(SModel , "SalesEmployeeModel");
       var that = this;
       const url = that.getBaseURL() + "/user-api/currentUser";
 

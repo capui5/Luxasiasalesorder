@@ -23,10 +23,12 @@ sap.ui.define(
       handleInventorySet: function () {
         var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
         var sStoreId = oStoreModel.getProperty("/selectedStoreId");
+        var email = this.getView().getModel("SalesEmployeeModel" ).oData.results[0].Email;
         var filter1 = new sap.ui.model.Filter("StoreId", "EQ", sStoreId);
         var filter2 = new sap.ui.model.Filter("StorageLoc", "EQ", "0001");
-        var filter3 = new sap.ui.model.Filter([filter1, filter2], true);
-        this.getView().byId("inventory").getBinding("items").filter(filter3);
+        var filter3 = new sap.ui.model.Filter("CreatedByEmail", "EQ", email);
+        var filters = new sap.ui.model.Filter([filter1, filter2,filter3], true);
+        this.getView().byId("inventory").getBinding("items").filter(filters);
       },
       onAfterRendering: function () {
         var that = this;
@@ -138,12 +140,14 @@ sap.ui.define(
     onGoButtonPress: function (evt) {
       var oStoreModel = this.getOwnerComponent().getModel("StoreModel");
         var sStoreId = oStoreModel.getProperty("/selectedStoreId");
+        var email = this.getView().getModel("SalesEmployeeModel" ).oData.results[0].Email;
       var filter1 = new sap.ui.model.Filter("StoreId", "EQ", sStoreId);
+      var filterEmail = new sap.ui.model.Filter("CreatedByEmail", "EQ", email);
       var beginDate = this.getView().byId("startDatePicker").getValue();
       var endDate = this.getView().byId("endDatePicker").getValue();
       var stockCountNo = this.getView().byId("stockCountNo").getValue();
       var storageLocation = this.getView().byId("storageLocation").getSelectedKey();
-      var filters=[filter1];
+      var filters=[filter1,filterEmail];
       
          if (stockCountNo.length > 0) {         
           var filter3 = new sap.ui.model.Filter("StockCountNo", "EQ", stockCountNo);
@@ -183,6 +187,8 @@ sap.ui.define(
   },
   onPostAdjustmentPress:function(evt){
     var that = this;
+    var SModel = this.getOwnerComponent().getModel("SalesEmployeeModel");
+    var UserEmail = SModel.getProperty("/results/0/Email");
     var selectedDate = new Date();
     var milliseconds = selectedDate.getTime();
     var formattedDate = '/Date(' + milliseconds + ')/';
@@ -194,7 +200,9 @@ sap.ui.define(
       "SalesEmp": this.oSelectedItem.SalesEmp,
       "StoreId": this.oSelectedItem.StoreId,
       "StorageLoc": this.oSelectedItem.StorageLoc,
+      "CreatedByEmail" :UserEmail,
       "Action" : "GR-POST",
+
       "to_inventory_detail": []
     };
     var stockLineItems = that.getView().getModel("InventoryDetails").getData();
@@ -211,6 +219,7 @@ sap.ui.define(
         "StoreId": this.oSelectedItem.StoreId,
         //"StorageLoc": stockLineItems[m].StorageLoc,
         "StorageLoc": this.oSelectedItem.StorageLoc,
+
         //"UOM" : stockLineItems[m].UOM,
         "UOM" : "ST",
         "Action": ""
@@ -226,8 +235,19 @@ sap.ui.define(
           that.getView().getModel("headerModel").setProperty("/Status","P");
           that.onVisibleFields([1,2],"P");
       },
-      error:function(oData,oResponse){
-        sap.m.MessageBox.error(JSON.parse(oData.responseText).error.message.value);
+      error:function(error,oResponse){
+        //sap.m.MessageBox.error(JSON.parse(oData.responseText).error.message.value);
+        var errorDetails = error.responseText ? JSON.parse(error.responseText).error.innererror.errordetails : [];
+        var errorMessage = "An error occurred. Details:\n";
+       
+        errorDetails.forEach(function (detail) {
+          errorMessage += "- " + detail.message + "\n";
+        });
+
+        // Show the error message in a message box or dialog
+        sap.m.MessageBox.error(errorMessage, {
+          title: "Error"
+        });
       }
     });
   },

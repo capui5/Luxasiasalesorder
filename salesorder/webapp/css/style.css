@@ -111,8 +111,8 @@
 }
  
 .sapMGT.OneByOne {
-    width: 15rem;
-    height: 26rem;
+    width: 14rem;
+    height: 18.5rem;
     border-radius: 0%;
 }
  
@@ -139,38 +139,40 @@
 /*Generic tile*/
 span#__tile0-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
  
 span#__tile1-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
  
 span#__tile2-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
  
 span#__tile3-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
  
 span#__tile4-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
 
 span#__tile5-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
 span#__tile6-title-inner {
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 10rem;
 }
-
+.headerContainerClass{
+    margin-top: 0.5rem !important;
+}
  
 /*Generic tiles icon*/
 .tile-1 .sapMImageContentImageIcon.sapUiIcon::before {
@@ -257,8 +259,8 @@ span#__tile6-title-inner {
  
  
 .tile-icon {
-    margin: 0 4.9rem;
-    padding-top: 5.85rem;
+    margin: 0 4.5rem;
+    /* padding-top: 5.85rem; */
    
    
 }
@@ -1131,6 +1133,32 @@ padding-left: 65px;
 .edit .sapMBtnContent {
     color: white;
 }
+.barClass .sapMBarRight {
+    padding-right: 0rem !important;
+}
+
+.stockActionBtn.sapMBtnBase{
+    background-color: rgb(8 168 168);
+    width: 120px;
+    border-radius: 20px;
+ 
+}
+.stockActionBtn.sapMBtnBase:hover{
+    background-color: rgb(8 78 88);
+    width: 120px;
+    border-radius: 20px;
+ 
+}
+.stockActionBtn.sapMBtn:hover>.sapMBtnDefault.sapMBtnHoverable{
+    background-color: rgb(8, 78, 88);
+    width: 120px;
+    border-radius: 20px;
+    border:none
+}
+.stockActionBtn .sapMBtnContent {
+    color: white;
+}
+
 .filter.sapMBtnBase{
     background-color: rgb(8 168 168);
     width: auto;
@@ -1178,6 +1206,33 @@ padding-left: 65px;
 .edit .sapMBtnContent {
     color: white;
 }
+
+
+.stockActionBtn.sapMBtnBase{
+    background-color: rgb(8 168 168);
+     width: 120px; 
+    border-radius: 20px;
+ 
+}
+.stockActionBtn.sapMBtnBase:hover{
+    background-color: rgb(8 78 88);
+   
+    width: 120px; 
+    border-radius: 20px;
+ 
+}
+.stockActionBtn.sapMBtn:hover>.sapMBtnDefault.sapMBtnHoverable{
+    background-color: rgb(8, 78, 88);
+    
+     width: 120px; 
+    border-radius: 20px;
+    border:none
+}
+.stockActionBtn .sapMBtnContent {
+    color: white;
+}
+
+
 .createBtn.sapMBtnBase{
     background-color: rgb(8 168 168);
     width: 100%;
@@ -1200,7 +1255,7 @@ padding-left: 65px;
     border:none
 }
 .createBtn .sapMBtnContent {
-    /* color: white; */
+    color: white;
 }
 /* Mobile (max-width: 767px) */
 @media screen and (max-width: 767px) {

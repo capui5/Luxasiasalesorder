@@ -110,7 +110,9 @@ sap.ui.define([
       var currentDate = new Date();
       var age = currentDate.getFullYear() - selectedDate.getFullYear();
    
-     
+      if (!this.validateRequiredFields()) {
+        return;
+    }
       if (age < 18) {
           sap.m.MessageBox.error("You must be at least 18 years old to create a profile.");
           return;
@@ -245,6 +247,63 @@ sap.ui.define([
           });
         }
       });
-    }
+    },
+    validateRequiredFields: function () {
+      var that = this;
+      var valid = true;
+      var missingFields = [];
+ 
+     
+      var requiredFields = [
+          { id: "title", label: "Title" },
+          { id: "fname", label: "First Name" },
+          { id: "lname", label: "Last Name" },
+          { id: "email", label: "Email" },
+          { id: "countrycode", label: "Mobile No" },
+          { id: "phoneno", label: "Mobile No" },
+          { id: "street1", label: "Street/City" },
+          { id: "city", label: "Street/City" },
+          { id: "pcode", label: "Pincode" },
+          { id: "country", label: "Country" },
+          { id: "datePickerId", label: "Date of Birth" },
+      ];
+ 
+      requiredFields.forEach(function (field) {
+          var control = that.getView().byId(field.id);
+ 
+          if (!control) {
+              console.error("Control with ID '" + field.id + "' not found.");
+              valid = false;
+              return;
+          }
+ 
+          var value;
+          if (typeof control.getValue === 'function') {
+              value = control.getValue();
+          } else if (typeof control.getSelectedKey === 'function') {
+              value = control.getSelectedKey();
+          } else {
+              console.error("Control with ID '" + field.id + "' does not have a getValue or getSelectedKey method.");
+              valid = false;
+              return;
+          }
+ 
+          if (!value) {
+              control.setValueState("Error");
+              control.setValueStateText("This field is required");
+              valid = false;
+              missingFields.push(field.label);
+          } else {
+              control.setValueState("None");
+          }
+      });
+ 
+      if (!valid) {
+       
+          sap.m.MessageBox.error("Please fill in the required fields:\n" + missingFields.join(", "));
+      }
+ 
+      return valid;
+  },
   });
 });
